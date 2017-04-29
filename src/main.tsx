@@ -10,19 +10,15 @@ class ListProperty {
 }
 
 class ListState {
-    list: Config.Item[];
 }
 
-class List extends React.Component<ListProperty, ListState> {
+class ListReact extends React.Component<ListProperty, ListState> {
     constructor(props: ListProperty) {
         super(props);
-        this.state = {
-            list: props.list,
-        };
     }
 
     render(): JSX.Element {
-        const list = this.state.list;
+        const list = this.props.list;
         console.log("list", list);
 
         const nestedItems = list.map((nestedItem) =>
@@ -41,60 +37,36 @@ class ItemProperty {
 }
 
 class ItemState {
-    itemTree: Config.Item;
     isTextBox: boolean;
-    textValue: string | null;
 }
 
 class ItemReact extends React.Component<ItemProperty, ItemState> {
-    textArea: JSX.Element;
-    itemTree: Config.Item;
-
     constructor(props: ItemProperty) {
         super(props);
         this.state = {
-            itemTree: props.itemTree,
             isTextBox: false,
-            textValue: null,
         };
 
         // This binding is necessary to make `this` work in the callback
         this.onEditItem = this.onEditItem.bind(this);
-        this.onKey = this.onKey.bind(this);
-        this.handleChange = this.handleChange.bind(this);
     }
 
     render() {
         console.log("item", this.state);
-        const item = this.state.itemTree;
-        const nestedList = item.nested !== undefined
-            ? <List list={item.nested} />
-            : null;
-        if (this.state.isTextBox) {
-            this.textArea = (
-                <textarea
-                    cols={50}
-                    rows={1}
-                    defaultValue={item.text}
-                    onKeyPress={this.onKey}
-                    onChange={this.handleChange}
-                />
-            );
+        const item = this.props.itemTree;
 
-            return (
-                <li onClick={this.onEditItem}>
-                    {this.textArea}
-                    {nestedList}
-                </li>
-            );
-        } else {
-            return (
-                <li onClick={this.onEditItem}>
-                    {item.text}
-                    {nestedList}
-                </li>
-            );
-        }
+        const text = this.state.isTextBox
+            ? <EditReact itemTree={this.props.itemTree} item={this} />
+            : item.text;
+        const nestedList = item.nested !== undefined
+            ? <ListReact list={item.nested} />
+            : null;
+        return (
+            <li onClick={this.onEditItem}>
+                {text}
+                {nestedList}
+            </li>
+        );
 
     }
 
@@ -112,6 +84,44 @@ class ItemReact extends React.Component<ItemProperty, ItemState> {
             isTextBox: true,
         }));
     }
+}
+
+class EditProperty {
+    item: ItemReact;
+    itemTree: Config.Item;
+}
+
+class EditState {
+    itemTree: Config.Item;
+
+    textValue: string | null;
+}
+
+class EditReact extends React.Component<EditProperty, EditState> {
+    constructor(props: EditProperty) {
+        super(props);
+        this.state = {
+            itemTree: props.itemTree,
+            textValue: null,
+        };
+
+        // This binding is necessary to make `this` work in the callback
+        this.onKey = this.onKey.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    render() {
+        const item = this.props.itemTree;
+        return (
+            <textarea
+                cols={50}
+                rows={1}
+                defaultValue={item.text}
+                onKeyPress={this.onKey}
+                onChange={this.handleChange}
+            />
+        );
+    }
 
     handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
         this.setState({ textValue: event.target.value });
@@ -122,8 +132,12 @@ class ItemReact extends React.Component<ItemProperty, ItemState> {
             return;
         }
 
-        this.setState((oldState: ItemState) => {
-            oldState.itemTree.text = oldState.textValue as string;
+        const test = this.state.textValue;
+        this.setState({
+            textValue: null,
+        });
+        this.props.item.setState((oldState: ItemState, props: ItemProperty) => {
+            props.itemTree.text = test as string;
             console.log(Config.example);
             return {
                 isTextBox: false,
@@ -132,4 +146,4 @@ class ItemReact extends React.Component<ItemProperty, ItemState> {
     }
 }
 
-ReactDOM.render(<List list={Config.example.notes} />, document.getElementById("replaceMe"));
+ReactDOM.render(<ListReact list={Config.example.notes} />, document.getElementById("replaceMe"));
