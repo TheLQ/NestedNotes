@@ -6,9 +6,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 class List extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            list: props.list
+        }
+    }
+
     render() {
-        let list = this.props.list;
-        console.log("list", list)
+        let list = this.state.list;
+        console.log("list", list);
+
         const nestedItems = list.map((nestedItem) =>
             <ListItem key={nestedItem.id} itemTree={nestedItem} />
         );
@@ -21,15 +29,62 @@ class List extends React.Component {
 }
 
 class ListItem extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            itemTree: props.itemTree,
+            isTextBox: false,
+            textArea: null
+        }
+
+        // This binding is necessary to make `this` work in the callback
+        this.onEditItem = this.onEditItem.bind(this);
+        this.onKey = this.onKey.bind(this);
+    }
+
     render() {
-        let item = this.props.itemTree;
-        console.log("item", item)
+        console.log("item", this.state);
+        let item = this.state.itemTree;
         let nestedList = "nested" in item
             ? <List list={item.nested} />
             : null;
-        return (
-            <li>{item.text}{nestedList}</li>
-        );
+        if (this.state.isTextBox) {
+            this.state.textArea = <textarea cols="50" rows="1" defaultValue={item.text} onKeyPress={this.onKey}></textarea>
+
+            return (
+                <li onClick={this.onEditItem}>
+                    {this.state.textArea}
+                    {nestedList}
+                </li>
+            );
+        } else {
+            return (
+                <li onClick={this.onEditItem}>
+                    {item.text}
+                    {nestedList}
+                </li>
+            );
+        }
+
+    }
+
+    onEditItem(e/*: MouseEvent*/) {
+        console.log("onEditItem");
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (this.state.isTextBox) {
+            //sucesfully stopped propagation
+            return;
+        }
+
+        this.setState((prevState, props) => ({
+            isTextBox: !prevState.isTextBox
+        }))
+    }
+
+    onKey(e/*: keyup*/) {
+        console.log(e.charCode)
     }
 }
 
