@@ -43,6 +43,7 @@ class ItemProperty {
 class ItemState {
     itemTree: Config.Item;
     isTextBox: boolean;
+    textValue: string | null;
 }
 
 class ItemReact extends React.Component<ItemProperty, ItemState> {
@@ -54,11 +55,13 @@ class ItemReact extends React.Component<ItemProperty, ItemState> {
         this.state = {
             itemTree: props.itemTree,
             isTextBox: false,
+            textValue: null,
         };
 
         // This binding is necessary to make `this` work in the callback
         this.onEditItem = this.onEditItem.bind(this);
         this.onKey = this.onKey.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     render() {
@@ -68,7 +71,15 @@ class ItemReact extends React.Component<ItemProperty, ItemState> {
             ? <List list={item.nested} />
             : null;
         if (this.state.isTextBox) {
-            this.textArea = <textarea cols={50} rows={1} defaultValue={item.text} onKeyPress={this.onKey} />;
+            this.textArea = (
+                <textarea
+                    cols={50}
+                    rows={1}
+                    defaultValue={item.text}
+                    onKeyPress={this.onKey}
+                    onChange={this.handleChange}
+                />
+            );
 
             return (
                 <li onClick={this.onEditItem}>
@@ -98,12 +109,26 @@ class ItemReact extends React.Component<ItemProperty, ItemState> {
         }
 
         this.setState((prevState, props) => ({
-            isTextBox: !prevState.isTextBox,
+            isTextBox: true,
         }));
     }
 
+    handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+        this.setState({ textValue: event.target.value });
+    }
+
     onKey(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-        console.log(e.charCode);
+        if (e.charCode !== 13) {
+            return;
+        }
+
+        this.setState((oldState: ItemState) => {
+            oldState.itemTree.text = oldState.textValue as string;
+            console.log(Config.example);
+            return {
+                isTextBox: false,
+            };
+        });
     }
 }
 
