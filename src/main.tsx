@@ -5,20 +5,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-class List extends React.Component {
-    constructor(props) {
+import * as Config from './config'
+
+class ListProperty {
+    list: Array<Config.Item>
+}
+
+class ListState {
+    list: Array<Config.Item>
+}
+
+class List extends React.Component<ListProperty, ListState> {
+    constructor(props: ListState/*lol*/) {
         super(props);
         this.state = {
             list: props.list
         }
     }
 
-    render() {
+    render(): JSX.Element {
         let list = this.state.list;
         console.log("list", list);
 
         const nestedItems = list.map((nestedItem) =>
-            <ListItem key={nestedItem.id} itemTree={nestedItem} />
+            <ItemReact key={nestedItem.id} itemTree={nestedItem} />
         );
         return (
             <ul>
@@ -28,14 +38,24 @@ class List extends React.Component {
     }
 }
 
-class ListItem extends React.Component {
-    constructor(props) {
+class ItemProperty {
+    itemTree: Config.Item;
+}
+
+class ItemState {
+    itemTree: Config.Item;
+    isTextBox: boolean;
+}
+
+class ItemReact extends React.Component<ItemProperty, ItemState> {
+    textArea: JSX.Element;
+
+    constructor(props: ItemProperty) {
         super(props);
         this.state = {
             itemTree: props.itemTree,
-            isTextBox: false,
-            textArea: null
-        }
+            isTextBox: false
+        };
 
         // This binding is necessary to make `this` work in the callback
         this.onEditItem = this.onEditItem.bind(this);
@@ -45,15 +65,15 @@ class ListItem extends React.Component {
     render() {
         console.log("item", this.state);
         let item = this.state.itemTree;
-        let nestedList = "nested" in item
+        let nestedList = item.nested !== undefined
             ? <List list={item.nested} />
             : null;
         if (this.state.isTextBox) {
-            this.state.textArea = <textarea cols="50" rows="1" defaultValue={item.text} onKeyPress={this.onKey}></textarea>
+            this.textArea = <textarea cols={50} rows={1} defaultValue={item.text} onKeyPress={this.onKey}></textarea>
 
             return (
                 <li onClick={this.onEditItem}>
-                    {this.state.textArea}
+                    {this.textArea}
                     {nestedList}
                 </li>
             );
@@ -68,7 +88,7 @@ class ListItem extends React.Component {
 
     }
 
-    onEditItem(e/*: MouseEvent*/) {
+    onEditItem(e: React.MouseEvent<HTMLLIElement>) {
         console.log("onEditItem");
         e.preventDefault();
         e.stopPropagation();
@@ -83,59 +103,9 @@ class ListItem extends React.Component {
         }))
     }
 
-    onKey(e/*: keyup*/) {
+    onKey(e: React.KeyboardEvent<HTMLTextAreaElement>) {
         console.log(e.charCode)
     }
 }
 
-var example = {
-    "config": {
-        "name": "myFirstTime"
-    },
-    "notes": [
-        {
-            "id": "1",
-            "settings": {},
-            "text": "level 1",
-            "nested": [
-                {
-                    "id": "2",
-                    "settings": {},
-                    "text": "level 1.1"
-                },
-                {
-                    "id": "3",
-                    "settings": {},
-                    "text": "level 1.2"
-                }
-            ]
-        },
-        {
-            "id": 4,
-            "settings": {},
-            "text": "level 2",
-            "nested": [
-                {
-                    "id": 5,
-                    "settings": {},
-                    "text": "level 2.1",
-                    "nested": [
-                        {
-                            "id": 6,
-                            "settings": {},
-                            "text": "level 2.1.1"
-                        }
-                    ]
-                },
-                {
-                    "id": 7,
-                    "settings": {},
-                    "text": "level 2.2"
-                }
-
-            ]
-        }
-    ]
-}
-
-ReactDOM.render(<List list={example.notes} />, document.getElementById('replaceMe'));
+ReactDOM.render(<List list={Config.example.notes} />, document.getElementById('replaceMe'));
