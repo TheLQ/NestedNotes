@@ -4,8 +4,6 @@ import nodeResolve from 'rollup-plugin-node-resolve';
 import babel from 'rollup-plugin-babel'
 import replace from 'rollup-plugin-replace'
 
-const pkg = require('..');
-
 export default {
   entry: 'src/main.jsx',
   sourceMap: true,

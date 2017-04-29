@@ -1,7 +1,7 @@
 "use strict"
 
 // import jquery from 'jquery';
-import * as h from './utils';
+// import * as h from './utils';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
