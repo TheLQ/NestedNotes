@@ -1,8 +1,7 @@
 {
-  "name": "treenotes",
+  "name": "treenotebook",
   "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
+  "description": "Note taking with nested lists and tags",
   "dependencies": {
     "jquery": "^3.2.1",
     "react": "^15.5.4",
