@@ -3,9 +3,10 @@ import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import babel from 'rollup-plugin-babel'
 import replace from 'rollup-plugin-replace'
+import typescript from 'rollup-plugin-typescript';
 
 export default {
-  entry: 'src/main.jsx',
+  entry: 'src/main.tsx',
   sourceMap: true,
   format: 'iife',
   dest: 'build/bundle.js',
@@ -21,12 +22,9 @@ export default {
       include: 'node_modules/**',
       sourceMap: true,
     }),
-    replace({ 'process.env.NODE_ENV': JSON.stringify('development') }),
-    babel({
-      babelrc: false,
-      exclude: 'node_modules/**',
-      presets: [['es2015', { modules: false }], 'stage-0', 'react'],
-      plugins: ['external-helpers']
+    typescript({
+      typescript: require('typescript')
     }),
+    replace({ 'process.env.NODE_ENV': JSON.stringify('development') }),
   ]
 }
