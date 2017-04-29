@@ -8,7 +8,7 @@ export default {
   entry: 'src/main.tsx',
   sourceMap: true,
   format: 'iife',
-  dest: 'build/bundle.js',
+  dest: 'dist/bundle.js',
   plugins: [
     nodeResolve({
       module: true,
