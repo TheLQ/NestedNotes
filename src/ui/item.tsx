@@ -90,7 +90,7 @@ function updateSelection(newSelection: Component) {
     }
     newSelection.setState({
         isSelected: true,
-    });
+    })
     selectedItem = newSelection;
 }
 
