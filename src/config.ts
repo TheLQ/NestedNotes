@@ -17,7 +17,7 @@ export class Item {
 export class ItemSettings {
 }
 
-export const example: Root = {
+export const activeConfig: Root = {
     globalsettings: {
         name: "myFirstTime",
     },
