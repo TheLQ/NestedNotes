@@ -1,5 +1,9 @@
-dist/bundle.js*
 node_modules
 .vscode
 build.sh
 build
+
+# built by npm run gulp
+gulpfile.js
+dist/bundle.js*
+
