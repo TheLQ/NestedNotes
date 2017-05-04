@@ -1,3 +1,5 @@
+import * as ItemReact from "./ui/item";
+
 export class Root {
     public globalsettings: GlobalSettings;
     public notes: Item[];
@@ -12,10 +14,21 @@ export class Item {
     public text: string;
     public settings?: ItemSettings;
     public nested?: Item[];
+
+    // ui
+    reactComponent?: ItemReact.Component;
+    // public reactElement?: JSX.Element;
 }
 
 export class ItemSettings {
 }
+
+export function react(item: Item) {
+        if (item.reactComponent == null) {
+            throw new Error("reactComponent is not set");
+        }
+        return item.reactComponent;
+    }
 
 export const activeConfig: Root = {
     globalsettings: {

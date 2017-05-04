@@ -11,7 +11,7 @@ export class State {
 }
 
 export class Component extends React.Component<Property, State> {
-    nestedComponents: Array<React.ReactElement<Item.Component>>;
+    nestedComponents: Array<Item.Component> = [];
 
     constructor(props: Property) {
         super(props);
@@ -21,12 +21,16 @@ export class Component extends React.Component<Property, State> {
         const list = this.props.list;
         console.log("list", list);
 
-        this.nestedComponents = list.map((nestedItem) =>
-            <Item.Component key={nestedItem.id} itemTree={nestedItem} />,
+        let itemComponents = list.map((nestedItem, index) =>
+            <Item.Component
+                key={nestedItem.id}
+                itemTree={nestedItem}
+                ref={(input) => {this.nestedComponents[index] = input} }
+            />,
         );
         return (
             <ul>
-                {this.nestedComponents}
+                {itemComponents}
             </ul>
         );
     }

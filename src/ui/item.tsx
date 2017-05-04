@@ -23,6 +23,8 @@ export class Component extends React.Component<Property, State> {
             isTextBox: false,
         };
 
+        this.props.itemTree.reactComponent = this;
+
         // This binding is necessary to make `this` work in the callback
         this.onEditItem = this.onEditItem.bind(this);
     }
@@ -40,11 +42,10 @@ export class Component extends React.Component<Property, State> {
             : null;
 
         return (
-            <li
-                onClick={this.onEditItem}
-                className={this.state.isSelected ? "item-selected" : "item-init"}
-            >
-                {text}
+            <li onClick={this.onEditItem}>
+                <div className={this.state.isSelected ? "item-selected" : "item-init"}>
+                    {text}
+                </div>
                 {nestedList}
             </li >
         );
