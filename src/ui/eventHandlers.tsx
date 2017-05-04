@@ -1,7 +1,10 @@
 import * as List from "./list";
+import * as Config from "../config";
 
-export let postReactInit: Array<(e: List.Component) => any> = [];
-export function onPostReactInit(event: List.Component) {
-    const self: any = this;
-    postReactInit.forEach((e) => e.apply(self, event));
+type PostReactHandler = (config: Config.Root) => any;
+
+export let postReactInit: Array<PostReactHandler> = [];
+export function onPostReactInit(config: Config.Root) {
+    console.log("running postreact");
+    postReactInit.forEach((e) => e(config));
 }
