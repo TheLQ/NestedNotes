@@ -1,8 +1,9 @@
 .item-init {
-    background-color: "#00000"
+    /*background-color: #000000;*/
 }
 
 .item-selected {
-    background-color: "#FFFFFF"
+    /*background-color: "#FFFFFF"*/
+    background-color: #777799;
 }
 
