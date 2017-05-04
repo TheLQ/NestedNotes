@@ -7,9 +7,27 @@ import * as Config from "./config";
 import * as EventHandler from "./ui/eventHandlers";
 import * as List from "./ui/list";
 
-const rootComponent = ReactDOM.render(
-    <List.Component list={Config.activeConfig.notes} />,
-    document.getElementById("replaceMe"),
-) as List.Component;
+// initialize 
+import "./ui/selection";
 
-EventHandler.onPostReactInit(rootComponent);
+window.addEventListener('error', (e) => {
+    // e instanceof ErrorEvent
+    console.error('caught the error: ', e);
+});
+
+window.addEventListener("load", function initReact() {
+    ReactDOM.render(
+        <List.Component
+            list={Config.activeConfig.notes}
+            ref={(rootComponent) => {
+                /*EventHandler.onPostReactInit(rootComponent, Config.activeConfig);*/
+            }}
+        />,
+        document.getElementById("replaceMe"),
+    );
+    console.log("after render");
+    // console.log('done2', rootComponent);
+
+    EventHandler.onPostReactInit(Config.activeConfig);
+});
+console.log("load");
