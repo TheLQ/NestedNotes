@@ -23,12 +23,7 @@ export function main() {
     console.log("load EventListener");
     // console.log('done2', rootComponent);
 
-    jQuery.ajax({
-        url: "../src-php/json.php",
-        dataType: "json"
-    }).done((data) => {
-        console.log("fetched data", data);
-        Config.setActiveConfig(data);
+    Config.initActiveConfig(() => {
         ReactDOM.render(
             makeReactComponent(),
             document.getElementById("replaceMe"),

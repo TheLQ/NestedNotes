@@ -2,4 +2,8 @@
 
 require 'utils.php';
 
-echo loadDataFile();
+if (isset($_GET["mode"]) && $_GET["mode"] === "save") {
+    saveData($_POST);
+} else {
+    echo loadDataFile();
+}
