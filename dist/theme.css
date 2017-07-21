@@ -62,3 +62,11 @@ textarea {
     padding-left: 3px;
     padding-right: 3px;
 }
+
+.errorHiden {
+    display: none;
+}
+
+.errorDisplayed {
+    color: red;
+}

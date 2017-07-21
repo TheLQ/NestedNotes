@@ -2,11 +2,11 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
-import jQuery from "jquery";
 
 import * as Config from "./config";
 import * as EventHandler from "./ui/eventHandlers";
 import * as List from "./ui/list";
+import * as Error from "./ui/error";
 
 // initialize 
 import "./ui/selection";
@@ -40,19 +40,26 @@ export function main() {
         if (loading != undefined) {
             loading.outerHTML = "";
         }
-    });
-    
-    
+    });   
 }
 
 export function makeReactComponent() {
-    return <List.Component
-            list={Config.getActiveConfig().notes}
-            even={true}
-            ref={(rootComponent) => {
-                 {/* EventHandler.onPostReactInit(rootComponent, Config.activeConfig); */}
-            }}
-        />
+    return (
+        <div>
+            <Error.Component ref={(errorComponent) => {
+                if (errorComponent != null) {
+                    Error.setComponent(errorComponent);
+                }
+            }} />
+            <List.Component
+                list={Config.getActiveConfig().notes}
+                even={true}
+                ref={(rootComponent) => {
+                {/* EventHandler.onPostReactInit(rootComponent, Config.activeConfig); */}
+                }}
+            />
+        </div>
+    )
 } 
 
 console.log("main end");
