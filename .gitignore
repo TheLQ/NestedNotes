@@ -9,3 +9,6 @@ build
 gulpfile.js
 dist/bundle.js*
 
+coverage/
+src-php/example.json*
+treenotebook*

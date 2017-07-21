@@ -21,6 +21,7 @@ import * as commonjs from "rollup-plugin-commonjs";
 import * as nodeResolve from "rollup-plugin-node-resolve";
 import * as replace from "rollup-plugin-replace";
 import * as rollupTypescript from "rollup-plugin-typescript";
+import * as rollupBabel from "rollup-plugin-babel";
 // import * as rollup from "rollup-stream";
 import * as rollup from "gulp-better-rollup";
 import * as source from "vinyl-source-stream";
@@ -97,31 +98,6 @@ gulp.task("bundle", ["clean", "testClean", "cleanBundle"], () => {
   debugger;
   const tsProject = newTsProject();
 
-  /* based on rollup-stream... for some reason
-  return rollup({
-      entry: "build/src/main.js",
-      sourceMap: true,
-      format: "iife",
-      moduleName: "selfnotes",
-      plugins: [
-        nodeResolve({
-          module: true,
-          jsnext: true,
-          browser: true,
-          //   extensions: [ ".js", ".json" ],
-          preferBuiltins: false,
-        }),
-        commonjs({
-          include: "node_modules/**",
-          sourceMap: true,
-        }),
-        // needed for react and react-dom
-        replace({ "process.env.NODE_ENV": JSON.stringify("development") }),
-      ],
-    })
-    .pipe(source(SOURCE_ALL_FILES))
-    // buffer the output. most gulp plugins, including gulp-sourcemaps, don't support streams. 
-    .pipe(buffer())*/
   gulp.src('src/main.tsx')
     .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(rollup({
@@ -131,7 +107,7 @@ gulp.task("bundle", ["clean", "testClean", "cleanBundle"], () => {
           module: true,
           jsnext: true,
           // browser: true,
-          extensions: [ ".js", ".json", ".ts", ".tsx" ],
+          extensions: [".js", ".json", ".ts", ".tsx"],
           // preferBuiltins: false,
         }),
         commonjs({
@@ -143,15 +119,13 @@ gulp.task("bundle", ["clean", "testClean", "cleanBundle"], () => {
         }),
         // needed for react and react-dom
         replace({ "process.env.NODE_ENV": JSON.stringify("development") }),
-        
+
       ],
     }, {
         // also rollups `sourceMap` option is replaced by gulp-sourcemaps plugin 
         format: "iife",
         moduleName: "selfnotes",
       }))
-    //    .pipe(tsProject())
-    // .js
     .pipe(rename("bundle.js"))
     .pipe(sourcemaps.write(".", {}))
     .pipe(gulp.dest("./dist"));
@@ -166,30 +140,30 @@ gulp.task("build", ["compile", "testCompile", "bundle"], () => {
   // )
 });
 
-gulp.task("watch", ["build"], () => {
+gulp.task("watch", ["bundle"], () => {
   return gulp.watch(
     [SOURCE_ALL_FILES, TEST_ALL_FILES],
     {
       debounceDelay: 5000/*ms*/
     },
-    ["build"]
+    ["bundle"]
   );
 });
 
-gulp.task("test", [/*"lint", "testLint", "build"*/], () => {
+gulp.task("test", [/*"bundle""lint", "testLint", "build"*/], () => {
   new Karma.Server({
     plugins: [
       // require("karma-es6-shim"),
+      //
+      require("karma-rollup-plugin"),
       require("karma-typescript"),
-      require("karma-babel-preprocessor"),
       require("karma-mocha"),
       require("karma-sinon"),
       require("karma-chai"),
       require("karma-phantomjs-launcher"),
-      // require("karma-jasmine"),
       // require("karma-coverage"),
-      // require("karma-sourcemap-loader"),
-      // require("karma-chrome-launcher"),
+      require("karma-sourcemap-loader"),
+      require("karma-chrome-launcher"),
       // require("karma-spec-reporter")
     ],
 
@@ -198,57 +172,33 @@ gulp.task("test", [/*"lint", "testLint", "build"*/], () => {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ["karma-typescript", "mocha", "chai", "sinon"/*, "es6-shim"*/],
+    frameworks: ["karma-typescript", "mocha", "chai", "sinon"],
 
     // list of files / patterns to load in the browser
     files: [
-      // "dist/bundle.js", // TODO: sourcemaps
-      { pattern: SOURCE_ALL_FILES },
-      { pattern: TEST_ALL_FILES, included: false },
-    ],
-    tests: [
-
+      "test/**/*.tsx",
+      "test/**/*.ts",
+      "src/**/*.ts",
+      "src/**/*.tsx"
     ],
 
     // list of files to exclude
     exclude: [
     ],
 
-    // preprocess matching files before serving them to the browser
-    // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-
-    // OLD babel and rollup sources
-    // preprocessors: {
-    //   'dist/bundle.js': ['babel'],
-    //   'build/**/*.js': ['babel'],
-    // },
-    // babelPreprocessor: {
-    //   options: {
-    //     presets: ['es2015'],
-    //     sourceMap: 'inline'
-    //   },
-    //   filename: function (file) {
-    //     return file.originalPath.replace(/\.js$/, '.es5.js');
-    //   },
-    //   sourceFileName: function (file) {
-    //     return file.originalPath;
-    //   }
-    // },
-
     karmaTypescriptConfig: {
-      bundlerOptions: {
-        transforms: [require("karma-typescript-es6-transform")()]
-      },
       compilerOptions: {
-          module: "es6",
+        module: "commonjs", 
+        sourceMap: true
       },
+      tsconfig: "./tsconfig.json",
     },
 
     preprocessors: {
-      'src/**/*.ts': ['karma-typescript'],
-      'src/**/*.tsx': ['karma-typescript'],
-      'test/**/*.ts': ['karma-typescript'],
-      // 'test/**/*.tsx': ['karma-typescript'],
+      'src/**/*.ts': ['karma-typescript', 'sourcemap'],
+      'src/**/*.tsx': ['karma-typescript', 'sourcemap'],
+      'test/**/*.ts': ['karma-typescript', 'sourcemap'],
+      'test/**/*.tsx': ['karma-typescript', 'sourcemap'],
     },
 
     // test results reporter to use
@@ -271,11 +221,11 @@ gulp.task("test", [/*"lint", "testLint", "build"*/], () => {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: [/*"Chrome", "Firefox",*/ "PhantomJS"],
+    browsers: ["Chrome"/*, "Firefox","PhantomJS"*/],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: true,
+    singleRun: false,
 
     // Concurrency level
     // how many browser should be started simultaneous
