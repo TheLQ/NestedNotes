@@ -9,16 +9,17 @@ enum SelectionState {
     Done,
 }
 
-let activeSelection: Config.Item = Config.activeConfig.notes[0];
+let activeSelection: Config.Item;
 // select on init
 
-// window.addEventListener("load", function initSelection() {
-console.log("load selection")
 EventHandlers.postReactInit.push((config: Config.Root) => {
-    console.log("setting first active selection");
+    activeSelection = Config.getActiveConfig().notes[0];
+    console.log("setting first active selection", activeSelection);
     Config.react(activeSelection).setState({
         isSelected: true,
     });
+
+    
 })
 
 export function init() {
@@ -26,7 +27,7 @@ export function init() {
 
 }
 
-function updateSelection(newSelection: Config.Item) {
+export function updateSelection(newSelection: Config.Item) {
     // skip during init
     Config.react(activeSelection).setState({
         isSelected: false,
@@ -38,16 +39,6 @@ function updateSelection(newSelection: Config.Item) {
 }
 
 function selectionNext() {
-    /* Use dummy item to work around weird typescript problem
-    *
-    * var result: Config.Item | null = null; // or undefined
-    * iterate(myIteratorThatSetsResult)
-    * if (result == null) {
-    *  throw error()
-    * } else if (result.childProperty.something == something) {
-    *  // above gives error TS2339: Property 'reactComponent' does not exist on type 'never'.
-    * }
-    */
     let result: Config.Item = activeSelection;
     let trigger = false;
     iterate(function selectionPump(currentItem: Config.Item): boolean {
@@ -76,12 +67,10 @@ function selectionPrev() {
     iterate(function selectionPump(currentItem: Config.Item): boolean {
         if (result === currentItem) {
             return true;
-        } else if (!trigger) {
+        } else {
             result = currentItem;
-            return true;
+            return false;
         }
-
-        return false;
     });
 
     if (result == activeSelection) {
@@ -93,7 +82,7 @@ function selectionPrev() {
 
 function iterate(test: IteratorUntilTrue) {
     /* Start: could be extracted if needed */
-    Config.activeConfig.notes.forEach(function iteratePump(rootItem, i) {
+    Config.getActiveConfig().notes.forEach(function iteratePump(rootItem, i) {
         console.log("iterating children of " + rootItem.text + " index " + i);
         let current = rootItem;
         let stack: Config.Item[] = [];
@@ -110,10 +99,7 @@ function iterate(test: IteratorUntilTrue) {
     /* End: could be extracted if needed */
 }
 
-
 const CODE_BREAK = -1;
-
-
 
 const BREAK_ITEM: Config.Item = {
     id: -1,
@@ -167,3 +153,7 @@ document.addEventListener("keypress", function selectionKeyPressListener(e: Keyb
         selectionPrev();
     }
 });
+
+export function getActiveSelection() {
+    return activeSelection;
+}

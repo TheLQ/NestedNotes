@@ -12,6 +12,7 @@ export class GlobalSettings {
 export class Item {
     public id: number;
     public text: string;
+    public tags?: string[];
     public settings?: ItemSettings;
     public nested?: Item[];
 
@@ -30,46 +31,13 @@ export function react(item: Item) {
         return item.reactComponent;
     }
 
-export const activeConfig: Root = {
-    globalsettings: {
-        name: "myFirstTime",
-    },
-    notes: [
-        {
-            id: 1,
-            settings: {},
-            text: "level 1",
-            nested: [
-                {
-                    id: 2,
-                    text: "level 1.1",
-                },
-                {
-                    id: 3,
-                    text: "level 1.2",
-                },
-            ],
-        },
-        {
-            id: 4,
-            text: "level 2",
-            nested: [
-                {
-                    id: 5,
-                    text: "level 2.1",
-                    nested: [
-                        {
-                            id: 6,
-                            text: "level 2.1.1",
-                        },
-                    ],
-                },
-                {
-                    id: 7,
-                    text: "level 2.2",
-                },
+let activeConfig: Root;
+export function setActiveConfig(config: Root) {
+    activeConfig = config;
+}
 
-            ],
-        },
-    ],
-};
+export function getActiveConfig() {
+    return activeConfig;
+}
+
+

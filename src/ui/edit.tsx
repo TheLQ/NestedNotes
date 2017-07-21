@@ -1,63 +1,83 @@
 import React from "react";
 import * as Config from "../config";
+import * as Selection from "./selection";
 
 import * as Item from "./item";
 
 export class Property {
-    item: Item.Component;
-    itemTree: Config.Item;
+    item: Config.Item;
 }
 
 export class State {
-    itemTree: Config.Item;
-
-    textValue: string | null;
+    newValue: string;
 }
 
 export class Component extends React.Component<Property, State> {
+    nestedComponents: Array<Item.Component> = [];
+    
+
     constructor(props: Property) {
         super(props);
+
         this.state = {
-            itemTree: props.itemTree,
-            textValue: null,
+            newValue: this.props.item.text
         };
 
-        // This binding is necessary to make `this` work in the callback
-        this.onKey = this.onKey.bind(this);
-        this.handleChange = this.handleChange.bind(this);
+        this.onTextEdit = this.onTextEdit.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
     }
 
-    render() {
-        const item = this.props.itemTree;
+    onSubmit(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        
+        // do stuff with data
+        this.props.item.text = this.state.newValue;
+
+        // and then cleanup
+        
+        changeIsEditing(false);
+        
+    }
+
+    onTextEdit(event: React.FormEvent<HTMLTextAreaElement>) {
+        this.setState({
+            newValue: event.currentTarget.value
+        })
+    }
+
+    /**
+     * Stop parent item's onClick selection listener run
+     * @param event 
+     */
+    blockOnClick(event: React.MouseEvent<HTMLFormElement>) {
+        event.stopPropagation();
+    }
+
+    render(): JSX.Element {
         return (
-            <textarea
-                cols={50}
-                rows={1}
-                defaultValue={item.text}
-                onKeyPress={this.onKey}
-                onChange={this.handleChange}
-            />
+            <form onSubmit={this.onSubmit} onClick={this.blockOnClick}>
+                <textarea rows={20} cols={80} value={this.state.newValue} onChange={this.onTextEdit}/> 
+                <input type='checkbox' id='bulkAdd' name='bulkAdd'/>
+                <label htmlFor='bulkAdd'>Bulk Add</label> 
+                <input type='submit' value='submit'/>
+            </form>
         );
     }
-
-    handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-        this.setState({ textValue: event.target.value });
-    }
-
-    onKey(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-        if (e.charCode !== 13) {
-            return;
-        }
-
-        const test = this.state.textValue;
-        this.setState({
-            textValue: null,
-        });
-        this.props.item.setState((oldState: State, props: Property) => {
-            props.itemTree.text = test as string;
-            return {
-                isTextBox: false,
-            };
-        });
-    }
 }
+
+function changeIsEditing(to: boolean) {
+    let activeReact = Selection.getActiveSelection().reactComponent;
+    if (activeReact != null) {
+        activeReact.setState({
+            isEditing: to
+        });
+    }
+} 
+
+document.addEventListener("keypress", function selectionKeyPressListener(e: KeyboardEvent) {
+    console.log("e", e);
+    if (e.charCode === "e".charCodeAt(0)) {
+        console.log("yay");
+        changeIsEditing(true);
+    }
+});

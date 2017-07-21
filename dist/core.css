@@ -3,7 +3,6 @@
 }
 
 .item-selected {
-    /*background-color: "#FFFFFF"*/
-    background-color: #777799;
+    background-color: #000000 !important;
 }
 

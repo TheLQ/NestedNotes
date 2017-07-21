@@ -5,6 +5,7 @@ import * as Item from "./item";
 
 export class Property {
     list: Config.Item[];
+    even: boolean;
 }
 
 export class State {
@@ -19,17 +20,18 @@ export class Component extends React.Component<Property, State> {
 
     render(): JSX.Element {
         const list = this.props.list;
-        console.log("list", list);
+        // console.log("list", list);
 
         let itemComponents = list.map((nestedItem, index) =>
             <Item.Component
                 key={nestedItem.id}
                 itemTree={nestedItem}
-                ref={(input) => {this.nestedComponents[index] = input} }
+                even={this.props.even}
+                ref={(input) => {if (input != null) this.nestedComponents[index] = input} }
             />,
         );
         return (
-            <ul>
+            <ul className="generic"> 
                 {itemComponents}
             </ul>
         );
