@@ -9,7 +9,8 @@
         "max-classes-per-file": false,
         "object-literal-sort-keys": false,
         "member-access": false,
-        "no-console": false
+        "no-console": false,
+        "indent": [true, "tabs", 2]
     },
     "rulesDirectory": []
 }

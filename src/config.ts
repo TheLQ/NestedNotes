@@ -3,115 +3,114 @@ import jQuery from "jquery";
 import * as ItemReact from "./ui/item";
 
 export class Root {
-    public globalsettings: GlobalSettings;
-    public notes: Item[];
+	static fromJsonRecursive(rawJson: any): Root {
+		const newRoot = new Root();
+		Object.assign(newRoot, rawJson);
 
-    toJson(): any {
-        return {
-            "globalsettings": this.globalsettings,
-            "notes": this.notes.map((item) => item.toJson())
-        }
-    }
+		newRoot.notes = newRoot.notes.map((topItem: any) => Item.fromJsonRecursive(topItem));
 
-    static fromJsonRecursive(rawJson: any): Root {
-        let newRoot = new Root();
-        Object.assign(newRoot, rawJson);
+		return newRoot;
+	}
 
-        newRoot.notes = newRoot.notes.map((topItem: any) => Item.fromJsonRecursive(topItem));
+	public globalsettings: GlobalSettings;
+	public notes: Item[];
 
-        return newRoot;
-    }
+	toJson(): any {
+		return {
+			globalsettings: this.globalsettings,
+			notes: this.notes.map((item) => item.toJson()),
+		};
+	}
 }
 
 export class GlobalSettings {
-    public name: string;
+	public name: string;
 }
 
 export class Item {
-    public id: number;
-    public text: string;
-    public tags: string[] = [];
-    public settings: ItemSettings = [];
-    public nested: Item[] = [];
+	static fromJsonRecursive(rawJsonItem: any) {
+		const newItem = new Item();
+		Object.assign(newItem, rawJsonItem);
+		console.log("uite", newItem);
 
-    // ui
-    reactComponent?: ItemReact.Component;
-    // public reactElement?: JSX.Element;
+		newItem.nested = newItem.nested.map((subItem: any) => Item.fromJsonRecursive(subItem));
 
-    toJson(): any {
-        return {
-            "id": this.id,
-            "text": this.text,
-            "tags": this.tags,
-            "settings": this.settings,
-            "nested": this.nested.map((nested) => nested.toJson())
-        }
-    }
+		return newItem;
+	}
 
-    static fromJsonRecursive(rawJsonItem: any) {
-        let newItem = new Item();
-        Object.assign(newItem, rawJsonItem);
-        console.log("uite", newItem);
+	public id: number;
+	public text: string;
+	public tags: string[] = [];
+	public settings: ItemSettings = [];
+	public nested: Item[] = [];
 
-        newItem.nested = newItem.nested.map((subItem: any) => Item.fromJsonRecursive(subItem));
+	// ui
+	reactComponent?: ItemReact.Component;
+	// public reactElement?: JSX.Element;
 
-        return newItem;
-    }
+	toJson(): any {
+		return {
+			id: this.id,
+			text: this.text,
+			tags: this.tags,
+			settings: this.settings,
+			nested: this.nested.map((nested) => nested.toJson()),
+		};
+	}
 }
 
 export class ItemSettings {
 }
 
 export function react(item: Item) {
-    if (item.reactComponent == null) {
-        throw new Error("reactComponent is not set");
-    }
-    return item.reactComponent;
+	if (item.reactComponent == null) {
+		throw new Error("reactComponent is not set");
+	}
+	return item.reactComponent;
 }
 
 export function getAllTags(): string[] {
-    let tags: string[] = [];
-    activeConfig.notes.forEach(curItem => _getAllTags(curItem, tags));
-    return tags;
+	const tags: string[] = [];
+	activeConfig.notes.forEach((curItem) => _getAllTags(curItem, tags));
+	return tags;
 }
 
 function _getAllTags(curItem: Item, tags: string[]) {
-    curItem.tags.forEach(curTag => {
-        if (tags.indexOf(curTag) == -1) {
-            tags.push(curTag);
-        }
-    });
+	curItem.tags.forEach((curTag) => {
+		if (tags.indexOf(curTag) === -1) {
+			tags.push(curTag);
+		}
+	});
 
-    curItem.nested.forEach(nested => _getAllTags(nested, tags));
+	curItem.nested.forEach((nested) => _getAllTags(nested, tags));
 }
 
 let activeConfig: Root;
 export function initActiveConfig(callback: () => any) {
-    jQuery.ajax({
-        url: "../src-php/json.php",
-        dataType: "json"
-    }).done((data) => {
-        console.log("fetched data", data);
-        activeConfig = Root.fromJsonRecursive(data);
+	jQuery.ajax({
+		url: "../src-php/json.php",
+		dataType: "json",
+	}).done((data) => {
+		console.log("fetched data", data);
+		activeConfig = Root.fromJsonRecursive(data);
 
-        callback();
-    });
+		callback();
+	});
 }
 
 export function saveActiveConfig() {
-    jQuery.post({
-        url: "../src-php/json.php?mode=save",
-        // dataType: "json",
-        data: activeConfig.toJson()
-    }).done((data) => {
-        console.log("sent data", data);
-        // activeConfig = data;
+	jQuery.post({
+		url: "../src-php/json.php?mode=save",
+		// dataType: "json",
+		data: activeConfig.toJson(),
+	}).done((data) => {
+		console.log("sent data", data);
+		// activeConfig = data;
 
-        // callback();
-    });
+		// callback();
+	});
 }
 
 export function getActiveConfig() {
-    return activeConfig;
+	return activeConfig;
 }
-

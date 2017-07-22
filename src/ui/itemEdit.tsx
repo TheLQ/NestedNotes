@@ -1,68 +1,68 @@
 import React from "react";
 import * as Config from "../config";
 
-import * as Item from "./item";
 import * as EventHandlers from "./eventHandlers";
+import * as Item from "./item";
 
 /*
  * Edit Textarea
  */
 
 export class Property {
-    item: Item.Component;
-    itemTree: Config.Item;
+	item: Item.Component;
+	itemTree: Config.Item;
 }
 
 export class State {
-    itemTree: Config.Item;
+	itemTree: Config.Item;
 
-    textValue: string | null;
+	textValue: string | null;
 }
 
 export class Component extends React.Component<Property, State> {
-    constructor(props: Property) {
-        super(props);
-        this.state = {
-            itemTree: props.itemTree,
-            textValue: null,
-        };
+	constructor(props: Property) {
+		super(props);
+		this.state = {
+			itemTree: props.itemTree,
+			textValue: null,
+		};
 
-        // This binding is necessary to make `this` work in the callback
-        this.onKey = this.onKey.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-    }
+		// This binding is necessary to make `this` work in the callback
+		this.onKey = this.onKey.bind(this);
+		this.handleChange = this.handleChange.bind(this);
+	}
 
-    render() {
-        const item = this.props.itemTree;
-        return (
-            <textarea
-                cols={50}
-                rows={1}
-                defaultValue={item.text}
-                onKeyPress={this.onKey}
-                onChange={this.handleChange}
-            />
-        );
-    }
+	render() {
+		const item = this.props.itemTree;
+		return (
+			<textarea
+				cols={50}
+				rows={1}
+				defaultValue={item.text}
+				onKeyPress={this.onKey}
+				onChange={this.handleChange}
+			/>
+		);
+	}
 
-    handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-        this.setState({ textValue: event.target.value });
-    }
+	handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+		this.setState({ textValue: event.target.value });
+	}
 
-    onKey(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-        if (e.charCode !== EventHandlers.KEY_ENTER) {
-            return;
-        }
+	onKey(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+		if (e.charCode !== EventHandlers.KEY_ENTER) {
+			return;
+		}
 
-        const test = this.state.textValue;
-        this.setState({
-            textValue: null,
-        });
-        this.props.item.setState((oldState: State, props: Property) => {
-            props.itemTree.text = test as string;
-            return {
-                isTextBox: false,
-            };
-        });
-    }
+		const test = this.state.textValue;
+		this.setState({
+			textValue: null,
+		});
+		this.props.item.setState((oldState: State, props: Property) => {
+			props.itemTree.text = test as string;
+			return {
+				isTextBox: false,
+			};
+		});
+	}
 }
