@@ -63,11 +63,27 @@ export class ItemSettings {
 }
 
 export function react(item: Item) {
-        if (item.reactComponent == null) {
-            throw new Error("reactComponent is not set");
-        }
-        return item.reactComponent;
+    if (item.reactComponent == null) {
+        throw new Error("reactComponent is not set");
     }
+    return item.reactComponent;
+}
+
+export function getAllTags(): string[] {
+    let tags: string[] = [];
+    activeConfig.notes.forEach(curItem => _getAllTags(curItem, tags));
+    return tags;
+}
+
+function _getAllTags(curItem: Item, tags: string[]) {
+    curItem.tags.forEach(curTag => {
+        if (tags.indexOf(curTag) == -1) {
+            tags.push(curTag);
+        }
+    });
+
+    curItem.nested.forEach(nested => _getAllTags(nested, tags));
+}
 
 let activeConfig: Root;
 export function initActiveConfig(callback: () => any) {

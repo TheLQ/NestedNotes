@@ -10,6 +10,7 @@ export class Property {
 
 export class State {
     newValue: string;
+    tags: string[];
 }
 
 export class Component extends React.Component<Property, State> {
@@ -20,11 +21,13 @@ export class Component extends React.Component<Property, State> {
         super(props);
 
         this.state = {
-            newValue: this.props.item.text
+            newValue: this.props.item.text,
+            tags: this.props.item.tags
         };
 
         this.onTextEdit = this.onTextEdit.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.onTagAddSelect = this.onTagAddSelect.bind(this);
     }
 
     onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -32,6 +35,8 @@ export class Component extends React.Component<Property, State> {
         
         // do stuff with data
         this.props.item.text = this.state.newValue;
+        this.props.item.tags = this.state.tags;
+        Config.saveActiveConfig();
 
         // and then cleanup
         
@@ -45,6 +50,12 @@ export class Component extends React.Component<Property, State> {
         })
     }
 
+    onTagAddSelect(event: React.FormEvent<HTMLSelectElement>) {
+        this.addTag(
+            event.currentTarget.options[event.currentTarget.selectedIndex].value
+        );
+    }
+
     /**
      * Stop parent item's onClick selection listener run
      * @param event 
@@ -53,12 +64,51 @@ export class Component extends React.Component<Property, State> {
         event.stopPropagation();
     }
 
+    addTag(tag: string) {
+        this.setState((oldState: State) => {
+            oldState.tags.push(tag)
+        });
+    }
+
+    removeTag(tag: string) {
+        this.setState((oldState: State) => {
+            oldState.tags.splice(oldState.tags.indexOf(tag), 1);
+        });
+    }
+
     render(): JSX.Element {
+
+        let addTagOptions = Config.getAllTags().map((tag) => 
+            <option key={tag}>{tag}</option>
+        )
+
+        let removeTagButtons = this.state.tags.map((tag) => 
+                <button id="removeTag" className="tag" onClick={(e) => this.removeTag(tag)} key={tag}>
+                    {tag}
+                </button>
+        )
+
         return (
-            <form onSubmit={this.onSubmit} onClick={this.blockOnClick}>
-                <textarea rows={20} cols={80} value={this.state.newValue} onChange={this.onTextEdit}/> 
-                <input type='checkbox' id='bulkAdd' name='bulkAdd'/>
-                <label htmlFor='bulkAdd'>Bulk Add</label> 
+            <form onSubmit={this.onSubmit} onClick={this.blockOnClick} className="item-selected">
+                <fieldset>
+                    <legend>Edit Text</legend>
+                    <input type='checkbox' id='bulkAdd' name='bulkAdd'/>
+                    <label htmlFor='bulkAdd'>Bulk Add Mode</label> 
+                    <br/>
+                    <textarea rows={20} cols={80} value={this.state.newValue} onChange={this.onTextEdit}/> 
+                </fieldset>
+                <fieldset>
+                    <legend>Tags</legend>
+                    <p>
+                        <label htmlFor="removeTag">Tags:</label>
+                        {removeTagButtons}
+                    </p>
+                    <p>
+                        <label htmlFor="addTags">Add: </label>
+                        <select id="addTags" onChange={this.onTagAddSelect}>{addTagOptions}</select>
+                    </p>
+                </fieldset>
+                
                 <input type='submit' value='submit'/>
             </form>
         );
@@ -66,6 +116,7 @@ export class Component extends React.Component<Property, State> {
 }
 
 function changeIsEditing(to: boolean) {
+    // console.log("changed to ", to);
     let activeReact = Selection.getActiveSelection().reactComponent;
     if (activeReact != null) {
         activeReact.setState({

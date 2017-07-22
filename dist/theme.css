@@ -55,12 +55,16 @@ textarea {
 .tag {
     border: solid 1px;
     background-color: #a8b3bd;
-    color: black;
+    color: black !important;
     /* background-color: #373737; */
     margin-left: 2px;
     margin-right: 2px;
     padding-left: 3px;
     padding-right: 3px;
+}
+
+.tag a {
+    color: black;
 }
 
 .errorHiden {
