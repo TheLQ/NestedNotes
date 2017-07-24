@@ -106,7 +106,7 @@ gulp.task("bundle", ["clean", "testClean", "cleanBundle"], () => {
 				nodeResolve({
 					module: true,
 					jsnext: true,
-					// browser: true,
+					browser: true,
 					extensions: [".js", ".json", ".ts", ".tsx"],
 					// preferBuiltins: false,
 				}),
