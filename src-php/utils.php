@@ -162,7 +162,7 @@ function delinkify($textpld)  {
         }
         // echo "<br/>".$caret;
         $end = strpos($text, " ", $caret);
-        
+
         if ($end === FALSE) {
             $end = strlen($text);
             echo "<br/>End: EOL";
@@ -170,14 +170,14 @@ function delinkify($textpld)  {
         } else {
             echo "<br/>End: $end";
         }
-        
+
         // echo "END $end".PHP_EOL;
 
         $links[] = substr($text, $caret, $end - $caret);
         $text = substr_replace($text, "", $caret, $end - $caret);
         continue;
 
-        
+
 
         $newEnd = $end;
 
@@ -191,7 +191,7 @@ function delinkify($textpld)  {
 
         $caret = $newEnd;
 
-        
+
     }
 
     return array("links" => $links, "text" => $text);

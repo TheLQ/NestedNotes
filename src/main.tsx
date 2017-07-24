@@ -6,7 +6,7 @@ import ReactDOM from "react-dom";
 import * as Config from "./config";
 import * as Error from "./ui/error";
 import * as EventHandler from "./ui/eventHandlers";
-import * as List from "./ui/list";
+import {ItemComponent as ItemComponent} from "./ui/item";
 
 // initialize
 import "./ui/edit";
@@ -21,7 +21,6 @@ window.addEventListener("load", main);
 
 export function main() {
 	console.log("load EventListener");
-	// console.log('done2', rootComponent);
 
 	Config.initActiveConfig(() => {
 		ReactDOM.render(
@@ -39,13 +38,11 @@ export function main() {
 }
 
 export function makeReactComponent() {
+	const rootItems = ItemComponent.renderList(Config.getActiveConfig().roots, true);
 	return (
 		<div>
-			<Error.Component ref={Error.setComponent} />
-			<List.Component
-				list={Config.getActiveConfig().notes}
-				even={true}
-			/>
+			<Error.ErrorComponent ref={Error.setComponent} />
+			{rootItems}
 		</div>
 	);
 }

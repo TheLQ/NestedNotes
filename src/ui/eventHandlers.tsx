@@ -1,5 +1,4 @@
 import * as Config from "../config";
-import * as List from "./list";
 
 type PostReactHandler = (config: Config.Root) => any;
 

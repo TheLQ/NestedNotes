@@ -1,19 +1,19 @@
 import React from "react";
 import * as Config from "../config";
 
-import * as Item from "./item";
+import {ItemComponent as ItemComponent} from "./item";
 
-export class Property {
+export class ErrorProperty {
 }
 
-export class State {
+export class ErrorState {
 	error: string;
 }
 
-export class Component extends React.Component<Property, State> {
-	nestedComponents: Item.Component[] = [];
+export class ErrorComponent extends React.Component<ErrorProperty, ErrorState> {
+	nestedComponents: ItemComponent[] = [];
 
-	constructor(props: Property) {
+	constructor(props: ErrorProperty) {
 		super(props);
 
 		this.state = {
@@ -28,8 +28,8 @@ export class Component extends React.Component<Property, State> {
 	}
 }
 
-let activeComponent: Component | null;
-export function setComponent(component: Component | null) {
+let activeComponent: ErrorComponent | null;
+export function setComponent(component: ErrorComponent | null) {
 	activeComponent = component;
 }
 

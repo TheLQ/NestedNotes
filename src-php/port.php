@@ -8,36 +8,34 @@ $notes = &$data["notes"];
 
 // var_dump($notes);
 
-$id = 0;
-function applyRecursive(array &$entryList) {
-    global $id;
-    foreach ($entryList as &$item) {
-        echo "<p>" . $item["text"];
+$roots = array();
+$newNotes = array();
+function applyRecursive(array &$entryList, &$parentId = null) {
+    global $newNotes, $roots;
+    foreach ($entryList as $item) {
+		$id = uniqid();
+		if ($parentId != null) {
+			$newNotes[$parentId]["children"][] = $id;
+			$item["parent"] = $parentId;
+		} else {
+			$roots[] = $id;
+		}
 
-        // $result = delinkify($item->text);
-        // $item->setTex(trim($result["text"]));
-        $item["id"] = $id++;
-        echo "<br/> turns into ".$item["text"] . " as ".$item["id"];
-        echo "</p><ol>";
-        // foreach ($result["links"] as $link ) {
-        //     echo "<li>".$link."</li>";
-        // }
-        echo "</ol>";
-
-        // $item->links = $result["links"];
-
-        // var_dump($item);
+		$item["id"] = $id;
+		$newNotes[$id] = $item;
 
         if (isset($item["nested"]) && $item["nested"] != null) {
-            applyRecursive($item["nested"]);
+            applyRecursive($item["nested"], $id);
         }
+
+		unset($newNotes[$id]["nested"]);
     }
 }
 
 applyRecursive($notes);
 
-
-
+$data["notes"] = $newNotes;
+$data["roots"] = $roots;
 // $lis = array();
 // applyRecursive($lis);
 // $data["notes"] = $lis;

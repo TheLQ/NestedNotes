@@ -1,5 +1,6 @@
 import * as Config from "../config";
 import * as EventHandlers from "./eventHandlers";
+import {ItemComponent as ItemComponent} from "./item";
 
 type IteratorUntilTrue = (currentItem: Config.Item) => boolean;
 
@@ -13,9 +14,9 @@ let activeSelection: Config.Item;
 // select on init
 
 EventHandlers.postReactInit.push((config: Config.Root) => {
-	activeSelection = Config.getActiveConfig().notes[0];
+	activeSelection = Config.getItem(Config.getActiveConfig().roots[0]);
 	console.log("setting first active selection", activeSelection);
-	Config.react(activeSelection).setState({
+	ItemComponent.forItem(activeSelection.id).setState({
 		isSelected: true,
 	});
 });
@@ -26,10 +27,10 @@ export function init() {
 
 export function updateSelection(newSelection: Config.Item) {
 	// skip during init
-	Config.react(activeSelection).setState({
+	ItemComponent.forItem(activeSelection.id).setState({
 		isSelected: false,
 	});
-	Config.react(newSelection).setState({
+	ItemComponent.forItem(newSelection.id).setState({
 		isSelected: true,
 	});
 	activeSelection = newSelection;

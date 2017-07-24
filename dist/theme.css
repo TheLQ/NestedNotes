@@ -5,7 +5,7 @@
 body {
     background-color: #333333;
     /*background-color: #161616;*/
-     color: #DDDDDD; 
+     color: #DDDDDD;
     font: normal x-small verdana,arial,helvetica,sans-serif;
     font-weight: 400;
     line-height: 1.4285714285714286em;
@@ -55,7 +55,7 @@ textarea {
 .tag {
     border: solid 1px;
     background-color: #a8b3bd;
-    color: black !important;
+    color: black;
     /* background-color: #373737; */
     margin-left: 2px;
     margin-right: 2px;
@@ -65,6 +65,23 @@ textarea {
 
 .tag a {
     color: black;
+}
+
+.link {
+	border: solid 1px;
+    background-color: blue;
+    color: white;
+    /* background-color: #373737; */
+    margin-left: 2px;
+    margin-right: 2px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.link-new {
+    /* background-color: red;
+	color: white; */
+	border-color: red;
 }
 
 .errorHiden {
