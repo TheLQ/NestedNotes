@@ -97,13 +97,16 @@ export class ItemComponent extends React.Component<ItemProperty, ItemState> {
 			? ItemComponent.renderList(item.children, !this.props.even)
 			: null;
 		const tags = item.tags !== undefined
-			? item.tags.map((curTag: string, i: number) => (<span className="tag" key={curTag}>{curTag}</span>))
+			? [...item.tags].map((curTag: string) => (<span className="tag" key={curTag}>{curTag}</span>))
+			: null;
+		const links = item.links !== undefined
+			? [...item.links].map((curLink: string) => (<span className="link" key={curLink}>{curLink}</span>))
 			: null;
 
 		return (
 			<li onClick={this.onClickItem} className={this.props.even ? "genericEven" : "genericOdd"}>
 				<div className={this.state.isSelected ? "item-selected" : "item-init"}  >
-					{tags}{this.state.itemTree.text}
+					{tags}{links}{this.state.itemTree.text}
 				</div>
 				{children}
 			</li >

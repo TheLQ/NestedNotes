@@ -141,7 +141,6 @@ function _iterateNext(stack: Config.Item[], currentItem: Config.Item, test: Iter
 }
 
 document.addEventListener("keypress", function selectionKeyPressListener(e: KeyboardEvent) {
-	console.log("e", e);
 	if (e.charCode === "j".charCodeAt(0)) {
 		selectionNext();
 	} else if (e.charCode === "k".charCodeAt(0)) {

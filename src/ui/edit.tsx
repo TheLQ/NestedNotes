@@ -1,9 +1,10 @@
 import commonmark from "commonmark";
 import React from "react";
+import { v4 as uuid} from "uuid";
 
 import * as Config from "../config";
 
-import {AttributeComponent as AttributeComponent} from "./attribute";
+import * as Attribute from "./attribute";
 import {ItemComponent as ItemComponent} from "./item";
 import * as Selection from "./selection";
 
@@ -14,9 +15,9 @@ export class EditProperty {
 export class EditState {
 	textValue: string;
 	newValue: string;
-	tags: string[];
-	links: Set<string>;
-	existingLinks: string[];
+	tags: Set<string>;
+	newLinks: Set<string>;
+	existingLinks: Set<string>;
 }
 
 export class EditComponent extends React.Component<EditProperty, EditState> {
@@ -34,6 +35,8 @@ export class EditComponent extends React.Component<EditProperty, EditState> {
 		this.onTextEdit = this.onTextEdit.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
 		this.onTagAdd = this.onTagAdd.bind(this);
+		this.onTagRemove = this.onTagRemove.bind(this);
+		this.onLinkExistingRemove = this.onLinkExistingRemove.bind(this);
 	}
 
 	onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -42,12 +45,13 @@ export class EditComponent extends React.Component<EditProperty, EditState> {
 		// save state to props
 
 		this.props.item.text = this.state.newValue;
-		this.props.item.tags = this.state.tags;
+		this.props.item.tags = new Set(this.state.tags);
 
 		const allLinks: Set<string> = new Set();
-		this.state.links.forEach(allLinks.add);
-		this.state.existingLinks.forEach(allLinks.add);
-		this.props.item.links = [...allLinks];
+		this.state.newLinks.forEach((link) => allLinks.add(link));
+		this.state.existingLinks.forEach((link) => allLinks.add(link));
+		// this.props.item.links = this.state.links || [];
+		this.props.item.links = allLinks;
 
 		Config.saveActiveConfig();
 
@@ -57,16 +61,16 @@ export class EditComponent extends React.Component<EditProperty, EditState> {
 	}
 
 	onTextEdit(event: React.FormEvent<HTMLTextAreaElement>) {
-		this.setState(this.parseNewTextValue(event.target.value));
+		this.setState(this.parseNewTextValue(event.currentTarget.value));
 	}
 
 	onTagAdd(event: React.FormEvent<HTMLSelectElement>) {
-		const tagToAdd = event.target.value;
-		if (this.state.tags.indexOf(tagToAdd) !== -1) {
+		const tagToAdd = event.currentTarget.value;
+		if (this.state.tags.has(tagToAdd)) {
 			return;
 		}
 		this.setState((state: EditState) => {
-			state.tags.push(
+			state.tags.add(
 				tagToAdd,
 				// event.currentTarget.options[event.currentTarget.selectedIndex].value,
 			);
@@ -75,13 +79,13 @@ export class EditComponent extends React.Component<EditProperty, EditState> {
 
 	onTagRemove(tag: string) {
 		this.setState((oldState: EditState) => {
-			oldState.tags.splice(oldState.tags.indexOf(tag), 1);
+			oldState.tags.delete(tag);
 		});
 	}
 
 	onLinkExistingRemove(link: string) {
-		this.setState((oldState) => {
-			oldState.existingLinks.splice(oldState.tags.indexOf(link), 1);
+		this.setState((oldState: EditState) => {
+			oldState.existingLinks.delete(link);
 		});
 	}
 
@@ -102,28 +106,43 @@ export class EditComponent extends React.Component<EditProperty, EditState> {
 		return {
 			textValue: newTextValue,
 			newValue: parsed.result,
-			links: parsed.links,
+			newLinks: parsed.links,
 		};
 	}
 
 	render(): JSX.Element {
-		const links = [...this.state.links].map((link) => (
-			<AttributeComponent cssClass="tag" new={true} value={link}/>
-		));
-		const existingLinks = this.state.existingLinks.map((link) => {
-			const onRemoveLink = (e: any) => this.onLinkExistingRemove(link);
-			return (
-				<button id="removeLink" className="link" onClick={onRemoveLink} key={link}>
-					{link}
-				</button>
-			);
-		});
+		const links = [...this.state.existingLinks].concat([...this.state.newLinks])
+			.sort()
+			.map((link) => {
+				if (this.state.newLinks.has(link)) {
+					return (
+						<Attribute.AttributeComponent
+							type={Attribute.AttributeType.Link}
+							new={true}
+							value={link}
+							key={"new-" + link}
+						/>
+					);
+				} else {
+					const onRemoveLink = (e: any) => this.onLinkExistingRemove(link);
+					return (
+						<button
+							id="removeLink"
+							className="link"
+							onClick={onRemoveLink}
+							key={"existing-" + link}
+						>
+							{link}
+						</button>
+					);
+				}
+			});
 
 		const addTagOptions = Config.getAllTags().map(
 			(tag) => <option key={tag}>{tag}</option>,
 		);
 
-		const removeTagButtons = this.state.tags.map((tag) => {
+		const removeTagButtons = [...this.state.tags].map((tag) => {
 			const onRemoveTag = (e: any) => this.onTagRemove(tag);
 			return (
 				<button id="removeTag" className="tag" onClick={onRemoveTag} key={tag}>
@@ -136,14 +155,13 @@ export class EditComponent extends React.Component<EditProperty, EditState> {
 			<form onSubmit={this.onSubmit} onClick={this.blockOnClick} className="item-selected">
 				<fieldset>
 					<legend>Edit Text</legend>
-					<input type="checkbox" id="bulkAdd" name="bulkAdd" />
-					<label htmlFor="bulkAdd">Bulk Add Mode</label>
-
-					<br />
+					<div>
+						<label><input type="checkbox" id="bulkAdd" name="bulkAdd" /> Bulk Add Mode</label>
+					</div>
 					<textarea rows={20} cols={80} value={this.state.textValue} onChange={this.onTextEdit} />
-					<label htmlFor="renderedEdit">Rendered</label>
-					<p id="renderedEdit">{this.state.newValue}</p>
-					<p>Links: {links}{existingLinks}</p>
+					<div>
+						{links}{this.state.newValue}
+					</div>
 				</fieldset>
 				<fieldset>
 					<legend>Tags</legend>
@@ -173,11 +191,24 @@ function changeIsEditing(to: boolean) {
 	}
 }
 
-document.addEventListener("keypress", function selectionKeyPressListener(e: KeyboardEvent) {
-	console.log("e", e);
+const uuidDomain = "net.thelq.pro";
+function newItemId() {
+	// uuid();
+}
+
+function insertNested() {
+	const active = Selection.getActiveSelection();
+	console.log("active", active);
+	const parent = Config.getItem(active.parentId);
+
+
+}
+
+document.addEventListener("keypress", function editKeyPressListener(e: KeyboardEvent) {
 	if (e.charCode === "e".charCodeAt(0)) {
-		console.log("yay");
 		changeIsEditing(true);
+	} else if (e.charCode === "s".charCodeAt(0)) {
+		insertNested();
 	}
 });
 
@@ -185,7 +216,7 @@ function parseLinks(input: string) {
 	const newLinks: Set<string> = new Set();
 	let counter = 0;
 	for (const urlPrefix of ["http://", "https://"]) {
-		console.log("prefix " + urlPrefix);
+		// console.log("prefix " + urlPrefix);
 		let start = 0;
 		while (true) {
 			if (++counter === 10) {
@@ -193,7 +224,7 @@ function parseLinks(input: string) {
 			}
 			const origStart = start;
 			start = input.indexOf(urlPrefix, start);
-			console.log("for string '" + input + "' from " + origStart + " found start " + start);
+			// console.log("for string '" + input + "' from " + origStart + " found start " + start);
 			if (start === -1) {
 				break;
 			}
@@ -202,15 +233,15 @@ function parseLinks(input: string) {
 			if (end === -1) {
 				end = input.length;
 			}
-			console.log("found end " + end);
+			// console.log("found end " + end);
 
 			const link = input.substr(start, end - start);
 			newLinks.add(link);
-			console.log("found link '" + link + "'");
+			// console.log("found link '" + link + "'");
 
 			input = input.substr(0, start) + input.substr(end + 1);
 			// start = ;
-			console.log("new input '" + input + "'");
+			// console.log("new input '" + input + "'");
 		}
 	}
 

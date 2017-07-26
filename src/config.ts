@@ -25,16 +25,14 @@ export class Root {
 
 	toJson(): any {
 		// rebuild map as json-able key-value object
-		const jsonNotes = {};
+		const jsonNotes = {} as any;
 		for (const value of this.notes.values()) {
-			jsonNotes[value.id] = value;
+			jsonNotes[value.id] = value.toJson();
 		}
 
-		return {
-			globalsettings: this.globalsettings,
+		return Object.assign({}, this, {
 			notes: jsonNotes,
-			roots: this.roots,
-		};
+		});
 	}
 }
 
@@ -47,6 +45,9 @@ export class Item {
 		const newItem = new Item();
 		Object.assign(newItem, rawJsonItem);
 
+		newItem.links = new Set(rawJsonItem.links);
+		newItem.tags = new Set(rawJsonItem.tags);
+
 		return newItem;
 	}
 
@@ -54,9 +55,16 @@ export class Item {
 	public parentId: string;
 	public children: string[];
 	public text: string;
-	public tags: string[] = [];
+	public tags: Set<string> = new Set<string>();
 	public settings: ItemSettings = [];
-	public links: string[] = [];
+	public links: Set<string> = new Set<string>();
+
+	toJson() {
+		return Object.assign({}, this, {
+			tags: [...this.tags],
+			links: [...this.links],
+		});
+	}
 }
 
 export class ItemSettings {
@@ -65,6 +73,9 @@ export class ItemSettings {
 let activeConfig: Root;
 
 export function getItem(id: string): Item {
+	if (id == null) {
+		throw new Error("id is " + id);
+	}
 	const item = activeConfig.notes.get(id);
 	if (item == null) {
 		// console.log("id is", id);
