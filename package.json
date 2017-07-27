@@ -78,7 +78,7 @@
   },
   "scripts": {
     "gulp": "gulp",
-    "gulpc": "tsc gulpfile.ts && gulp"
+    "gulpc": "tsc gulpfile.ts || true && gulp"
   },
   "author": "Leon Blakey <leon.m.blakey at gmail.com>",
   "license": "ISC"
