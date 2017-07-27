@@ -26,6 +26,7 @@ export function init() {
 }
 
 export function updateSelection(newSelection: Config.Item) {
+	console.log("update selection", newSelection);
 	// skip during init
 	ItemComponent.forItem(activeSelection.id).setState({
 		isSelected: false,

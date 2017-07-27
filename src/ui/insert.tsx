@@ -23,6 +23,9 @@ function insertAbove() {
 		item.setState({
 			isEditing: true,
 		});
+		Selection.updateSelection(item.state.itemTree);
+
+		// remove this temporary listener
 		ItemComponent.componentRefListeners.splice(
 			ItemComponent.componentRefListeners.indexOf(editListener),
 			1,
