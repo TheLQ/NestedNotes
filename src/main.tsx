@@ -10,6 +10,7 @@ import {ItemComponent as ItemComponent} from "./ui/item";
 
 // initialize
 import "./ui/edit";
+import "./ui/insert";
 import "./ui/selection";
 
 // window.addEventListener('error', (e) => {
