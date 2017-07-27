@@ -3,6 +3,10 @@
 // Report everything
 error_reporting(-1);
 
+ini_set("display_errors", 1);
+ini_set("track_errors", 1);
+ini_set("html_errors", 1);
+
 // Crash on warnings
 function exception_error_handler($errno, $errstr, $errfile, $errline ) {
     throw new ErrorException($errstr, $errno, 0, $errfile, $errline);

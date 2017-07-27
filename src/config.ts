@@ -52,7 +52,7 @@ export class Item {
 	}
 
 	public id: string;
-	public parentId: string;
+	public parent: string;
 	public children: string[];
 	public text: string;
 	public tags: Set<string> = new Set<string>();

@@ -1,12 +1,11 @@
 import commonmark from "commonmark";
 import React from "react";
-import { v4 as uuid} from "uuid";
 
 import * as Config from "../config";
 
 import * as Attribute from "./attribute";
-import {ItemComponent as ItemComponent} from "./item";
 import * as Selection from "./selection";
+import {ItemComponent, ItemState} from "./item";
 
 export class EditProperty {
 	item: Config.Item;
@@ -28,7 +27,7 @@ export class EditComponent extends React.Component<EditProperty, EditState> {
 
 		this.state = {
 			tags: this.props.item.tags,
-			existingLinks: this.props.item.links,
+			existingLinks: new Set(this.props.item.links),
 			...this.parseNewTextValue(this.props.item.text),
 		};
 
@@ -43,15 +42,14 @@ export class EditComponent extends React.Component<EditProperty, EditState> {
 		event.preventDefault();
 
 		// save state to props
+		const item = this.props.item;
 
-		this.props.item.text = this.state.newValue;
-		this.props.item.tags = new Set(this.state.tags);
+		item.text = this.state.newValue;
+		item.tags = new Set(this.state.tags);
 
-		const allLinks: Set<string> = new Set();
-		this.state.newLinks.forEach((link) => allLinks.add(link));
-		this.state.existingLinks.forEach((link) => allLinks.add(link));
-		// this.props.item.links = this.state.links || [];
-		this.props.item.links = allLinks;
+		item.links.clear();
+		this.state.newLinks.forEach((link) => item.links.add(link));
+		this.state.existingLinks.forEach((link) => item.links.add(link));
 
 		Config.saveActiveConfig();
 
@@ -102,6 +100,13 @@ export class EditComponent extends React.Component<EditProperty, EditState> {
 	}
 
 	parseNewTextValue(newTextValue: string) {
+		if (newTextValue == null || newTextValue === "") {
+			return {
+				textValue: newTextValue,
+				newValue: newTextValue,
+				newLinks: new Set(),
+			};
+		}
 		const parsed = parseLinks(newTextValue);
 		return {
 			textValue: newTextValue,
@@ -191,24 +196,11 @@ function changeIsEditing(to: boolean) {
 	}
 }
 
-const uuidDomain = "net.thelq.pro";
-function newItemId() {
-	// uuid();
-}
-
-function insertNested() {
-	const active = Selection.getActiveSelection();
-	console.log("active", active);
-	const parent = Config.getItem(active.parentId);
-
-
-}
-
 document.addEventListener("keypress", function editKeyPressListener(e: KeyboardEvent) {
+	console.log("as", e);
 	if (e.charCode === "e".charCodeAt(0)) {
+		e.stopPropagation();
 		changeIsEditing(true);
-	} else if (e.charCode === "s".charCodeAt(0)) {
-		insertNested();
 	}
 });
 

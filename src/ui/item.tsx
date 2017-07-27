@@ -18,28 +18,14 @@ export class ItemState {
 	isEditing: boolean;
 }
 
-export class ItemComponent extends React.Component<ItemProperty, ItemState> {
+type ComponentRefLisener = (removed: boolean, item: ItemComponent) => void;
+
+export class ItemComponent
+	extends React.Component<ItemProperty, ItemState>
+	implements React.ComponentLifecycle<ItemProperty, ItemState> {
+
 	static componentRefs: Map<string, ItemComponent> = new Map();
-	// static newComponent(givenTree: Config.Item, givenEven: boolean, parent: Component): JSX.Element {
-	// 	if (givenTree.id == null) {
-	// 		givenTree.id = shortid.generate();
-	// 	}
-	// 	const refHandle = (jsxComponent: Component) => {
-	// 		if (jsxComponent == null) {
-	// 			this.componentRefs.delete(givenTree.id);
-	// 		} else {
-	// 			this.componentRefs.set(givenTree.id, jsxComponent);
-	// 		}
-	// 	};
-	// 	return (
-	// 		<Component
-	// 			itemId={givenTree.id}
-	// 			even={givenEven}
-	// 			key={givenTree.id}
-	// 			ref={refHandle}
-	// 		/>
-	// 	);
-	// }
+	static componentRefListeners: ComponentRefLisener[] = [];
 
 	static forItem(id: string): ItemComponent {
 		const value = this.componentRefs.get(id);
@@ -63,7 +49,6 @@ export class ItemComponent extends React.Component<ItemProperty, ItemState> {
 					itemId={childId}
 					even={givenEven}
 					key={childId}
-					ref={refHandle}
 				/>
 			);
 		});
@@ -81,6 +66,9 @@ export class ItemComponent extends React.Component<ItemProperty, ItemState> {
 		};
 
 		// This binding is necessary to make `this` work in the callback
+		this.onClickItem = this.onClickItem.bind(this);
+		this.componentDidMount = this.componentDidMount.bind(this);
+		this.componentWillUnmount = this.componentWillUnmount.bind(this);
 		this.onClickItem = this.onClickItem.bind(this);
 	}
 
@@ -124,5 +112,19 @@ export class ItemComponent extends React.Component<ItemProperty, ItemState> {
 		// }
 
 		Selection.updateSelection(this.state.itemTree);
+	}
+
+	componentDidMount() {
+		ItemComponent.componentRefs.set(this.props.itemId, this);
+		for (const listener of ItemComponent.componentRefListeners) {
+			listener(false, this);
+		}
+	}
+
+	componentWillUnmount() {
+		ItemComponent.componentRefs.delete(this.props.itemId);
+		for (const listener of ItemComponent.componentRefListeners) {
+			listener(true, this);
+		}
 	}
 }
