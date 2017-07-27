@@ -1,7 +1,7 @@
 import uuid from "uuid/v4";
-import Config from "../config";
+import * as Config from "../config";
 import {ItemComponent, ItemState} from "./item";
-import Selection from "./selection";
+import * as Selection from "./selection";
 
 function newItem(): Config.Item {
 	const item = new Config.Item();
