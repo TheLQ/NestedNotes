@@ -21,6 +21,7 @@ export class EditState {
 
 export class EditComponent extends React.Component<EditProperty, EditState> {
 	nestedComponents: ItemComponent[] = [];
+	private firstRun: boolean;
 
 	constructor(props: EditProperty) {
 		super(props);
@@ -163,7 +164,7 @@ export class EditComponent extends React.Component<EditProperty, EditState> {
 					<div>
 						<label><input type="checkbox" id="bulkAdd" name="bulkAdd" /> Bulk Add Mode</label>
 					</div>
-					<textarea rows={20} cols={80} value={this.state.textValue} onChange={this.onTextEdit} />
+					<textarea rows={20} cols={80} value={this.state.textValue} onChange={this.onTextEdit} autoFocus />
 					<div>
 						{links}{this.state.newValue}
 					</div>

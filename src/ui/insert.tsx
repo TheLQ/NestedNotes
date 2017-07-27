@@ -12,14 +12,57 @@ function newItem(): Config.Item {
 }
 
 function insertAbove() {
+	doInsert("above", true, (oldState, active, created) => {
+		const activeIndex = oldState.itemTree.children.indexOf(active.id);
+		if (activeIndex === -1) {
+			console.log("ItemState", oldState);
+			throw new Error("activeIndex " + activeIndex + " not found in " + oldState.itemTree.children);
+		}
+		oldState.itemTree.children.splice(activeIndex, 0, created.id);
+	});
+}
+
+function insertBelow() {
+	doInsert("below", true, (oldState, active, created) => {
+		const activeIndex = oldState.itemTree.children.indexOf(active.id);
+		if (activeIndex === -1) {
+			console.log("ItemState", oldState);
+			throw new Error("activeIndex " + activeIndex + " not found in " + oldState.itemTree.children);
+		}
+		oldState.itemTree.children.splice(activeIndex + 1, 0, created.id);
+	});
+}
+
+function insertRight() {
+	doInsert("right", false, (oldState, active, created) => {
+		oldState.itemTree.children.splice(0, 0, created.id);
+	});
+}
+
+function doInsert(
+	direction: string,
+	forParent: boolean,
+	callback: (oldState: ItemState, activeSelection: Config.Item, createdItem: Config.Item) => void) {
+
 	const active = Selection.getActiveSelection();
-	console.log("active", active);
-	// const parent = Config.getItem(active.parent);
+	console.log("insert " + direction + " this:", active);
 
 	const createdItem = newItem();
 	createdItem.parent = active.parent;
 
+	setStatePostReact(createdItem);
+
+	const itemToSetState = forParent ? active.parent : active.id;
+	ItemComponent.forItem(itemToSetState).setState(
+		(oldState: ItemState) => callback(oldState, active, createdItem)
+	);
+}
+
+function setStatePostReact(itemToEdit: Config.Item) {
 	const editListener = (removed: boolean, item: ItemComponent) => {
+		if (item.props.itemId !== itemToEdit.id) {
+			return;
+		}
 		item.setState({
 			isEditing: true,
 		});
@@ -32,20 +75,14 @@ function insertAbove() {
 		);
 	};
 	ItemComponent.componentRefListeners.push(editListener);
-
-	ItemComponent.forItem(active.parent).setState((oldState: ItemState) => {
-		const activeIndex = oldState.itemTree.children.indexOf(active.id);
-		if (activeIndex === -1) {
-			console.log("ItemState", oldState);
-			throw new Error("activeIndex " + activeIndex + " not found in " + oldState.itemTree.children);
-		}
-		oldState.itemTree.children.splice(activeIndex, 0, createdItem.id);
-	});
 }
 
 document.addEventListener("keypress", function editKeyPressListener(e: KeyboardEvent) {
 	if (e.key === "W" && e.shiftKey === true) {
-		e.stopPropagation();
 		insertAbove();
+	} else if (e.key === "S" && e.shiftKey === true) {
+		insertBelow();
+	} else if (e.key === "D" && e.shiftKey === true) {
+		insertRight();
 	}
 });

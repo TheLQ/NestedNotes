@@ -45,8 +45,15 @@ export class Item {
 		const newItem = new Item();
 		Object.assign(newItem, rawJsonItem);
 
-		newItem.links = new Set(rawJsonItem.links);
-		newItem.tags = new Set(rawJsonItem.tags);
+		newItem.links = new Set<string>(rawJsonItem.links);
+		newItem.tags = new Set<string>(rawJsonItem.tags);
+
+		if (newItem.children == null) {
+			newItem.children = [];
+		}
+		if (newItem.settings == null) {
+			newItem.settings = [];
+		}
 
 		return newItem;
 	}

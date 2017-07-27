@@ -37,13 +37,6 @@ export class ItemComponent
 
 	static renderList(childrenIds: string[], givenEven: boolean): JSX.Element {
 		const children = childrenIds.map((childId) => {
-			const refHandle = (jsxComponent: ItemComponent) => {
-				if (jsxComponent == null) {
-					this.componentRefs.delete(childId);
-				} else {
-					this.componentRefs.set(childId, jsxComponent);
-				}
-			};
 			return (
 				<ItemComponent
 					itemId={childId}
