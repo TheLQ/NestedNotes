@@ -1,15 +1,16 @@
 import uuid from "uuid/v4";
 
-import * as Config from "../config";
+import ItemModel from "../model/item";
+import * as ActiveRoot from "../model/active";
 import * as Utils from "../utils";
 import {ItemComponent, ItemState} from "./item";
 import * as Selection from "./selection";
 
-function newItem(): Config.Item {
-	const item = new Config.Item();
+function newItem(): ItemModel {
+	const item = new ItemModel();
 	item.id = uuid();
 
-	Config.getActiveConfig().notes.set(item.id, item);
+	ActiveRoot.getActiveConfig().notes.set(item.id, item);
 	return item;
 }
 
@@ -45,7 +46,7 @@ function insertRight() {
 function doInsert(
 	direction: string,
 	forParent: boolean,
-	callback: (oldState: ItemState, activeSelection: Config.Item, createdItem: Config.Item) => void) {
+	callback: (oldState: ItemState, activeSelection: ItemModel, createdItem: ItemModel) => void) {
 
 	const active = Selection.getActiveSelection();
 	console.log("insert " + direction + " this:", active);
@@ -60,11 +61,11 @@ function doInsert(
 	ItemComponent.forItem(parentToChange)
 		.setState((oldState: ItemState) => {
 			callback(oldState, active, createdItem)
-			createdItem.validate(Config.getActiveConfig());
+			createdItem.validate(ActiveRoot.getActiveConfig());
 		});
 }
 
-function setEditPostReact(itemToEdit: Config.Item) {
+function setEditPostReact(itemToEdit: ItemModel) {
 	const editListener = (removed: boolean, item: ItemComponent) => {
 		if (item.props.itemId !== itemToEdit.id) {
 			return;

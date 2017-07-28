@@ -1,7 +1,6 @@
 import React from "react";
-import * as Config from "../config";
 
-import {ItemComponent as ItemComponent} from "./item";
+import {ItemComponent} from "./item";
 
 export class ErrorProperty {
 }

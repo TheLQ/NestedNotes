@@ -1,14 +1,15 @@
 import commonmark from "commonmark";
 import React from "react";
 
-import * as Config from "../config";
+import ItemModel from "../model/item";
+import * as ActiveModel from "../model/active";
 
 import * as Attribute from "./attribute";
 import * as Selection from "./selection";
 import {ItemComponent, ItemState} from "./item";
 
 export class EditProperty {
-	item: Config.Item;
+	item: ItemModel;
 }
 
 export class EditState {
@@ -62,7 +63,7 @@ export class EditComponent
 		this.state.newLinks.forEach((link) => item.links.add(link));
 		this.state.existingLinks.forEach((link) => item.links.add(link));
 
-		Config.saveActiveConfig();
+		ActiveModel.saveActiveConfig();
 
 		// and then cleanup
 
@@ -72,7 +73,7 @@ export class EditComponent
 	onCancel(event: React.MouseEvent<HTMLButtonElement> ) {
 		changeIsEditing(false);
 		this.setState((oldState, props: EditProperty) => {
-			props.item.delete(Config.getActiveConfig());
+			props.item.delete(ActiveModel.getActiveConfig());
 		});
 	}
 
@@ -161,7 +162,7 @@ export class EditComponent
 				}
 			});
 
-		const addTagOptions = Config.getAllTags().map(
+		const addTagOptions = ActiveModel.getActiveConfig().getAllTags().map(
 			(tag) => <option key={tag}>{tag}</option>,
 		);
 

@@ -1,9 +1,10 @@
 import React from "react";
 import shortid from "shortid";
 
-import * as Config from "../config";
+import * as ActiveRoot from "../model/active";
 import {EditComponent as EditComponent} from "./edit";
 import * as EventHandler from "./eventHandlers";
+import ItemModel from "../model/item";
 import * as Item from "./item";
 import * as Selection from "./selection";
 import * as Attribute from "./attribute";
@@ -15,7 +16,7 @@ export class ItemProperty {
 
 export class ItemState {
 	isSelected: boolean;
-	itemTree: Config.Item;
+	itemTree: ItemModel;
 	isEditing: boolean;
 }
 
@@ -56,7 +57,7 @@ export class ItemComponent
 		this.state = {
 			isSelected: false,
 			isEditing: false,
-			itemTree: Config.getItem(this.props.itemId),
+			itemTree: ActiveRoot.getActiveConfig().getItem(this.props.itemId),
 		};
 
 		// This binding is necessary to make `this` work in the callback

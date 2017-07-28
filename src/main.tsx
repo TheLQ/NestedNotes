@@ -3,10 +3,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import * as Config from "./config";
+
 import * as Error from "./ui/error";
 import * as EventHandler from "./ui/eventHandlers";
 import {ItemComponent as ItemComponent} from "./ui/item";
+import * as ActiveRoot from "./model/active";
 
 // initialize
 import "./ui/edit";
@@ -23,13 +24,13 @@ window.addEventListener("load", main);
 export function main() {
 	console.log("load EventListener");
 
-	Config.initActiveConfig(() => {
+	ActiveRoot.initActiveConfig(() => {
 		ReactDOM.render(
 			makeReactComponent(),
 			document.getElementById("replaceMe"),
 		);
 
-		EventHandler.onPostReactInit(Config.getActiveConfig());
+		EventHandler.onPostReactInit(ActiveRoot.getActiveConfig());
 
 		const loading = document.getElementById("loading");
 		if (loading != null) {
@@ -39,7 +40,7 @@ export function main() {
 }
 
 export function makeReactComponent() {
-	const rootItems = ItemComponent.renderList(Config.getActiveConfig().roots, true);
+	const rootItems = ItemComponent.renderList(ActiveRoot.getActiveConfig().children, true);
 	return (
 		<div>
 			<Error.ErrorComponent ref={Error.setComponent} />

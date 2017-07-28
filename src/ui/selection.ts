@@ -1,8 +1,10 @@
-import * as Config from "../config";
+import ItemModel from "../model/item";
+import RootModel from "../model/root";
+import * as ActiveRoot from "../model/active";
 import * as EventHandlers from "./eventHandlers";
 import {ItemComponent as ItemComponent} from "./item";
 
-type IteratorUntilTrue = (currentItem: Config.Item) => boolean;
+type IteratorUntilTrue = (currentItem: ItemModel) => boolean;
 
 enum SelectionState {
 	Enabled,
@@ -10,11 +12,11 @@ enum SelectionState {
 	Done,
 }
 
-let activeSelection: Config.Item;
+let activeSelection: ItemModel;
 // select on init
 
-EventHandlers.postReactInit.push((config: Config.Root) => {
-	activeSelection = Config.getItem(Config.getActiveConfig().roots[0]);
+EventHandlers.postReactInit.push((config: RootModel) => {
+	activeSelection = ActiveRoot.getActiveConfig().getItem(ActiveRoot.getActiveConfig().children[0]);
 	console.log("setting first active selection", activeSelection);
 	ItemComponent.forItem(activeSelection.id).setState({
 		isSelected: true,
@@ -25,7 +27,7 @@ export function init() {
 	console.log("init selection");
 }
 
-export function updateSelection(newSelection: Config.Item) {
+export function updateSelection(newSelection: ItemModel) {
 	console.log("update selection", newSelection);
 	// skip during init
 	ItemComponent.forItem(activeSelection.id).setState({
@@ -38,15 +40,15 @@ export function updateSelection(newSelection: Config.Item) {
 }
 
 export function selectionNext() {
-	let result: Config.Item = activeSelection;
+	let result: ItemModel = activeSelection;
 
 	if (result.children.length > 0) {
-		result = Config.getItem(result.children[0]);
+		result = ActiveRoot.getActiveConfig().getItem(result.children[0]);
 	} else {
 		while (true) {
-			const parent = result.getParent();
+			const parent = result.getParent(ActiveRoot.getActiveConfig());
 			if (parent.indexOfChild != parent.parentChildren.length - 1) {
-				result = Config.getItem(parent.parentChildren[parent.indexOfChild + 1])
+				result = ActiveRoot.getActiveConfig().getItem(parent.parentChildren[parent.indexOfChild + 1])
 				break;
 			} else  {
 				if (parent.parent == null) {
@@ -63,14 +65,14 @@ export function selectionNext() {
 }
 
 export function selectionPrev() {
-	let result: Config.Item = activeSelection;
+	let result: ItemModel = activeSelection;
 
 	while (true) {
-		const parent = result.getParent();
+		const parent = result.getParent(ActiveRoot.getActiveConfig());
 		if (parent.indexOfChild != 0) {
-			result = Config.getItem(parent.parentChildren[parent.indexOfChild - 1])
+			result = ActiveRoot.getActiveConfig().getItem(parent.parentChildren[parent.indexOfChild - 1])
 			while (result.children.length != 0) {
-				result = Config.getItem(result.children[result.children.length - 1]);
+				result = ActiveRoot.getActiveConfig().getItem(result.children[result.children.length - 1]);
 			}
 			break;
 		} else  {
