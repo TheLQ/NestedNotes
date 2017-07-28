@@ -28,7 +28,7 @@ export class AttributeComponent extends React.Component<AttributeProperty, {}> {
 }
 
 export function newTag(givenValue: string, isNew: boolean = false): JSX.Element {
-	return <AttributeComponent type={AttributeType.Tag} new={isNew} value={givenValue}/>;
+	return <AttributeComponent type={AttributeType.Tag} new={isNew} value={givenValue} key={givenValue}/>;
 }
 
 export function newLink(givenValue: string, isNew: boolean = false): JSX.Element {
