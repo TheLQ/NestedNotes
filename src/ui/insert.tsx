@@ -82,6 +82,11 @@ function setStatePostReact(itemToEdit: Config.Item) {
 }
 
 document.addEventListener("keypress", function editKeyPressListener(e: KeyboardEvent) {
+	// stop from triggering inside edit
+	if (document.activeElement instanceof HTMLTextAreaElement) {
+		return;
+	}
+	console.log("e", e);
 	if (e.key === "W" && e.shiftKey === true) {
 		insertAbove();
 	} else if (e.key === "S" && e.shiftKey === true) {
