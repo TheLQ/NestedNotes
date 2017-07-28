@@ -19,6 +19,7 @@ export class EditState {
 	newLinks: Set<string>;
 	existingLinks: Set<string>;
 	deleteOnCancel: boolean;
+	newTagText: string;
 }
 
 export class EditComponent
@@ -35,6 +36,7 @@ export class EditComponent
 			tags: this.props.item.tags,
 			existingLinks: new Set(this.props.item.links),
 			deleteOnCancel: false,
+			newTagText: "",
 			...this.parseNewTextValue(this.props.item.text),
 		};
 
@@ -45,6 +47,8 @@ export class EditComponent
 		this.onTagAdd = this.onTagAdd.bind(this);
 		this.onTagRemove = this.onTagRemove.bind(this);
 		this.onLinkExistingRemove = this.onLinkExistingRemove.bind(this);
+		this.onTagNewAdd = this.onTagNewAdd.bind(this);
+		this.onTagNewChange = this.onTagNewChange.bind(this);
 	}
 
 	onSubmit(event: React.FormEvent<HTMLFormElement> | null) {
@@ -107,6 +111,20 @@ export class EditComponent
 		});
 	}
 
+	onTagNewChange(event: React.ChangeEvent<HTMLInputElement>) {
+		event.persist();
+		this.setState((oldState: EditState) => {
+			oldState.newTagText = event.target.value;
+		});
+	}
+
+	onTagNewAdd(event: React.FormEvent<HTMLButtonElement>) {
+		this.setState((oldState: EditState) => {
+			oldState.tags.add(oldState.newTagText);
+			oldState.newTagText = "";
+		});
+	}
+
 	onLinkExistingRemove(link: string) {
 		this.setState((oldState: EditState) => {
 			oldState.existingLinks.delete(link);
@@ -162,7 +180,7 @@ export class EditComponent
 				}
 			});
 
-		const addTagOptions = ActiveModel.getActiveConfig().getAllTags().map(
+		const addTagOptions = [...ActiveModel.getActiveConfig().getAllTags(), "Add..."].map(
 			(tag) => <option key={tag}>{tag}</option>,
 		);
 
@@ -203,6 +221,11 @@ export class EditComponent
 					<p>
 						<label htmlFor="addTags">Add: </label>
 						<select id="addTags" onChange={this.onTagAdd}>{addTagOptions}</select>
+					</p>
+					<p>
+						<label htmlFor="newTag">New: </label>
+						<input type="text" value={this.state.newTagText} onChange={this.onTagNewChange}/>
+						<button onClick={this.onTagNewAdd}>Add New Tag</button>
 					</p>
 				</fieldset>
 
@@ -266,4 +289,9 @@ function parseLinks(input: string) {
 		result: input,
 		links: newLinks,
 	};
+}
+
+export function insideForm(): boolean {
+	return document.activeElement instanceof HTMLTextAreaElement
+		|| document.activeElement instanceof HTMLInputElement;
 }

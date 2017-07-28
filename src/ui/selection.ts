@@ -1,6 +1,7 @@
+import * as ActiveRoot from "../model/active";
 import ItemModel from "../model/item";
 import RootModel from "../model/root";
-import * as ActiveRoot from "../model/active";
+import * as Edit from "./edit";
 import * as EventHandlers from "./eventHandlers";
 import {ItemComponent as ItemComponent} from "./item";
 
@@ -93,7 +94,7 @@ export function selectionPrev() {
 
 document.addEventListener("keypress", function selectionKeyPressListener(e: KeyboardEvent) {
 	// disable selection when inside edit box
-	if (document.activeElement instanceof HTMLTextAreaElement) {
+	if (Edit.insideForm()) {
 		return;
 	}
 	if (e.charCode === "s".charCodeAt(0)) {

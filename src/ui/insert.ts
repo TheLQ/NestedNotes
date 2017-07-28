@@ -1,8 +1,9 @@
 import uuid from "uuid/v4";
 
-import ItemModel from "../model/item";
 import * as ActiveRoot from "../model/active";
+import ItemModel from "../model/item";
 import * as Utils from "../utils";
+import * as Edit from "./edit";
 import {ItemComponent, ItemState} from "./item";
 import * as Selection from "./selection";
 
@@ -102,7 +103,7 @@ function deleteSelected() {
 
 document.addEventListener("keypress", function editKeyPressListener(e: KeyboardEvent) {
 	// stop from triggering inside edit
-	if (document.activeElement instanceof HTMLTextAreaElement) {
+	if (Edit.insideForm()) {
 		return;
 	}
 	console.log("e", e);
