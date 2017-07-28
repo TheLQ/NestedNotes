@@ -2,7 +2,7 @@ import React from "react";
 import shortid from "shortid";
 
 import * as ActiveRoot from "../model/active";
-import {EditComponent as EditComponent} from "./edit";
+import {EditComponent} from "./edit";
 import * as EventHandler from "./eventHandlers";
 import ItemModel from "../model/item";
 import * as Item from "./item";
@@ -29,9 +29,9 @@ export class ItemComponent
 	static componentRefs: Map<string, ItemComponent> = new Map();
 	static componentRefListeners: ComponentRefLisener[] = [];
 
-	static forItem(id: string): ItemComponent {
+	static forItem(id: string, errorOnNotFound: boolean = true): ItemComponent {
 		const value = this.componentRefs.get(id);
-		if (value == null) {
+		if (errorOnNotFound && value == null) {
 			throw new Error("cannot find value " + id);
 		}
 		return value;

@@ -3,11 +3,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-
-import * as Error from "./ui/error";
-import * as EventHandler from "./ui/eventHandlers";
-import {ItemComponent as ItemComponent} from "./ui/item";
 import * as ActiveRoot from "./model/active";
+import * as EventHandler from "./ui/eventHandlers";
+import * as View from "./ui/view";
 
 // initialize
 import "./ui/edit";
@@ -40,13 +38,7 @@ export function main() {
 }
 
 export function makeReactComponent() {
-	const rootItems = ItemComponent.renderList(ActiveRoot.getActiveConfig().children, true);
-	return (
-		<div>
-			<Error.ErrorComponent ref={Error.setComponent} />
-			{rootItems}
-		</div>
-	);
+	return <View.ViewComponent initRenderer={View.defaultRenderer}/>;
 }
 
 console.log("main end");

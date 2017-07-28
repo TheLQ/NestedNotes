@@ -27,12 +27,15 @@ export function init() {
 	console.log("init selection");
 }
 
-export function updateSelection(newSelection: ItemModel) {
+export function updateSelection(newSelection: ItemModel, forced: boolean = false) {
 	console.log("update selection", newSelection);
 	// skip during init
-	ItemComponent.forItem(activeSelection.id).setState({
-		isSelected: false,
-	});
+	const activeComponent = ItemComponent.forItem(activeSelection.id, false);
+	if (activeComponent != null) {
+		activeComponent.setState({
+			isSelected: false,
+		});
+	}
 	ItemComponent.forItem(newSelection.id).setState({
 		isSelected: true,
 	});
