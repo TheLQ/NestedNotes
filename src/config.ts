@@ -140,3 +140,35 @@ export function saveActiveConfig() {
 export function getActiveConfig() {
 	return activeConfig;
 }
+
+export function getParent(curItem: Item): ParentData {
+	if (curItem.parent != null) {
+		const parent = getItem(curItem.parent);
+		const childIndex = parent.children.indexOf(curItem.id);
+		if (childIndex == -1) {
+			console.log("parent", parent );
+			throw new Error("could not find child " + curItem.id + " in parent " + parent.id);
+		}
+		return {
+			parent: parent,
+			parentChildren: parent.children,
+			indexOfChild: childIndex
+		};
+	} else {
+		const childIndex = getActiveConfig().roots.indexOf(curItem.id);
+		if (childIndex == -1) {
+			throw new Error("could not find child " + curItem.id + " in roots");
+		}
+		return {
+			parent: null,
+			parentChildren: getActiveConfig().roots,
+			indexOfChild: childIndex
+		}
+	}
+}
+
+export class ParentData {
+	parent: Item | null;
+	parentChildren: string[];
+	indexOfChild: number;
+}
