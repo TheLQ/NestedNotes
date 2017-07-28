@@ -6,6 +6,7 @@ import {EditComponent as EditComponent} from "./edit";
 import * as EventHandler from "./eventHandlers";
 import * as Item from "./item";
 import * as Selection from "./selection";
+import * as Attribute from "./attribute";
 
 export class ItemProperty {
 	itemId: string;
@@ -78,10 +79,10 @@ export class ItemComponent
 			? ItemComponent.renderList(item.children, !this.props.even)
 			: null;
 		const tags = item.tags !== undefined
-			? [...item.tags].map((curTag: string) => (<span className="tag" key={curTag}>{curTag}</span>))
+			? [...item.tags].map((curTag: string) => Attribute.newTag(curTag))
 			: null;
 		const links = item.links !== undefined
-			? [...item.links].map((curLink: string) => (<span className="link" key={curLink}>{curLink}</span>))
+			? [...item.links].map((curLink: string) => Attribute.newLink(curLink))
 			: null;
 
 		return (

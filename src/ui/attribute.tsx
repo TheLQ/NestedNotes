@@ -3,7 +3,7 @@ import React from "react";
 export class AttributeProperty {
 	type: AttributeType;
 	new: boolean;
-	value: string;
+	value: any;
 	onClick?: React.MouseEventHandler<HTMLSpanElement>;
 }
 
@@ -32,5 +32,7 @@ export function newTag(givenValue: string, isNew: boolean = false): JSX.Element 
 }
 
 export function newLink(givenValue: string, isNew: boolean = false): JSX.Element {
-	return <AttributeComponent type={AttributeType.Link} new={isNew} value={givenValue}/>;
+	const url = new URL(givenValue);
+	const value = <a href={givenValue}>{url.hostname}</a>;
+	return <AttributeComponent type={AttributeType.Link} new={isNew} value={value} key={givenValue}/>;
 }

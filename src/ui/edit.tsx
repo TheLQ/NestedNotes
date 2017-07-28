@@ -145,14 +145,7 @@ export class EditComponent
 			.sort()
 			.map((link) => {
 				if (this.state.newLinks.has(link)) {
-					return (
-						<Attribute.AttributeComponent
-							type={Attribute.AttributeType.Link}
-							new={true}
-							value={link}
-							key={"new-" + link}
-						/>
-					);
+					return Attribute.newLink(link);
 				} else {
 					const onRemoveLink = (e: any) => this.onLinkExistingRemove(link);
 					return (
