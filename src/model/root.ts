@@ -2,7 +2,7 @@ import ItemModel from "./item";
 
 type ItemIdMap = Map<string, ItemModel>;
 
-export default class Root {
+export default class RootModel {
 	public notes: ItemIdMap;
 	public children: string[];
 

@@ -6,9 +6,9 @@ export default class UserRoot extends RootModel {
 	static fromJson(rawJson: any): UserRoot {
 		const newRoot = new UserRoot();
 		newRoot.globalsettings = rawJson.globalsettings;
-		newRoot.children = rawJson.roots;
-		newRoot.notes = new Map();
+		newRoot.children = rawJson.children;
 
+		newRoot.notes = new Map();
 		for (const key in rawJson.notes) {
 			if (rawJson.notes.hasOwnProperty(key)) {
 				const rawItem = rawJson.notes[key];
