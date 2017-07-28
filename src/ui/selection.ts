@@ -39,23 +39,43 @@ export function updateSelection(newSelection: Config.Item) {
 
 function selectionNext() {
 	let result: Config.Item = activeSelection;
-	let trigger = false;
-	iterate(function selectionPump(currentItem: Config.Item): boolean {
-		console.info("tested ", result, currentItem);
-		if (result === currentItem) {
-			trigger = true;
-			return false;
-		} else if (!trigger) {
-			return false;
+
+	if (result.children.length > 0) {
+		result = Config.getItem(result.children[0]);
+	} else {
+		while (true) {
+			const parent = Config.getParent(result);
+			if (parent.indexOfChild != parent.parentChildren.length - 1) {
+				result = Config.getItem(parent.parentChildren[parent.indexOfChild + 1])
+				break;
+			} else  {
+				if (parent.parent == null) {
+					// do nothing, end of docuemnt?
+					return;
+				}
+				result = parent.parent;
+				continue;
+			}
 		}
-
-		result = currentItem;
-		return true;
-	});
-
-	if (result === activeSelection) {
-		throw new Error("did not advance item");
 	}
+
+	// let trigger = false;
+	// iterate(function selectionPump(currentItem: Config.Item): boolean {
+	// 	console.info("tested ", result, currentItem);
+	// 	if (result === currentItem) {
+	// 		trigger = true;
+	// 		return false;
+	// 	} else if (!trigger) {
+	// 		return false;
+	// 	}
+
+	// 	result = currentItem;
+	// 	return true;
+	// });
+
+	// if (result === activeSelection) {
+	// 	throw new Error("did not advance item");
+	// }
 
 	updateSelection(result);
 }
@@ -142,11 +162,17 @@ function _iterateNext(stack: Config.Item[], currentItem: Config.Item, test: Iter
 }
 
 document.addEventListener("keypress", function selectionKeyPressListener(e: KeyboardEvent) {
-	// if (e.charCode === "j".charCodeAt(0)) {
-	// 	selectionNext();
-	// } else if (e.charCode === "k".charCodeAt(0)) {
-	// 	selectionPrev();
-	// }
+	// disable selection when inside edit box
+	if (document.activeElement instanceof HTMLTextAreaElement) {
+		return;
+	}
+	if (e.charCode === "s".charCodeAt(0)) {
+		e.stopPropagation();
+		selectionNext();
+	} else if (e.charCode === "w".charCodeAt(0)) {
+		e.stopPropagation();
+		selectionPrev();
+	}
 });
 
 export function getActiveSelection() {
