@@ -35,7 +35,8 @@ function insertBelow() {
 
 function insertRight() {
 	doInsert("right", false, (oldState, active, created) => {
-		oldState.itemTree.children.splice(0, 0, created.id);
+		oldState.itemTree.children.push(created.id);
+		// oldState.itemTree.children.splice(0, 0, created.id);
 	});
 }
 
@@ -47,15 +48,18 @@ function doInsert(
 	const active = Selection.getActiveSelection();
 	console.log("insert " + direction + " this:", active);
 
+	const parentToChange = forParent ? active.parent : active.id;
+
 	const createdItem = newItem();
-	createdItem.parent = active.parent;
+	createdItem.parent = parentToChange;
 
 	setStatePostReact(createdItem);
 
-	const itemToSetState = forParent ? active.parent : active.id;
-	ItemComponent.forItem(itemToSetState).setState(
-		(oldState: ItemState) => callback(oldState, active, createdItem)
-	);
+	ItemComponent.forItem(parentToChange)
+		.setState((oldState: ItemState) => {
+			callback(oldState, active, createdItem)
+			createdItem.validate(Config.getActiveConfig());
+		});
 }
 
 function setStatePostReact(itemToEdit: Config.Item) {

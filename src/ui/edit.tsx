@@ -17,6 +17,7 @@ export class EditState {
 	tags: Set<string>;
 	newLinks: Set<string>;
 	existingLinks: Set<string>;
+	deleteOnCancel: boolean;
 }
 
 export class EditComponent
@@ -32,6 +33,7 @@ export class EditComponent
 		this.state = {
 			tags: this.props.item.tags,
 			existingLinks: new Set(this.props.item.links),
+			deleteOnCancel: false,
 			...this.parseNewTextValue(this.props.item.text),
 		};
 
@@ -69,6 +71,9 @@ export class EditComponent
 
 	onCancel(event: React.MouseEvent<HTMLButtonElement> ) {
 		changeIsEditing(false);
+		this.setState((oldState, props: EditProperty) => {
+			props.item.delete(Config.getActiveConfig());
+		});
 	}
 
 	onTextEdit(event: React.FormEvent<HTMLTextAreaElement>) {

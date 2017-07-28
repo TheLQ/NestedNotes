@@ -44,7 +44,7 @@ function selectionNext() {
 		result = Config.getItem(result.children[0]);
 	} else {
 		while (true) {
-			const parent = Config.getParent(result);
+			const parent = result.getParent();
 			if (parent.indexOfChild != parent.parentChildren.length - 1) {
 				result = Config.getItem(parent.parentChildren[parent.indexOfChild + 1])
 				break;
@@ -66,7 +66,7 @@ function selectionPrev() {
 	let result: Config.Item = activeSelection;
 
 	while (true) {
-		const parent = Config.getParent(result);
+		const parent = result.getParent();
 		if (parent.indexOfChild != 0) {
 			result = Config.getItem(parent.parentChildren[parent.indexOfChild - 1])
 			while (result.children.length != 0) {
