@@ -19,7 +19,10 @@ export class EditState {
 	existingLinks: Set<string>;
 }
 
-export class EditComponent extends React.Component<EditProperty, EditState> {
+export class EditComponent
+	extends React.Component<EditProperty, EditState>
+	implements React.ComponentLifecycle<EditProperty, EditState> {
+
 	nestedComponents: ItemComponent[] = [];
 	private firstRun: boolean;
 
@@ -33,14 +36,18 @@ export class EditComponent extends React.Component<EditProperty, EditState> {
 		};
 
 		this.onTextEdit = this.onTextEdit.bind(this);
+		this.onKeyPress = this.onKeyPress.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
 		this.onTagAdd = this.onTagAdd.bind(this);
 		this.onTagRemove = this.onTagRemove.bind(this);
 		this.onLinkExistingRemove = this.onLinkExistingRemove.bind(this);
 	}
 
-	onSubmit(event: React.FormEvent<HTMLFormElement>) {
-		event.preventDefault();
+	onSubmit(event: React.FormEvent<HTMLFormElement> | null) {
+		// skip when chained from other functions
+		if (event != null) {
+			event.preventDefault();
+		}
 
 		// save state to props
 		const item = this.props.item;
@@ -61,6 +68,13 @@ export class EditComponent extends React.Component<EditProperty, EditState> {
 
 	onTextEdit(event: React.FormEvent<HTMLTextAreaElement>) {
 		this.setState(this.parseNewTextValue(event.currentTarget.value));
+	}
+
+	onKeyPress(event: React.KeyboardEvent<HTMLTextAreaElement>) {
+		event.stopPropagation();
+		if (event.shiftKey === true && event.key === "Enter") {
+			this.onSubmit(null);
+		}
 	}
 
 	onTagAdd(event: React.FormEvent<HTMLSelectElement>) {
@@ -164,7 +178,14 @@ export class EditComponent extends React.Component<EditProperty, EditState> {
 					<div>
 						<label><input type="checkbox" id="bulkAdd" name="bulkAdd" /> Bulk Add Mode</label>
 					</div>
-					<textarea rows={20} cols={80} value={this.state.textValue} onChange={this.onTextEdit} autoFocus />
+					<textarea
+						rows={20}
+						cols={80}
+						value={this.state.textValue}
+						onChange={this.onTextEdit}
+						onKeyPress={this.onKeyPress}
+						autoFocus
+					/>
 					<div>
 						{links}{this.state.newValue}
 					</div>
@@ -197,10 +218,8 @@ function changeIsEditing(to: boolean) {
 	}
 }
 
-document.addEventListener("keypress", function editKeyPressListener(e: KeyboardEvent) {
-	console.log("as", e);
-	if (e.charCode === "e".charCodeAt(0)) {
-		e.stopPropagation();
+document.addEventListener("keyup", function editKeyPressListener(e: KeyboardEvent) {
+	if (e.key === "e") {
 		changeIsEditing(true);
 	}
 });
