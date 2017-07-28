@@ -35,6 +35,7 @@ export class EditComponent
 			...this.parseNewTextValue(this.props.item.text),
 		};
 
+		this.onCancel = this.onCancel.bind(this);
 		this.onTextEdit = this.onTextEdit.bind(this);
 		this.onKeyPress = this.onKeyPress.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
@@ -63,6 +64,10 @@ export class EditComponent
 
 		// and then cleanup
 
+		changeIsEditing(false);
+	}
+
+	onCancel(event: React.MouseEvent<HTMLButtonElement> ) {
 		changeIsEditing(false);
 	}
 
@@ -202,6 +207,7 @@ export class EditComponent
 					</p>
 				</fieldset>
 
+				<button id="cancel" type="reset" onClick={this.onCancel}>Cancel</button>
 				<input type="submit" value="submit" />
 			</form>
 		);
