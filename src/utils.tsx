@@ -7,3 +7,10 @@ export function indexOfOrError(haystack: any[], needle: any, errorMessage: strin
 	}
 	return result;
 }
+
+export function deleteFrom(haystack: any[], needle: any, deleteCount: number = 1) {
+	haystack.splice(
+		indexOfOrError(haystack, needle),
+		deleteCount
+	);
+}

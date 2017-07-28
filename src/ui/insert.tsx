@@ -1,5 +1,7 @@
 import uuid from "uuid/v4";
+
 import * as Config from "../config";
+import * as Utils from "../utils";
 import {ItemComponent, ItemState} from "./item";
 import * as Selection from "./selection";
 
@@ -53,7 +55,7 @@ function doInsert(
 	const createdItem = newItem();
 	createdItem.parent = parentToChange;
 
-	setStatePostReact(createdItem);
+	setEditPostReact(createdItem);
 
 	ItemComponent.forItem(parentToChange)
 		.setState((oldState: ItemState) => {
@@ -62,7 +64,7 @@ function doInsert(
 		});
 }
 
-function setStatePostReact(itemToEdit: Config.Item) {
+function setEditPostReact(itemToEdit: Config.Item) {
 	const editListener = (removed: boolean, item: ItemComponent) => {
 		if (item.props.itemId !== itemToEdit.id) {
 			return;
@@ -81,6 +83,22 @@ function setStatePostReact(itemToEdit: Config.Item) {
 	ItemComponent.componentRefListeners.push(editListener);
 }
 
+function deleteSelected() {
+	const active = Selection.getActiveSelection();
+
+	// keep selection valid
+	// TODO: doesn't work if deleting tree
+	Selection.selectionNext();
+	if (Selection.getActiveSelection() == active) {
+		Selection.selectionPrev();
+	}
+
+	ItemComponent.forItem(active.parent)
+		.setState((oldState: ItemState) => {
+			Utils.deleteFrom(oldState.itemTree.children, active.id);
+		});
+}
+
 document.addEventListener("keypress", function editKeyPressListener(e: KeyboardEvent) {
 	// stop from triggering inside edit
 	if (document.activeElement instanceof HTMLTextAreaElement) {
@@ -93,5 +111,7 @@ document.addEventListener("keypress", function editKeyPressListener(e: KeyboardE
 		insertBelow();
 	} else if (e.key === "D" && e.shiftKey === true) {
 		insertRight();
+	} else if (e.key=== "Delete") {
+		deleteSelected();
 	}
 });

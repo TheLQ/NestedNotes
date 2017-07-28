@@ -37,7 +37,7 @@ export function updateSelection(newSelection: Config.Item) {
 	activeSelection = newSelection;
 }
 
-function selectionNext() {
+export function selectionNext() {
 	let result: Config.Item = activeSelection;
 
 	if (result.children.length > 0) {
@@ -62,7 +62,7 @@ function selectionNext() {
 	updateSelection(result);
 }
 
-function selectionPrev() {
+export function selectionPrev() {
 	let result: Config.Item = activeSelection;
 
 	while (true) {
