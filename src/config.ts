@@ -2,6 +2,8 @@ import jQuery from "jquery";
 
 import * as ItemReact from "./ui/item";
 
+type NoteMap = Map<string, Item>;
+
 export class Root {
 	static fromJson(rawJson: any): Root {
 		const newRoot = new Root();
@@ -11,16 +13,23 @@ export class Root {
 
 		for (const key in rawJson.notes) {
 			if (rawJson.notes.hasOwnProperty(key)) {
-				const value = Item.fromJson(rawJson.notes[key]);
+				const rawItem = rawJson.notes[key];
+				if (key != rawItem.id) {
+					throw new Error("map id is " + key + " but nested id is " + rawJson.id);
+				}
+				const value = Item.fromJson(rawItem);
 				newRoot.notes.set(key, value);
 			}
+		}
+		for (const item of newRoot.notes.values()) {
+			validateItem(item, newRoot.notes);
 		}
 
 		return newRoot;
 	}
 
 	public globalsettings: GlobalSettings;
-	public notes: Map<string, Item>;
+	public notes: NoteMap;
 	public roots: string[];
 
 	toJson(): any {
@@ -139,6 +148,27 @@ export function saveActiveConfig() {
 
 export function getActiveConfig() {
 	return activeConfig;
+}
+
+export function validateItem(item: Item, notes: NoteMap) {
+	if (notes == null) {
+		notes = activeConfig.notes;
+	}
+
+	if (!notes.has(item.id)) {
+		throw new Error("Failed to find id " + item.id);
+	}
+
+	if (item.parent != null) {
+		const parent = notes.get(item.parent);
+		if (parent == null) {
+			throw new Error("Failed to find parent id " + item.parent);
+		} else if (parent.children == null) {
+			throw new Error("Parent id " + parent.id + " has no children");
+		} else if (parent.children.indexOf(item.id) == -1) {
+			throw new Error("Parent id " + parent.id + " does not contain it's child id " + item.id);
+		}
+	}
 }
 
 export function getParent(curItem: Item): ParentData {
