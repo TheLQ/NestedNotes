@@ -119,6 +119,7 @@ export class EditComponent
 	}
 
 	onTagNewAdd(event: React.FormEvent<HTMLButtonElement>) {
+		event.preventDefault();
 		this.setState((oldState: EditState) => {
 			oldState.tags.add(oldState.newTagText);
 			oldState.newTagText = "";
@@ -292,6 +293,7 @@ function parseLinks(input: string) {
 }
 
 export function insideForm(): boolean {
-	return document.activeElement instanceof HTMLTextAreaElement
-		|| document.activeElement instanceof HTMLInputElement;
+	return document.activeElement.form != null;
+	// return document.activeElement instanceof HTMLTextAreaElement
+	// 	|| document.activeElement instanceof HTMLInputElement;
 }

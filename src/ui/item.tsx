@@ -87,7 +87,7 @@ export class ItemComponent
 			: null;
 
 		return (
-			<li onClick={this.onClickItem} className={this.props.even ? "genericEven" : "genericOdd"}>
+			<li onClick={this.onClickItem} className={(this.props.even ? "itemEven" : "itemOdd") + " item"}>
 				<div className={this.state.isSelected ? "item-selected" : "item-init"}  >
 					{tags}{links}{this.state.itemTree.text}
 				</div>

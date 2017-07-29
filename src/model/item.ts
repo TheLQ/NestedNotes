@@ -70,33 +70,51 @@ export default class ItemModel {
 	}
 
 	validate(root: RootModel) {
-		if (!root.notes.has(this.id)) {
-			throw new Error("Failed to find id " + this.id);
-		} else if (this.children == null) {
-			throw new Error("children is null for " + this.id);
-		} else if (this.tags == null) {
-			throw new Error("tags is null for " + this.id);
-		} else if (this.settings == null) {
-			throw new Error("settings is null for " + this.id);
-		} else if (this.links == null) {
-			throw new Error("links is null for " + this.id);
-		} else if (this.text == null) {
-			throw new Error("text is null for " + this.id);
-		}
+		try {
+			if (!root.notes.has(this.id)) {
+				throw new Error("Failed to find id " + this.id);
+			} else if (this.children == null) {
+				throw new Error("children is null for " + this.id);
+			} else if (this.tags == null) {
+				throw new Error("tags is null for " + this.id);
+			} else if (this.settings == null) {
+				throw new Error("settings is null for " + this.id);
+			} else if (this.links == null) {
+				throw new Error("links is null for " + this.id);
+			} else if (this.text == null) {
+				throw new Error("text is null for " + this.id);
+			}
 
-		if (this.parent == null) {
-			if (root.children.indexOf(this.id) == -1) {
-				throw new Error("Item " + this.id + " has no parent but not in roots");
+			if (this.parent == null) {
+				if (root.children.indexOf(this.id) == -1) {
+					throw new Error("Item " + this.id + " has no parent but not in roots");
+				}
+			} else {
+				const parent = root.notes.get(this.parent);
+				try {
+					if (parent == null) {
+						throw new Error("Failed to find parent id " + this.parent);
+					} else if (parent.children == null) {
+						throw new Error("Parent id " + parent.id + " has no children");
+					} else if (parent.children.indexOf(this.id) == -1) {
+						throw new Error("Parent id " + parent.id + " does not contain it's child id " + this.id);
+					}
+				} catch (error) {
+					console.log("parent item", parent);
+					throw error;
+				}
+
 			}
-		} else {
-			const parent = root.notes.get(this.parent);
-			if (parent == null) {
-				throw new Error("Failed to find parent id " + this.parent);
-			} else if (parent.children == null) {
-				throw new Error("Parent id " + parent.id + " has no children");
-			} else if (parent.children.indexOf(this.id) == -1) {
-				throw new Error("Parent id " + parent.id + " does not contain it's child id " + this.id);
-			}
+		} catch (error) {
+			console.log("item", this);
+			throw error;
+		}
+	}
+
+	applyRecursive(root: RootModel, callback: (value: ItemModel) => void) {
+		callback(this);
+		for (const child of this.children) {
+			root.getItem(child).applyRecursive(root, callback);
 		}
 	}
 

@@ -98,7 +98,12 @@ function deleteSelected() {
 	ItemComponent.forItem(active.parent)
 		.setState((oldState: ItemState) => {
 			Utils.deleteFrom(oldState.itemTree.children, active.id);
+			active.applyRecursive(ActiveRoot.getActiveConfig(), (child: ItemModel) => {
+				ActiveRoot.getActiveConfig().notes.delete(child.id);
+			});
 		});
+
+	ActiveRoot.saveActiveConfig();
 }
 
 document.addEventListener("keypress", function editKeyPressListener(e: KeyboardEvent) {
@@ -108,12 +113,24 @@ document.addEventListener("keypress", function editKeyPressListener(e: KeyboardE
 	}
 	console.log("e", e);
 	if (e.key === "W" && e.shiftKey === true) {
+		// stop from triggering inside edit
+		e.preventDefault();
+
 		insertAbove();
 	} else if (e.key === "S" && e.shiftKey === true) {
+		// stop from triggering inside edit
+		e.preventDefault();
+
 		insertBelow();
 	} else if (e.key === "D" && e.shiftKey === true) {
+		// stop from triggering inside edit
+		e.preventDefault();
+
 		insertRight();
-	} else if (e.key=== "Delete") {
+	} else if (e.key === "Delete") {
+		// stop from triggering inside edit
+		e.preventDefault();
+
 		deleteSelected();
 	}
 });
