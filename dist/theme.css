@@ -22,16 +22,28 @@ textarea {
 }
 
 /* .generic:nth-child(even) li { */
-.genericEven {
-    background: #333333 !important;
-    background-color: #333333 !important;
+.itemEven {
+	background-color: #333333 !important;
+}
+
+.itemEven ul {
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: #121212 !important;
 }
 
 /* .generic:nth-child(odd) li { */
-.genericOdd {
-    background: #121212 !important;
-    background-color: #121212 !important;
+.itemOdd {
+	background-color: #121212 !important;
+
 }
+
+.itemOdd ul {
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: #333333 !important;
+}
+
 
 .links {
     font-size: 9px;
