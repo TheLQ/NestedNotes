@@ -10,7 +10,7 @@ gulpfile.js
 dist/bundle.js*
 
 coverage/
-src-php/example.json*
+src-php/example*.json*
 treenotebook*
 package-lock.json
 core
