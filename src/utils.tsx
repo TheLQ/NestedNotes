@@ -9,8 +9,7 @@ export function indexOfOrError(haystack: any[], needle: any, errorMessage: strin
 }
 
 export function deleteFrom(haystack: any[], needle: any, deleteCount: number = 1) {
-	haystack.splice(
-		indexOfOrError(haystack, needle),
-		deleteCount
-	);
+	const index = indexOfOrError(haystack, needle);
+	haystack.splice(index, deleteCount);
+	return index;
 }
