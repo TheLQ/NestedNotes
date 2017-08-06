@@ -95,10 +95,9 @@ gulp.task("testLint", ["testCompile"], () => {
 gulp.task("cleanBundle", tasks.clean("./dist/bundle.js*"));
 
 gulp.task("bundle", ["clean", "testClean", "cleanBundle"], () => {
-	debugger;
 	const tsProject = newTsProject();
 
-	gulp.src('src/main.tsx')
+	gulp.src("src/main.tsx")
 		.pipe(sourcemaps.init({ loadMaps: true }))
 		.pipe(rollup({
 			// no entry needed, gulp-better-rollup automatically does this
@@ -115,7 +114,7 @@ gulp.task("bundle", ["clean", "testClean", "cleanBundle"], () => {
 					sourceMap: true,
 				}),
 				rollupTypescript({
-					typescript: require('typescript')
+					typescript: require("typescript")
 				}),
 				// needed for react and react-dom
 				replace({ "process.env.NODE_ENV": JSON.stringify("development") }),
@@ -144,9 +143,9 @@ gulp.task("watch", ["bundle"], () => {
 	return gulp.watch(
 		[SOURCE_ALL_FILES, TEST_ALL_FILES],
 		{
-			debounceDelay: 5000/*ms*/
+			debounceDelay: 5000/*ms*/,
 		},
-		["bundle"]
+		["bundle"],
 	);
 });
 
