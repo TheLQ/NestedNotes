@@ -20,10 +20,14 @@ import * as Karma from "karma";
 import * as commonjs from "rollup-plugin-commonjs";
 import * as nodeResolve from "rollup-plugin-node-resolve";
 import * as replace from "rollup-plugin-replace";
-import * as rollupTypescript from "rollup-plugin-typescript";
+import * as rollupTypescript from "rollup-plugin-typescript2";
 import * as rollupBabel from "rollup-plugin-babel";
 // import * as rollup from "rollup-stream";
-import * as rollup from "gulp-better-rollup";
+// import * as rollup from "gulp-better-rollup";
+
+import * as rollup from "rollup";
+// const rollup = require('rollup');
+
 import * as source from "vinyl-source-stream";
 import * as buffer from "vinyl-buffer";
 
@@ -94,40 +98,41 @@ gulp.task("testLint", ["testCompile"], () => {
 
 gulp.task("cleanBundle", tasks.clean("./dist/bundle.js*"));
 
-gulp.task("bundle", ["clean", "testClean", "cleanBundle"], () => {
-	const tsProject = newTsProject();
+gulp.task("bundle", async () => {
+	const bundle = await rollup.rollup({
+		entry: "./src/main.tsx",
+		plugins: [
+			nodeResolve({
+				module: true,
+				jsnext: true,
+				browser: true,
+				extensions: [".js", ".json", ".ts", ".tsx"],
+				// preferBuiltins: false,
+			}),
+			commonjs({
+				include: "node_modules/**",
+				sourceMap: true,
+				namedExports: {
+					"node_modules/react/react.js": [ "Children", "Component", "createElement" ]
+				}
+			}),
+			rollupTypescript({
+				typescript: require("typescript"),
+				abortOnError: false,
+				// verbosity: 3,
+				// check: false,
+			}),
+			// needed for react and react-dom
+			replace({ "process.env.NODE_ENV": JSON.stringify("development") }),
+		]
+	});
 
-	gulp.src("src/main.tsx")
-		.pipe(sourcemaps.init({ loadMaps: true }))
-		.pipe(rollup({
-			// no entry needed, gulp-better-rollup automatically does this
-			plugins: [
-				nodeResolve({
-					module: true,
-					jsnext: true,
-					browser: true,
-					extensions: [".js", ".json", ".ts", ".tsx"],
-					// preferBuiltins: false,
-				}),
-				commonjs({
-					include: "node_modules/**",
-					sourceMap: true,
-				}),
-				rollupTypescript({
-					typescript: require("typescript")
-				}),
-				// needed for react and react-dom
-				replace({ "process.env.NODE_ENV": JSON.stringify("development") }),
-
-			],
-		}, {
-				// also rollups `sourceMap` option is replaced by gulp-sourcemaps plugin
-				format: "iife",
-				moduleName: "selfnotes",
-			}))
-		.pipe(rename("bundle.js"))
-		.pipe(sourcemaps.write(".", {}))
-		.pipe(gulp.dest("./dist"));
+	await bundle.write({
+		format: "iife",
+		moduleName: "selfnotes",
+		dest: "./dist/bundle.js",
+		sourceMap: true,
+	});
 });
 
 gulp.task("build", ["compile", "testCompile", "bundle"], () => {
