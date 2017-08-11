@@ -1,7 +1,7 @@
-import { ItemModel } from "../../model/item";
-import { UserDataModel } from "../../model/userData";
+import { ItemState } from "../../state/item";
+import { UserState } from "../../state/user";
 
-export function deleteItem(item: ItemModel, root: UserDataModel) {
+export function deleteItem(item: ItemState, root: UserState) {
 	// const parent = getItem(root, item.parent);
 	// if (parent != null) {
 	// 	parent.children.splice(

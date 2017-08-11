@@ -1,9 +1,9 @@
-import { ItemModel } from "./item";
-import { UserDataModel } from "./userData";
+import { ItemState } from "./item";
+import { UserState } from "./user";
 
 // ----- Item Data ------
 
-export function getItem(userData: UserDataModel, id: string): ItemModel {
+export function getItem(userData: UserState, id: string): ItemState {
 	if (id == null) {
 		throw new Error("id is " + id);
 	}
@@ -18,7 +18,7 @@ export function getItem(userData: UserDataModel, id: string): ItemModel {
 	return item;
 }
 
-export function getParent(item: ItemModel, userData: UserDataModel): ParentData {
+export function getParent(item: ItemState, userData: UserState): ParentData {
 	if (item.parent != null) {
 		const parent = getItem(userData, item.parent);
 		const childIndex = parent.childNotes.indexOf(item.id);
@@ -45,12 +45,12 @@ export function getParent(item: ItemModel, userData: UserDataModel): ParentData 
 }
 
 interface ParentData {
-	parent: ItemModel | null;
+	parent: ItemState | null;
 	parentChildren: string[];
 	indexOfChild: number;
 }
 
-export function getAllTags(userData: UserDataModel): string[] {
+export function getAllTags(userData: UserState): string[] {
 	const tags: string[] = [];
 	for (const item of Object.values(userData.notes)) {
 		for (const tag of item.tags) {
@@ -64,7 +64,7 @@ export function getAllTags(userData: UserDataModel): string[] {
 
 // ------ Utils ----
 
-export function applyRecursive(item: ItemModel, root: UserDataModel, callback: (value: ItemModel) => void) {
+export function applyRecursive(item: ItemState, root: UserState, callback: (value: ItemState) => void) {
 	callback(item);
 	for (const child of item.childNotes) {
 		applyRecursive(
@@ -75,7 +75,7 @@ export function applyRecursive(item: ItemModel, root: UserDataModel, callback: (
 	}
 }
 
-export function validate(userData: UserDataModel) {
+export function validate(userData: UserState) {
 	for (const item of Object.values(userData.notes)) {
 		try {
 			if (!(item.id in userData.notes)) {

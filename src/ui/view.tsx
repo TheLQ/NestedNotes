@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { AppDataModel } from "../model/appData";
+import { RootState } from "../state/root";
 
 import TagFilter from "../redux/ui/tagFilter";
 
@@ -20,7 +20,7 @@ function newViewComponent(props: StateFromProps): JSX.Element {
 	);
 }
 
-function mapStateToProps(state: AppDataModel, props: any): StateFromProps {
+function mapStateToProps(state: RootState, props: any): StateFromProps {
 	return {
 		renderedRoots: state.activeRoots,
 	};

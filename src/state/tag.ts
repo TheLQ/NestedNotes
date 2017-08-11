@@ -1,4 +1,4 @@
-export interface TagModel {
+export interface TagState {
 	id: string;
 	name: string;
 }

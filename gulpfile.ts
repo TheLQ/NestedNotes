@@ -107,7 +107,7 @@ gulp.task("bundle", async () => {
 				jsnext: true,
 				browser: true,
 				extensions: [".js", ".json", ".ts", ".tsx"],
-				// preferBuiltins: false,
+				preferBuiltins: false,
 			}),
 			commonjs({
 				include: "node_modules/**",

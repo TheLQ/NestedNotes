@@ -1,14 +1,14 @@
 import React from "react"; 
 import { connect } from "react-redux";
 
-import { AppDataModel } from "../../model/appData";
-import { TagModel } from "../../model/tag";
+import { RootState } from "../../state/root";
+import { TagState } from "../../state/tag";
 
 import TagFilterButton from "./tagFilterButton";
 
 interface TagFilterPropsFromState {
-	tags: TagModel[];
-	selectedTag: TagModel | null;
+	tags: TagState[];
+	selectedTag: TagState | null;
 }
 
 export function TagFilter(props: TagFilterPropsFromState): JSX.Element {
@@ -22,7 +22,7 @@ export function TagFilter(props: TagFilterPropsFromState): JSX.Element {
 	return <div>{tagButtons}</div>;
 }
 
-function mapStateToProps(state: AppDataModel): TagFilterPropsFromState {
+function mapStateToProps(state: RootState): TagFilterPropsFromState {
 	return {
 		tags: Object.values(state.userData.tags),
 		selectedTag: state.selectedTag,

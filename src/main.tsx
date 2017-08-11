@@ -2,8 +2,8 @@
 
 import ReactDOM from "react-dom";
 
-import * as Storage from "./model/storage";
-import { UserDataModel } from "./model/userData";
+import * as Storage from "./state/storage";
+import { UserState } from "./state/user";
 
 import * as NotesRedux from "./redux/factory";
 import * as Utils from "./utils";
@@ -48,7 +48,7 @@ export function main() {
 		document.getElementById("react-content"),
 	);
 
-	Storage.initActiveConfig((data: UserDataModel) => {
+	Storage.initActiveConfig((data: UserState) => {
 		NotesRedux.onUserDataLoad(data);
 
 		const loading = document.getElementById("loading");

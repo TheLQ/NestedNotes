@@ -25,6 +25,7 @@
     "@types/react-dom": "^15.5.1",
     "@types/react-redux": "^4.4.47",
     "@types/react-test-renderer": "^15.5.2",
+    "@types/remote-redux-devtools": "^0.5.0",
     "@types/shortid": "0.0.29",
     "@types/uuid": "^3.4.0",
     "babel-cli": "^6.24.1",
@@ -66,6 +67,7 @@
     "multipipe": "^1.0.2",
     "react-addons-test-utils": "^15.6.0",
     "react-test-renderer": "^15.6.1",
+    "remote-redux-devtools": "^0.5.12",
     "rollup": "^0.41.6",
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-commonjs": "^8.0.2",
@@ -83,7 +85,7 @@
   },
   "scripts": {
     "gulp": "gulp",
-    "gulpc": "tsc --target es2017 gulpfile.ts || true && gulp"
+    "gulpc": "tsc --target es5 gulpfile.ts || true && gulp"
   },
   "author": "Leon Blakey <leon.m.blakey at gmail.com>",
   "license": "ISC"

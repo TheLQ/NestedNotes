@@ -2,26 +2,19 @@ import React from "react";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 
-import { AppDataModel } from "../model/appData";
-import { UserDataModel } from "../model/userData";
+import { UserState } from "../state/user";
 
 import View from "../ui/view";
-import * as Reducers from "./reducers";
+import * as Actions from "./reducers/Actions";
+import RootReducer from "./reducers/root";
 
-const initData: AppDataModel = {
-	userData: {
-		notes: {},
-		tags: {},
-		rootNotes: [],
-	},
-	activeRoots: [],
-	selectedTag: null,
-};
+import devToolsEnhancer from "remote-redux-devtools";
 
-const store = createStore(Reducers.ALL_REDUCERS, initData);
+// const store = createStore(RootReducer);
+const store = createStore(RootReducer, devToolsEnhancer());
 
-export function onUserDataLoad(fileState: UserDataModel) {
-	store.dispatch(Reducers.initUserData(fileState));
+export function onUserDataLoad(fileState: UserState) {
+	store.dispatch(Actions.initUser(fileState));
 }
 
 export function createReact() {

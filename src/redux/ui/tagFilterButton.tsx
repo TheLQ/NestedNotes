@@ -2,19 +2,19 @@ import React from "react";
 import { connect } from "react-redux";
 import Redux from "redux";
 
-import { TagModel } from "../../model/tag";
+import { TagState } from "../../state/tag";
 
-import * as Reducers from "../reducers";
+import * as Actions from "../reducers/Actions";
 
 interface TagFilterButtonProperty {
-	tag: TagModel;
+	tag: TagState;
 	selected: boolean;
 }
 
 function mapDispatchToProps(dispatch: Redux.Dispatch</*Action*/any>, ownProps: TagFilterButtonProperty) {
 	return {
 		onClick: () => {
-			dispatch(Reducers.activeTag(ownProps.tag))
+			dispatch(Actions.activeTag(ownProps.tag));
 		},
 	};
 }

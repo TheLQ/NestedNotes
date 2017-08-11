@@ -1,3 +1,3 @@
 export interface SettingsModel {
-	name: string;
+	name?: string;
 }
