@@ -103,3 +103,13 @@ textarea {
 .errorDisplayed {
     color: red;
 }
+
+#error-box {
+    /* PSOD */
+    color: white;
+    background-color: #AA00AA;
+    /* stick to bottom */
+    position: absolute;
+    width: 100%;
+    bottom: 0px;
+}

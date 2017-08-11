@@ -1,17 +1,18 @@
 "use strict";
 
-import React from "react";
 import ReactDOM from "react-dom";
 
-import * as ActiveRoot from "./model/active";
-import * as EventHandler from "./ui/eventHandlers";
-import * as View from "./ui/view";
+import * as Storage from "./model/storage";
+import { UserDataModel } from "./model/userData";
+
+import * as NotesRedux from "./redux/factory";
+import * as Utils from "./utils";
 
 // initialize
-import "./ui/edit";
-import "./ui/insert";
-import "./ui/move";
-import "./ui/selection";
+// import "./ui/edit";
+// import "./ui/insert";
+// import "./ui/move";
+// import "./ui/selection";
 
 // window.addEventListener('error', (e) => {
 //     // e instanceof ErrorEvent
@@ -25,7 +26,7 @@ function globalErrorHandler(event: ErrorEvent) {
 	extra += !event.error ? "" : "\nerror: " + event.error;
 
 	// You can view the information in an alert to see things working like this:
-	alert("Error: " + event.message + "\nfilename: " + event.filename + "\nline: " + event.lineno + extra);
+	Utils.setError("Error: " + event.message + "\nfilename: " + event.filename + "\nline: " + event.lineno + extra);
 
 	// TODO: Report this error via ajax so you can keep track
 	//       of what pages have JS issues
@@ -42,24 +43,19 @@ window.addEventListener("load", main);
 
 export function main() {
 	console.log("load EventListener");
+	ReactDOM.render(
+		NotesRedux.createReact(),
+		document.getElementById("react-content"),
+	);
 
-	ActiveRoot.initActiveConfig(() => {
-		ReactDOM.render(
-			makeReactComponent(),
-			document.getElementById("replaceMe"),
-		);
-
-		EventHandler.onPostReactInit(ActiveRoot.getActiveConfig());
+	Storage.initActiveConfig((data: UserDataModel) => {
+		NotesRedux.onUserDataLoad(data);
 
 		const loading = document.getElementById("loading");
 		if (loading != null) {
 			loading.outerHTML = "";
 		}
 	});
-}
-
-export function makeReactComponent() {
-	return <View.ViewComponent initRenderer={View.defaultRenderer} />;
 }
 
 console.log("main end");

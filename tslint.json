@@ -10,7 +10,8 @@
         "object-literal-sort-keys": false,
         "member-access": false,
         "no-console": false,
-        "indent": [true, "tabs", 2]
+        "indent": [true, "tabs", 2],
+        "interface-name": false
     },
     "rulesDirectory": []
 }

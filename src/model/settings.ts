@@ -1,3 +1,3 @@
-export default class Settings {
-	public name: string;
+export interface SettingsModel {
+	name: string;
 }

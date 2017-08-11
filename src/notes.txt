@@ -1,0 +1,6 @@
+Bug #1 - Found Aug 2017
+
+
+
+
+default typescript+rollup

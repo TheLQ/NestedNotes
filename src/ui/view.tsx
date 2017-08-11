@@ -1,64 +1,30 @@
 import React from "react";
+import { connect } from "react-redux";
 
-import * as ActiveRoot from "../model/active";
-import {ItemComponent} from "./item";
-import {ErrorComponent} from "./error";
-import * as Error from "./error";
-import * as Selection from "./selection";
+import { AppDataModel } from "../model/appData";
 
-export class ViewProperty {
-	initRenderer: Renderer;
+import TagFilter from "../redux/ui/tagFilter";
+
+import List from "./list";
+
+interface StateFromProps {
+	renderedRoots: string[];
 }
 
-export class ViewState {
-	filter: Renderer;
-}
-
-type Renderer = () => JSX.Element;
-export const defaultRenderer: Renderer = () => {
-	return ItemComponent.renderList(
-		ActiveRoot.getActiveConfig().children,
-		true
+function newViewComponent(props: StateFromProps): JSX.Element {
+	return (
+		<div>
+			<TagFilter />
+			<List rootNotes={props.renderedRoots} even={true} />
+		</div>
 	);
 }
 
-function tagFilter(tag: string): Renderer {
-	return () => {
-		const roots: string[] = [];
-		for (const item of ActiveRoot.getActiveConfig().notes.values()) {
-			if (item.tags.has(tag)) {
-				roots.push(item.id);
-			}
-		}
-		return ItemComponent.renderList(roots, true);
+function mapStateToProps(state: AppDataModel, props: any): StateFromProps {
+	return {
+		renderedRoots: state.activeRoots,
 	};
 }
 
-export class ViewComponent extends React.Component<ViewProperty, ViewState> {
-	changedFilter: boolean = true;
-
-	constructor(props: ViewProperty) {
-		super(props);
-		this.state = {
-			filter: this.props.initRenderer
-		};
-
-		this.onclick = this.onclick.bind(this);
-	}
-
-	onclick(e: React.FormEvent<HTMLButtonElement>) {
-		this.setState((oldState: ViewState) => {
-			oldState.filter = tagFilter("Later")
-		})
-	}
-
-	render() {
-		return (
-			<div>
-				<ErrorComponent ref={Error.setComponent} />
-				<button onClick={this.onclick}>Tag: Test</button>
-				{this.state.filter()}
-			</div>
-		)
-	}
-}
+const component = connect<StateFromProps, void, {}>(mapStateToProps)(newViewComponent);
+export default component;
