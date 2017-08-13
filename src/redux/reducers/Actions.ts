@@ -18,3 +18,22 @@ export function activeTag(newTag: TagState): AnyAction {
 		value: newTag,
 	};
 }
+
+export function selectedItem(id: string): AnyAction {
+	return {
+		type: ActionType.SELECTED_ITEM,
+		value: id,
+	};
+}
+
+export function selectedNext(): AnyAction {
+	return {
+		type: ActionType.SELECTED_ITEM_NEXT,
+	};
+}
+
+export function selectedPrev(): AnyAction {
+	return {
+		type: ActionType.SELECTED_ITEM_PREV,
+	};
+}

@@ -1,4 +1,3 @@
-import { TagState } from "./tag";
 import { UserState } from "./user";
 
 export interface RootState {
@@ -6,7 +5,10 @@ export interface RootState {
 
 	// generated ui data
 	activeRoots: string[];
-	selectedTag: TagState | null;
+
+	// ui state
+	selectedTag: string | null;
+	selectedItem: string | null;
 }
 
 export const initialState: RootState = {
@@ -16,5 +18,6 @@ export const initialState: RootState = {
 		rootNotes: [],
 	},
 	activeRoots: [],
+	selectedItem: null,
 	selectedTag: null,
 };

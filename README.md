@@ -5,6 +5,8 @@ Development
 
 Library soup
 
+* TypeScript for sanity
+  *  typescript-string-enum
 * Build - `npm run build` (defined in package.json)
     * Starts rollup
         * es6 module bundler

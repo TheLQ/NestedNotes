@@ -8,14 +8,12 @@ import TagFilterButton from "./tagFilterButton";
 
 interface TagFilterPropsFromState {
 	tags: TagState[];
-	selectedTag: TagState | null;
 }
 
 export function TagFilter(props: TagFilterPropsFromState): JSX.Element {
 	const tagButtons = props.tags.map((tagIn) => (
 			<TagFilterButton
 				tag={tagIn}
-				selected={tagIn === props.selectedTag}
 				key={tagIn.name}
 			/>
 	));
@@ -25,7 +23,6 @@ export function TagFilter(props: TagFilterPropsFromState): JSX.Element {
 function mapStateToProps(state: RootState): TagFilterPropsFromState {
 	return {
 		tags: Object.values(state.userData.tags),
-		selectedTag: state.selectedTag,
 	};
 }
 

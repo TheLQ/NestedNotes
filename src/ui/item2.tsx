@@ -33,7 +33,7 @@ function ItemComponent(props: ItemProperty & StateFromProps): JSX.Element {
 		const onClickHandler = (e: React.FormEvent<HTMLLIElement>) => {
 			onClickItem(props.id);
 		};
-		const selected = false /*props.selected*/ ? "item-selected" : "item-init";
+		const selected = props.selected ? "item-selected" : "item-init";
 		return (
 			<li onClick={onClickHandler} className={(props.even ? "itemEven" : "itemOdd") + " item"}>
 				<div className={selected}>
@@ -54,11 +54,13 @@ function mapStateToProps(state: RootState, props: ItemProperty): StateFromProps 
 	return {
 		...note,
 		tagsModel: note.tags.map((tagId) => state.userData.tags[tagId]),
+		selected: props.id === state.selectedItem,
 	};
 }
 
 interface StateFromProps extends ItemState {
 	tagsModel: TagState[];
+	selected: boolean;
 }
 
 const component = connect<StateFromProps, void, ItemProperty>(mapStateToProps)(ItemComponent);

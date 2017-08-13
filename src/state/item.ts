@@ -12,12 +12,20 @@ export interface ItemState {
 export function fillItemDefault(item: ItemState, roots: string[]) {
 	if (typeof item.id === "undefined") {
 		console.log("Invalid item: Missing id. ", item);
-		throw new Error("Invalid item: Missing id. " + item);
+		throw new Error("Invalid item: Missing id. " + item.id);
 	}
-	if (typeof item.parent === "undefined" && roots.indexOf(item.id) === -1) {
-		console.log("Invalid item: Missing parent. ", item);
-		throw new Error("Invalid item: Missing parent. " + item);
+	if (typeof item.parent === "undefined") {
+		if (roots.indexOf(item.id) === -1) {
+			console.log("Invalid item: Missing parent. ", item);
+			throw new Error("Invalid item: Missing parent. " + item.id);
+		}
+	} else {
+		if (roots.indexOf(item.id) !== -1) {
+			console.log("Invalid item: Illegal state, has parent and in rootNotes. ", item);
+			throw new Error("Invalid item: Illegal state, has parent and in rootNotes. " + item.id);
+		}
 	}
+
 	if (typeof item.childNotes === "undefined") {
 		item.childNotes = [];
 	}

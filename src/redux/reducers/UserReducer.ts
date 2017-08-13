@@ -1,5 +1,5 @@
 import { fillItemDefault } from "../../state/item";
-import { UserState, TagList } from "../../state/user";
+import { TagList, UserState } from "../../state/user";
 
 import ActionType from "./ActionType";
 

@@ -24,6 +24,7 @@ export function getParent(item: ItemState, userData: UserState): ParentData {
 		const childIndex = parent.childNotes.indexOf(item.id);
 		if (childIndex === -1) {
 			console.log("parent", parent);
+			console.log("item", item);
 			throw new Error("could not find child " + item.id + " in parent " + parent.id);
 		}
 		return {
