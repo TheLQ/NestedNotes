@@ -3,7 +3,7 @@
 import ReactDOM from "react-dom";
 
 import * as Storage from "./state/storage";
-import { UserState } from "./state/user";
+import { UserState } from "./state/UserState";
 
 import * as NotesRedux from "./redux/factory";
 import * as Utils from "./utils";

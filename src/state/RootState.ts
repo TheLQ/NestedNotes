@@ -1,4 +1,4 @@
-import { UserState } from "./user";
+import { UserState } from "./UserState";
 
 export interface RootState {
 	userData: UserState;

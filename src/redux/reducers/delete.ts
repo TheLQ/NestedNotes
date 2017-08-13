@@ -1,5 +1,5 @@
-import { ItemState } from "../../state/item";
-import { UserState } from "../../state/user";
+import { ItemState } from "../../state/ItemState";
+import { UserState } from "../../state/UserState";
 
 export function deleteItem(item: ItemState, root: UserState) {
 	// const parent = getItem(root, item.parent);

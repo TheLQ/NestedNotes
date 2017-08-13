@@ -1,5 +1,5 @@
-import { ItemState } from "./item";
-import { TagState } from "./tag";
+import { ItemState } from "./ItemState";
+import { TagState } from "./TagState";
 
 export type NoteList = IdList<ItemState>;
 export type TagList = IdList<TagState>;

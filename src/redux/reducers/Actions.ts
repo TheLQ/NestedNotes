@@ -1,7 +1,7 @@
 import { AnyAction } from "redux";
 
-import { TagState } from "../../state/tag";
-import { UserState } from "../../state/user";
+import { TagState } from "../../state/TagState";
+import { UserState } from "../../state/UserState";
 
 import ActionType from "./ActionType";
 

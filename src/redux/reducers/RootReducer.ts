@@ -1,6 +1,6 @@
 import { AnyAction } from "redux";
 
-import { initialState, RootState } from "../../state/root";
+import { initialState, RootState } from "../../state/RootState";
 
 import ActionType from "./ActionType";
 import SelectionReducer from "./SelectionReducer";

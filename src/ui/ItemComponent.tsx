@@ -1,12 +1,12 @@
 import React from "react"; 
 import { connect } from "react-redux";
 
-import { RootState } from "../state/root";
-import { ItemState } from "../state/item";
-import { TagState } from "../state/tag";
+import { ItemState } from "../state/ItemState";
+import { RootState } from "../state/RootState";
+import { TagState } from "../state/TagState";
 
-import * as Attribute from "./attribute";
-import List from "./list";
+import * as AttributeComponent from "./AttributeComponent";
+import ListComponent from "./ListComponent";
 
 interface ItemProperty {
 	id: string;
@@ -21,13 +21,13 @@ function onClickItem(id: string) {
 function ItemComponent(props: ItemProperty & StateFromProps): JSX.Element {
 	try {
 		const nested = props.childNotes.length > 0
-			? <List rootNotes={props.childNotes} even={!props.even} />
+			? <ListComponent rootNotes={props.childNotes} even={!props.even} />
 			: null;
 		const tags = props.tagsModel.length > 0
-			? [...props.tagsModel].map((curTag: TagState) => Attribute.newTag(curTag.name))
+			? [...props.tagsModel].map((curTag: TagState) => AttributeComponent.newTag(curTag.name))
 			: null;
 		const links = props.links.length > 0
-			? [...props.links].map((curLink: string) => Attribute.newLink(curLink))
+			? [...props.links].map((curLink: string) => AttributeComponent.newLink(curLink))
 			: null;
 
 		const onClickHandler = (e: React.FormEvent<HTMLLIElement>) => {

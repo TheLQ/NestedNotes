@@ -1,6 +1,6 @@
-import { ItemState } from "../../state/item";
+import { ItemState } from "../../state/ItemState";
 import * as StateTools from "../../state/tools";
-import { UserState } from "../../state/user";
+import { UserState } from "../../state/UserState";
 
 import ActionType from "./ActionType";
 

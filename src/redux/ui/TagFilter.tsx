@@ -1,10 +1,10 @@
 import React from "react"; 
 import { connect } from "react-redux";
 
-import { RootState } from "../../state/root";
-import { TagState } from "../../state/tag";
+import { RootState } from "../../state/RootState";
+import { TagState } from "../../state/TagState";
 
-import TagFilterButton from "./tagFilterButton";
+import TagFilterButton from "./TagFilterButton";
 
 interface TagFilterPropsFromState {
 	tags: TagState[];

@@ -1,10 +1,10 @@
-import { SettingsModel } from "./settings";
+import { SettingsState } from "./SettingsState";
 export interface ItemState {
 	readonly id: string;
 	parent: string;
 	childNotes: string[];
 	text: string;
-	settings: SettingsModel;
+	settings: SettingsState;
 	links: string[];
 	tags: string[];
 }

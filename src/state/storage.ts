@@ -1,7 +1,7 @@
 import jQuery from "jquery";
 
 import * as ModelTools from "./tools";
-import { UserState } from "./user";
+import { UserState } from "./UserState";
 
 import * as Utils from "../utils";
 

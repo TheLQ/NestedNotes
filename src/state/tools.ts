@@ -1,5 +1,5 @@
-import { ItemState } from "./item";
-import { UserState } from "./user";
+import { ItemState } from "./ItemState";
+import { UserState } from "./UserState";
 
 // ----- Item Data ------
 

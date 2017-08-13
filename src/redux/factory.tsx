@@ -2,10 +2,10 @@ import React from "react";
 import { Provider } from "react-redux";
 import { createStore, Store } from "redux";
 
-import { RootState } from "../state/root";
-import { UserState } from "../state/user";
+import { RootState } from "../state/RootState";
+import { UserState } from "../state/UserState";
 
-import View from "../ui/view";
+import ViewComponent from "../ui/ViewComponent";
 import * as Actions from "./reducers/Actions";
 import RootReducer from "./reducers/RootReducer";
 
@@ -21,7 +21,7 @@ export function onUserDataLoad(fileState: UserState) {
 export function createReact() {
 	return (
 		<Provider store={store}>
-			 <View />
+			 <ViewComponent />
 		</Provider>
 	);
 }

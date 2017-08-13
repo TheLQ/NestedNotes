@@ -2,8 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import Redux from "redux";
 
-import { RootState } from "../../state/root";
-import { TagState } from "../../state/tag";
+import { RootState } from "../../state/RootState";
+import { TagState } from "../../state/TagState";
 
 import * as Actions from "../reducers/Actions";
 
