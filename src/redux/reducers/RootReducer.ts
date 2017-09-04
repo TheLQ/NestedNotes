@@ -2,20 +2,13 @@ import { AnyAction } from "redux";
 
 import { initialState, RootState } from "../../state/RootState";
 
-import ActionType from "./ActionType";
-import SelectionReducer from "./SelectionReducer";
-import UserReducer from "./UserReducer";
+import ClientReducer from "./client/ClientReducer";
+import UserReducer from "./user/UserReducer";
 
-export default function RootReducer(state: RootState = initialState, action: AnyAction): RootState {
-	const type: ActionType = action.type;
-	const value = action.value;
-
-	const newUserData = UserReducer(state.userData, type, value);
-
+export default function RootReducer(state: RootState = initialState, rawAction: AnyAction): RootState {
+	const newUserState = UserReducer(state.user, rawAction);
 	return {
-		userData: newUserData,
-		selectedTag: type === ActionType.SELECTED_TAG ?  value : state.selectedTag,
-		selectedItem: SelectionReducer(state.selectedItem, type, value, newUserData),
-		activeRoots: newUserData.rootNotes,
+		user: newUserState,
+		client: ClientReducer(state.client, newUserState, rawAction),
 	};
 }

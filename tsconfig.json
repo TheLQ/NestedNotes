@@ -4,7 +4,8 @@
       "test/**/*"
   ],
   "exclude": [
-      "node_modules"
+      "node_modules",
+      "src/redux/reducers/tplReducer.ts"
   ],
   "compilerOptions": {
     /* Basic Options */                       

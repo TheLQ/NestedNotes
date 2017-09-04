@@ -1,11 +1,12 @@
 "use strict";
+import { initialState } from "./state/RootState";
 
 import ReactDOM from "react-dom";
 
-import * as Storage from "./state/storage";
-import { UserState } from "./state/UserState";
+import { initActiveConfig } from "./state/storage";
+import { UserState } from "./state/user/UserState";
 
-import * as NotesRedux from "./redux/factory";
+import * as MainRedux from "./redux/factory";
 import * as Utils from "./utils";
 
 // initialize
@@ -13,6 +14,7 @@ import * as Utils from "./utils";
 // import "./ui/insert";
 // import "./ui/move";
 // import "./ui/selection";
+import "./redux/factory";
 
 // window.addEventListener('error', (e) => {
 //     // e instanceof ErrorEvent
@@ -44,18 +46,25 @@ window.addEventListener("load", main);
 export function main() {
 	console.log("load EventListener");
 	ReactDOM.render(
-		NotesRedux.createReact(),
+		MainRedux.createReact(),
 		document.getElementById("react-content"),
 	);
 
-	Storage.initActiveConfig((data: UserState) => {
-		NotesRedux.onUserDataLoad(data);
+	// initActiveConfig(start);
+	startStatic();
+}
 
-		const loading = document.getElementById("loading");
-		if (loading != null) {
-			loading.outerHTML = "";
-		}
-	});
+function start(userState: UserState) {
+	MainRedux.onUserDataLoad(userState);
+
+	const loading = document.getElementById("loading");
+	if (loading != null) {
+		loading.outerHTML = "";
+	}
+}
+
+function startStatic() {
+	start(initialState.user);
 }
 
 console.log("main end");

@@ -1,14 +1,15 @@
-import React from "react"; 
+import React from "react";
 import { connect } from "react-redux";
 
-import { ItemState } from "../state/ItemState";
 import { RootState } from "../state/RootState";
-import { TagState } from "../state/TagState";
+import { ItemState } from "../state/user/ItemState";
+import { TagState } from "../state/user/TagState";
 
 import * as AttributeComponent from "./AttributeComponent";
 import ListComponent from "./ListComponent";
 
 interface ItemProperty {
+	viewId: string;
 	id: string;
 	even: boolean;
 }
@@ -21,7 +22,7 @@ function onClickItem(id: string) {
 function ItemComponent(props: ItemProperty & StateFromProps): JSX.Element {
 	try {
 		const nested = props.childNotes.length > 0
-			? <ListComponent rootNotes={props.childNotes} even={!props.even} />
+			? <ListComponent viewId={props.viewId} rootNotes={props.childNotes} even={!props.even} />
 			: null;
 		const tags = props.tagsModel.length > 0
 			? [...props.tagsModel].map((curTag: TagState) => AttributeComponent.newTag(curTag.name))
@@ -50,11 +51,12 @@ function ItemComponent(props: ItemProperty & StateFromProps): JSX.Element {
 }
 
 function mapStateToProps(state: RootState, props: ItemProperty): StateFromProps {
-	const note = state.userData.notes[props.id];
+	const view = state.client.views[props.viewId];
+	const note = view.items[props.id];
 	return {
 		...note,
-		tagsModel: note.tags.map((tagId) => state.userData.tags[tagId]),
-		selected: props.id === state.selectedItem,
+		tagsModel: note.tags.map((tagId) => view.tags[tagId]),
+		selected: props.id === view.selectedItem,
 	};
 }
 

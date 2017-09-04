@@ -1,3 +1,6 @@
+import { RootState } from "./state/RootState";
+import { StringMap } from "./state/StringMap";
+
 export function indexOfOrError(haystack: any[], needle: any, errorMessage: string = "indexOf failed to find needle") {
 	const result = haystack.indexOf(needle);
 	if (result === -1) {
@@ -19,4 +22,52 @@ export function setError(error: string) {
 	if (errorBox != null) {
 		errorBox.appendChild(new Text(error + "\n"));
 	}
+}
+
+export function assertUnreachable(x: never): never {
+	console.log("assert failed for", x);
+	throw new Error("Didn't expect to get here");
+}
+
+/**
+ * Copy object and apply onSingle transform to one key
+ * @param map 
+ * @param key 
+ * @param onSingle 
+ */
+export function mapSingle<V>(
+	map: StringMap<V>,
+	key: string,
+	onSingle: (val: V) => V,
+) {
+	const newMap = {...map};
+	newMap[key] = onSingle(newMap[key]);
+	return newMap;
+}
+
+export function getActiveView(rootState: RootState) {
+	const value = rootState.client.views[rootState.client.activeViewId];
+	if (value === undefined) {
+		console.log("views", rootState.client.views);
+		throw new Error(`cannot find view '${rootState.client.activeViewId}'`);
+	}
+	return value;
+}
+
+export function getFirstInMap<T>(map: StringMap<T>): T | null {
+	for(const key in map) {
+		if (!map.hasOwnProperty(key)) {
+			continue;
+		}
+		return map[key];
+	}
+	return null;
+}
+
+export function getFirstInMapOrError<T>(map: StringMap<T>): T {
+	const result = getFirstInMap(map);
+	if (result == null) {
+		throw new Error("map empty");
+	}
+	return result;
 }
