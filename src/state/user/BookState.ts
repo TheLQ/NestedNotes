@@ -1,4 +1,4 @@
-import { StringMap } from "../StringMap";
+import { Tree } from "../Tree";
 import { ItemState } from "./ItemState";
 import { TagState } from "./TagState";
 
@@ -7,5 +7,5 @@ export interface BookState {
 	items: ItemMap;
 }
 
-export type ItemMap = StringMap<ItemState>;
-export type TagMap = StringMap<TagState>;
+export type ItemMap = Tree<ItemState>;
+export type TagMap = Tree<TagState>;

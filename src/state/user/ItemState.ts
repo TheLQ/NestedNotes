@@ -15,17 +15,17 @@ export function fillItemDefault(item: ItemState, rootItemIds: string[]) {
 		console.log("Invalid item: Missing id. ", item);
 		throw new Error("Invalid item: Missing id. " + item.id);
 	}
-	// if (typeof item.parent === "undefined") {
-	// 	if (rootItemIds.indexOf(item.id) === -1) {
-	// 		console.log("Invalid item: Missing parent. ", item);
-	// 		throw new Error("Invalid item: Missing parent. " + item.id);
-	// 	}
-	// } else {
-	// 	if (rootItemIds.indexOf(item.id) !== -1) {
-	// 		console.log("Invalid item: Illegal state, has parent and in rootNotes. ", item);
-	// 		throw new Error("Invalid item: Illegal state, has parent and in rootNotes. " + item.id);
-	// 	}
-	// }
+	if (typeof item.parent === "undefined") {
+		if (rootItemIds.indexOf(item.id) === -1) {
+			console.log("Invalid item: Missing parent. ", item);
+			throw new Error("Invalid item: Missing parent. " + item.id);
+		}
+	} else {
+		if (rootItemIds.indexOf(item.id) !== -1) {
+			console.log("Invalid item: Illegal state, has parent and in rootNotes. ", item);
+			throw new Error("Invalid item: Illegal state, has parent and in rootNotes. " + item.id);
+		}
+	}
 
 	if (typeof item.childNotes === "undefined") {
 		item.childNotes = [];

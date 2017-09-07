@@ -1,9 +1,8 @@
-import { StringMap } from "../StringMap";
+import { ActiveStringMap } from "../StringMap";
 import { ClientViewState } from "./ClientViewState";
 
 export interface ClientState {
 	views: ClientViewMap;
-	activeViewId: string;
 }
 
-export type ClientViewMap = StringMap<ClientViewState>;
+export type ClientViewMap = ActiveStringMap<ClientViewState>;

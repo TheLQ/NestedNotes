@@ -1,64 +1,93 @@
+import lodash from "lodash";
 import { AnyAction } from "redux";
 
+import { ClientViewMap } from "../../../state/client/ClientState";
+import { ClientViewState } from "../../../state/client/ClientViewState";
 import * as StateTools from "../../../state/tools";
-import { BookState } from "../../../state/user/BookState";
 import { ItemState } from "../../../state/user/ItemState";
 
-import {
-	SelectedItemAction
-} from "../actions/BookActions";
+import { SelectedItemAction, SelectedNextAction, SelectedPrevAction } from "../actions/ViewActions";
 import ActionType from "../ActionType";
 
-export default SelectionReducer;
-function SelectionReducer(
-	state: BookState,
+export function SelectionReducer(
+	state: ClientViewMap,
 	rawAction: AnyAction,
-): BookState {
+): ClientViewMap {
 	switch (rawAction.type) {
 		case ActionType.SELECTED_ITEM: {
 			const action = rawAction as SelectedItemAction;
-			return {
-				...state,
-				selectedItem: action.value,
-			};
+
+			return ifViewId(state, action.viewId, selectNext);
 		}
 		case ActionType.SELECTED_ITEM_NEXT: {
-			if (state == null) {
-				throw new Error("illegal state: null selection");
+			const action = rawAction as SelectedNextAction;
+
+			return ifViewId(state, action.viewId, selectNext);
+		}
+		case ActionType.SELECTED_ITEM_NEXT_ACTIVE_VIEW: {
+			if (state.active === null) {
+				throw new Error("active view null");
 			}
-			return {
-				...state,
-				selectedItem: selectionNext(state),
-			};
+
+			return ifViewId(state, state.active, selectNext);
 		}
 		case ActionType.SELECTED_ITEM_PREV: {
-			return {
-				...state,
-				selectedItem: selectionPrev(state),
-			};
+			const action = rawAction as SelectedPrevAction;
+
+			return ifViewId(state, action.viewId, selectPrev);
+		}
+		case ActionType.SELECTED_ITEM_PREV_ACTIVE_VIEW: {
+			if (state.active === null) {
+				throw new Error("active view null");
+			}
+
+			return ifViewId(state, state.active, selectPrev);
 		}
 		default:
 			return state;
 	}
 }
 
-function selectionNext(book: BookState): string {
-	if (book.selectedItem == null) {
+function ifViewId(
+	state: ClientViewMap,
+	viewId: string,
+	callback: (view: ClientViewState) => string,
+): ClientViewMap {
+	return {
+		...state,
+		entries: lodash.mapValues(state.entries, (view) => {
+			if (viewId === view.viewId) {
+				return {
+					...view,
+					items: {
+						...view.items,
+						active: callback(view),
+					},
+				};
+			}
+
+			return view;
+		}),
+	};
+}
+
+function selectNext(view: ClientViewState): string {
+	const selectedId = view.items.active;
+	if (selectedId === null) {
 		throw new Error("illegal state: null selection");
 	}
-	const selectedId = book.selectedItem;
-	const selected = book.items[selectedId];
+	const selected = view.items.entries[selectedId];
 	if (selected.childNotes.length > 0) {
 		return selected.childNotes[0];
 	} else {
 		let child: ItemState = selected;
 		while (true) {
-			const parent = StateTools.getParent(child, book);
+			const parent = StateTools.getParent(view.items, child);
 			if (parent.indexOfChild !== parent.parentChildren.length - 1) {
 				return parent.parentChildren[parent.indexOfChild + 1];
 			} else {
-				if (parent.parent == null) {
-					// at last entry
+				if (parent.parent === null) {
+					// At last entry
 					return selectedId;
 				}
 				child = parent.parent;
@@ -68,30 +97,31 @@ function selectionNext(book: BookState): string {
 	}
 }
 
-function selectionPrev(book: BookState): string {
-	if (book.selectedItem == null) {
+function selectPrev(view: ClientViewState): string {
+	const selectedId = view.items.active;
+	if (selectedId === null) {
 		throw new Error("illegal state: null selection");
 	}
-	const selectedId = book.selectedItem;
-	let child = book.items[selectedId];
+	const child = view.items.entries[selectedId];
 
-	const parent = StateTools.getParent(child, book);
+	const parent = StateTools.getParent(view.items, child);
 	if (parent.indexOfChild !== 0) {
 		let prevSiblingId: string = parent.parentChildren[parent.indexOfChild - 1];
-		let prevSibling: ItemState = book.items[prevSiblingId];
+		let prevSibling: ItemState = view.items.entries[prevSiblingId];
 		while (prevSibling.childNotes.length !== 0) {
 			prevSiblingId = prevSibling.childNotes[prevSibling.childNotes.length - 1];
-			prevSibling = book.items[prevSiblingId];
+			prevSibling = view.items.entries[prevSiblingId];
 		}
+
 		return prevSiblingId;
 	} else {
-		if (parent.parent == null) {
+		if (parent.parent === null) {
 			// at first entry
 			return selectedId;
 		}
 		// child = parent.parent;
+
 		return parent.parent.id;
 		// break;
 	}
-
 }

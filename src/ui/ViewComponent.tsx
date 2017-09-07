@@ -25,12 +25,12 @@ function ViewComponent(props: StateFromProps & Props): JSX.Element {
 }
 
 function mapStateToProps(state: RootState, props: Props): StateFromProps {
-	const view = state.client.views[props.viewId];
+	const view = state.client.views.entries[props.viewId];
 	if (view == null) {
 		throw new Error(`view does not exist: ${props.viewId}`);
 	}
 	return {
-		renderedRoots: view.rootItems,
+		renderedRoots: view.items.roots,
 	};
 }
 

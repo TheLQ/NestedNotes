@@ -14,9 +14,9 @@ interface ViewActionValue<V> extends ViewAction {
 export type SelectedTagAction = ViewActionValue<string>;
 export type SelectedItemAction = ViewActionValue<string>;
 export type SelectedNextAction = ViewAction;
-export type SelectedNextActiveView = Action;
+export type SelectedNextActiveViewAction = Action;
 export type SelectedPrevAction = ViewAction;
-export type SelectedPrevActiveView = Action;
+export type SelectedPrevActiveViewAction = Action;
 
 // export function selectedBook(givenBookId: string): SelectedBookAction {
 // 	return {
@@ -48,7 +48,7 @@ export function selectedNext(viewId: string): SelectedNextAction {
 	};
 }
 
-export function selectedNextActiveView(): SelectedNextActiveView {
+export function selectedNextActiveView(): SelectedNextActiveViewAction {
 	return {
 		type: ActionType.SELECTED_ITEM_NEXT_ACTIVE_VIEW,
 	};
@@ -61,7 +61,7 @@ export function selectedPrev(viewId: string): SelectedPrevAction {
 	};
 }
 
-export function selectedPrevActiveView(): SelectedPrevActiveView {
+export function selectedPrevActiveView(): SelectedPrevActiveViewAction {
 	return {
 		type: ActionType.SELECTED_ITEM_PREV_ACTIVE_VIEW,
 	};

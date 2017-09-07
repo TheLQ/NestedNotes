@@ -1,10 +1,9 @@
-import React from "react"; 
+import React from "react";
 import { connect } from "react-redux";
 
 import { RootState } from "../../state/RootState";
 import { TagState } from "../../state/user/TagState";
 
-import { getActiveView } from "../../utils";
 import TagFilterButton from "./TagFilterButton";
 
 interface TagFilterProps {
@@ -26,10 +25,10 @@ export function TagFilter(props: TagFilterPropsFromState & TagFilterProps): JSX.
 	return <div>{tagButtons}</div>;
 }
 
-function mapStateToProps(state: RootState): TagFilterPropsFromState {
-	const view = getActiveView(state);
+function mapStateToProps(state: RootState, props: TagFilterProps): TagFilterPropsFromState {
+	const view = state.client.views.entries[props.viewId];
 	return {
-		tags: Object.values(view.tags),
+		tags: Object.values(view.tags.entries),
 	};
 }
 

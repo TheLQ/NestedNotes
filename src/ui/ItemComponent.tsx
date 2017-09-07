@@ -51,12 +51,12 @@ function ItemComponent(props: ItemProperty & StateFromProps): JSX.Element {
 }
 
 function mapStateToProps(state: RootState, props: ItemProperty): StateFromProps {
-	const view = state.client.views[props.viewId];
-	const note = view.items[props.id];
+	const view = state.client.views.entries[props.viewId];
+	const note = view.items.entries[props.id];
 	return {
 		...note,
-		tagsModel: note.tags.map((tagId) => view.tags[tagId]),
-		selected: props.id === view.selectedItem,
+		tagsModel: note.tags.map((tagId) => view.tags.entries[tagId]),
+		selected: props.id === view.items.active,
 	};
 }
 

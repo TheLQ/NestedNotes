@@ -12,5 +12,8 @@ dist/bundle.js*
 coverage/
 src-php/example*.json*
 treenotebook*
-package-lock.json
 core
+.rpt2_cache
+src.bak
+old
+nohup.out

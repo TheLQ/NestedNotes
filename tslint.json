@@ -1,17 +1,30 @@
 {
     "defaultSeverity": "error",
     "extends": [
-        "tslint:recommended",
-        "tslint-react"
+        "tslint:all"
     ],
     "jsRules": {},
     "rules": {
         "max-classes-per-file": false,
         "object-literal-sort-keys": false,
-        "member-access": false,
+        // "member-access": false,
         "no-console": false,
         "indent": [true, "tabs", 2],
-        "interface-name": false
+        // "interface-name": [true, "never-prefix"],
+        "no-switch-case-fall-through": true,
+        "only-arrow-functions": ["allow-named-functions"],
+        "comment-format": false,
+        "typedef": [
+            "call-signature",
+            "arrow-call-signature",
+            "parameter",
+            "arrow-parameter",
+            "property-declaration",
+            // "variable-declaration",
+            "member-variable-declaration",
+            "object-destructuring",
+            "array-destructuring"
+        ]
     },
     "rulesDirectory": []
 }

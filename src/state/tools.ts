@@ -1,27 +1,27 @@
-import { BookState } from "./user/BookState";
+import { BookState, ItemMap } from "./user/BookState";
 import { ItemState } from "./user/ItemState";
 import { UserState } from "./user/UserState";
 
 // ----- Item Data ------
 
-export function getItem(book: BookState, id: string): ItemState {
+export function getItem(items: ItemMap, id: string): ItemState {
 	if (id == null) {
 		throw new Error("id is " + id);
 	}
-	const item = book.items[id];
+	const item = items.entries[id];
 	if (item == null) {
 		// console.log("id is", id);
 		// activeConfig.notes.forEach((key, value) => {
 		// 	console.log("key ", key);
 		// });
-		throw new Error("Missing item " + id + " out of " + Object.values(book.rootItems).length);
+		throw new Error(`Missing item ${id} out of ${items.entries.length}`);
 	}
 	return item;
 }
 
-export function getParent(item: ItemState, book: BookState): ParentData {
+export function getParent(items: ItemMap, item: ItemState): ParentData {
 	if (item.parent != null) {
-		const parent = getItem(book, item.parent);
+		const parent = getItem(items, item.parent);
 		const childIndex = parent.childNotes.indexOf(item.id);
 		if (childIndex === -1) {
 			console.log("parent", parent);
@@ -34,13 +34,13 @@ export function getParent(item: ItemState, book: BookState): ParentData {
 			indexOfChild: childIndex,
 		};
 	} else {
-		const childIndex = book.rootItems.indexOf(item.id);
+		const childIndex = items.roots.indexOf(item.id);
 		if (childIndex === -1) {
 			throw new Error("could not find child " + item.id + " in roots");
 		}
 		return {
 			parent: null,
-			parentChildren: book.rootItems,
+			parentChildren: items.roots,
 			indexOfChild: childIndex,
 		};
 	}
@@ -66,19 +66,19 @@ export function getAllTags(userData: BookState): string[] {
 
 // ------ Utils ----
 
-export function applyRecursive(item: ItemState, root: BookState, callback: (value: ItemState) => void) {
+export function applyRecursive(items: ItemMap, item: ItemState, callback: (value: ItemState) => void) {
 	callback(item);
 	for (const child of item.childNotes) {
 		applyRecursive(
-			getItem(root, child),
-			root,
+			items,
+			getItem(items, child),
 			callback,
 		);
 	}
 }
 
 export function validate(userState: UserState) {
-	for(const book of Object.values(userState.books)) {
+	for (const book of Object.values(userState.books)) {
 		validateBook(book);
 	}
 }
@@ -100,15 +100,11 @@ function validateBook(book: BookState) {
 				throw new Error("text is null for " + item.id);
 			}
 
-			if (item.parent == null) {
-				if (book.rootItems.indexOf(item.id) === -1) {
-					throw new Error("Item " + item.id + " has no parent but not in roots");
-				}
-			} else {
+			if (item.parent != null) {
 				if (!(item.parent in book.items)) {
 					throw new Error("Failed to find parent id " + item.parent);
 				}
-				const parent = book.items[item.parent];
+				const parent = book.items.entries[item.parent];
 				if (parent.childNotes == null) {
 					throw new Error("Parent id " + parent.id + " has no children");
 				} else if (parent.childNotes.indexOf(item.id) === -1) {

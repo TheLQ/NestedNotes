@@ -1,4 +1,4 @@
-import React from "react"; 
+import React from "react";
 import { connect } from "react-redux";
 import Redux from "redux";
 
@@ -20,9 +20,8 @@ interface TagFilterButtonPropsFromDispatch {
 }
 
 function mapStateToProps(state: RootState, ownProps: TagFilterButtonProperty): TagFilterButtonPropsFromState {
-	const view = state.client.views[ownProps.viewId];
 	return {
-		selected: ownProps.tag.id === view.selectedTag,
+		selected: ownProps.tag.id === state.client.views.active,
 	};
 }
 

@@ -9,7 +9,6 @@ import ActionType from "../ActionType";
 // import SelectionReducer from "../tools/SelectionReducer";
 import BookReducer from "./BookReducer";
 
-
 function UserReducer(state: UserState, rawAction: AnyAction): UserState {
 	state = {
 		...state,

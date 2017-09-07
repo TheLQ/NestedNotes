@@ -31,9 +31,9 @@ export function assertUnreachable(x: never): never {
 
 /**
  * Copy object and apply onSingle transform to one key
- * @param map 
- * @param key 
- * @param onSingle 
+ * @param map
+ * @param key
+ * @param onSingle
  */
 export function mapSingle<V>(
 	map: StringMap<V>,
@@ -46,16 +46,20 @@ export function mapSingle<V>(
 }
 
 export function getActiveView(rootState: RootState) {
-	const value = rootState.client.views[rootState.client.activeViewId];
+	const activeView = rootState.client.views.active;
+	if (activeView == null) {
+		throw new Error("null view");
+	}
+	const value = rootState.client.views.entries[activeView];
 	if (value === undefined) {
 		console.log("views", rootState.client.views);
-		throw new Error(`cannot find view '${rootState.client.activeViewId}'`);
+		throw new Error(`cannot find view '${activeView}'`);
 	}
 	return value;
 }
 
 export function getFirstInMap<T>(map: StringMap<T>): T | null {
-	for(const key in map) {
+	for (const key in map) {
 		if (!map.hasOwnProperty(key)) {
 			continue;
 		}

@@ -1,10 +1,12 @@
-import { ItemMap, TagMap } from "../user/BookState";
+import { ActiveTree } from "../Tree";
+import { ItemState } from "../user/ItemState";
+import { TagState } from "../user/TagState";
+
+export type ClientViewItems = ActiveTree<ItemState>;
+export type ClientViewTags = ActiveTree<TagState>;
 
 export interface ClientViewState {
 	viewId: string;
-	items: ItemMap;
-	rootItems: string[];
-	tags: TagMap;
-	selectedItem: string;
-	selectedTag: string | null;
+	items: ClientViewItems;
+	tags: ClientViewTags;
 }

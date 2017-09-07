@@ -8,7 +8,7 @@ interface ListProperty {
 	even: boolean;
 }
 
-function ListComponent(props: ListProperty): JSX.Element {
+export function ListComponent(props: ListProperty): JSX.Element {
 	console.log("props", props);
 	const items = props.rootNotes.map(
 		(id) => <ItemComponent viewId={props.viewId} id={id} even={props.even} key={id}/>,
