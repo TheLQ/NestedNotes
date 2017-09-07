@@ -58,7 +58,7 @@ export const initialState: RootState = {
 		},
 		views: {
 			view1: {
-				viewId: "view1",
+				id: "view1",
 				forBookId: "firstbook",
 			},
 		},

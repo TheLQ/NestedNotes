@@ -1,4 +1,3 @@
-import lodash from "lodash";
 import { AnyAction } from "redux";
 
 import { ClientViewMap } from "../../../state/client/ClientState";
@@ -6,8 +5,10 @@ import { ClientViewState } from "../../../state/client/ClientViewState";
 import * as StateTools from "../../../state/tools";
 import { ItemState } from "../../../state/user/ItemState";
 
+import { ActionType } from "../actions/ActionType";
 import { SelectItemAction, SelectNextAction, SelectPrevAction } from "../actions/ViewActions";
-import { ActionType } from "../ActionType";
+
+import { transformStringMap } from "../../../utils";
 
 export function SelectionReducer(
 	state: ClientViewMap,
@@ -55,19 +56,13 @@ function ifViewId(
 ): ClientViewMap {
 	return {
 		...state,
-		entries: lodash.mapValues(state.entries, (view) => {
-			if (viewId === view.viewId) {
-				return {
-					...view,
-					items: {
-						...view.items,
-						active: callback(view),
-					},
-				};
-			}
-
-			return view;
-		}),
+		entries: transformStringMap(state.entries, viewId, (view) => ({
+			...view,
+			items: {
+				...view.items,
+				active: callback(view),
+			},
+		})),
 	};
 }
 

@@ -1,9 +1,9 @@
+import { Entry } from "../Entry";
 import { Tree } from "../Tree";
 import { ItemState } from "./ItemState";
 import { TagState } from "./TagState";
 
-export interface BookState {
-	id: string;
+export interface BookState extends Entry {
 	items: ItemMap;
 }
 

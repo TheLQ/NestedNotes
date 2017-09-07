@@ -4,7 +4,7 @@ import { AnyAction } from "redux";
 import { UserState } from "../../../state/user/UserState";
 
 import { InitUserAction } from "../actions/GeneralActions";
-import { ActionType } from "../ActionType";
+import { ActionType } from "../actions/ActionType";
 
 import { BookReducer } from "./BookReducer";
 

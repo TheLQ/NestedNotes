@@ -1,3 +1,6 @@
+import lodash from "lodash";
+
+import { Entry } from "./state/Entry";
 import { RootState } from "./state/RootState";
 import { StringMap } from "./state/StringMap";
 
@@ -41,7 +44,7 @@ export function assertUnreachable(x: never): never {
  * @param key
  * @param onSingle
  */
-export function mapSingle<V>(
+export function mapSingle<V extends Entry>(
 	map: StringMap<V>,
 	key: string,
 	onSingle: (val: V) => V,
@@ -66,7 +69,7 @@ export function getActiveView(rootState: RootState) {
 	return value;
 }
 
-export function getFirstInMap<T>(map: StringMap<T>): T | undefined {
+export function getFirstInMap<T extends Entry>(map: StringMap<T>): T | undefined {
 	for (const key in map) {
 		if (!map.hasOwnProperty(key)) {
 			continue;
@@ -78,7 +81,7 @@ export function getFirstInMap<T>(map: StringMap<T>): T | undefined {
 	return undefined;
 }
 
-export function getFirstInMapOrError<T>(map: StringMap<T>): T {
+export function getFirstInMapOrError<T extends Entry>(map: StringMap<T>): T {
 	const result = getFirstInMap(map);
 	if (result === undefined) {
 		throw new Error("map empty");
@@ -89,4 +92,26 @@ export function getFirstInMapOrError<T>(map: StringMap<T>): T {
 
 export function isNullOrUndefined(value: {} | null | undefined): boolean {
 	return value === null || value === undefined;
+}
+
+export function transformStringMap<T extends Entry>(
+	entries: StringMap<T>,
+	viewId: string,
+	callback: (view: T) => T,
+): StringMap<T> {
+	return lodash.mapValues(entries, (entry) => {
+		if (viewId === entry.id) {
+			return callback(entry);
+		}
+
+		return entry;
+	});
+}
+
+export function hasActive(value: string | undefined, name: string): value is string {
+	if (value === undefined) {
+		throw new Error(`active is missing for ${name}`);
+	}
+
+	return true;
 }

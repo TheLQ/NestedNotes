@@ -1,10 +1,11 @@
+import { MoveReducer } from "../tools/MoveReducer";
 import { AnyAction } from "redux";
 
 import { ClientViewMap } from "../../../state/client/ClientState";
 import { ClientViewTags } from "../../../state/client/ClientViewState";
 import { UserState } from "../../../state/user/UserState";
 
-import { ActionType } from "../ActionType";
+import { ActionType } from "../actions/ActionType";
 import { SelectionReducer } from "../tools/SelectionReducer";
 
 export function ClientViewReducer(
@@ -13,6 +14,7 @@ export function ClientViewReducer(
 	rawAction: AnyAction,
 ): ClientViewMap {
 	state = SelectionReducer(state, rawAction);
+	state = MoveReducer(state, rawAction);
 
 	switch (rawAction.type) {
 		case ActionType.INIT: {
@@ -45,7 +47,7 @@ export function ClientViewReducer(
 				}
 
 				result.entries[viewId] = {
-					viewId,
+					id: viewId,
 					items: {
 						...book.items,
 						active: Object.keys(book.items.entries)[0],

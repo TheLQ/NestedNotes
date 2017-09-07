@@ -7,13 +7,14 @@ import { UserState } from "../state/user/UserState";
 
 import { ShellComponent } from "../ui/ShellComponent";
 import { initUser } from "./reducers/actions/GeneralActions";
-import { selectNextActiveView, selectPrevActiveView } from "./reducers/actions/ViewActions";
+import { moveDown, moveUp, selectNextActiveView, selectPrevActiveView } from "./reducers/actions/ViewActions";
 import { RootReducer } from "./reducers/RootReducer";
 
-import devToolsEnhancer from "remote-redux-devtools";
-
 // const store = createStore(RootReducer);
-const store: Store<RootState> = createStore(RootReducer, devToolsEnhancer());
+const store: Store<RootState> = createStore(
+	RootReducer, 
+	window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
 
 export function onUserDataLoad(fileState: UserState) {
 	store.dispatch(initUser(fileState));
@@ -32,9 +33,20 @@ document.addEventListener("keypress", function selectionKeyPressListener(e: Keyb
 	// if (Edit.insideForm()) {
 	// 	return;
 	// }
-	if (e.charCode === "s".charCodeAt(0)) {
-		store.dispatch(selectNextActiveView());
-	} else if (e.charCode === "w".charCodeAt(0)) {
-		store.dispatch(selectPrevActiveView());
+	console.log("keypress", e);
+	switch (e.key) {
+		case "w":
+			store.dispatch(selectPrevActiveView());
+			break;
+		case "W":
+			store.dispatch(moveUp());
+			break;
+		case "s":
+			store.dispatch(selectNextActiveView());
+			break;
+		case "S":
+			store.dispatch(moveDown());
+			break;
+		default:
 	}
 });

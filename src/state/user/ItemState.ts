@@ -1,9 +1,9 @@
+import { Entry } from "../Entry";
 import { SettingsState } from "./SettingsState";
 
 import { isNullOrUndefined } from "../../utils";
 
-export interface ItemState {
-	readonly id: string;
+export interface ItemState extends Entry {
 	parent?: string;
 	childNotes: string[];
 	text: string;

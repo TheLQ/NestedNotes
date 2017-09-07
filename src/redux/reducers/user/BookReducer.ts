@@ -4,7 +4,7 @@ import { StringMap } from "../../../state/StringMap";
 import { BookState } from "../../../state/user/BookState";
 import { fillItemDefault, ItemState } from "../../../state/user/ItemState";
 
-import { ActionType } from "../ActionType";
+import { ActionType } from "../actions/ActionType";
 
 export function BookReducer(
 	state: BookState,
