@@ -1,10 +1,10 @@
 import React from "react";
 
 export class AttributeProperty {
-	type: AttributeType;
-	new: boolean;
-	value: any;
-	onClick?: React.MouseEventHandler<HTMLSpanElement>;
+	public type: AttributeType;
+	public new: boolean;
+	public value: {};
+	public onClick?: React.MouseEventHandler<HTMLSpanElement>;
 }
 
 export enum AttributeType {
@@ -12,11 +12,11 @@ export enum AttributeType {
 	Tag,
 }
 
-export class AttributeComponent extends React.Component<AttributeProperty, {}> {
-	render() {
+export class AttributeComponent extends React.Component<AttributeProperty> {
+	public render() {
 		let finalCssClass = AttributeType[this.props.type] .toLowerCase();
 		if (this.props.new) {
-			finalCssClass = finalCssClass + " " + finalCssClass + "-new";
+			finalCssClass = `${finalCssClass} ${finalCssClass}-new`;
 		}
 
 		// let value = this.props.value;
@@ -34,5 +34,6 @@ export function newTag(givenValue: string, isNew: boolean = false): JSX.Element 
 export function newLink(givenValue: string, isNew: boolean = false): JSX.Element {
 	const url = new URL(givenValue);
 	const value = <a href={givenValue}>{url.hostname}</a>;
+
 	return <AttributeComponent type={AttributeType.Link} new={isNew} value={value} key={givenValue}/>;
 }

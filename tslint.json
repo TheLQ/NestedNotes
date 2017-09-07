@@ -1,19 +1,20 @@
 {
-    "defaultSeverity": "error",
-    "extends": [
-        "tslint:all"
-    ],
-    "jsRules": {},
+    "extends": "tslint:all",
     "rules": {
+        "indent": [true, "tabs", 2],
+        "no-console": false,
+        "completed-docs": false,
+        // tune more intrusive rules
         "max-classes-per-file": false,
         "object-literal-sort-keys": false,
-        // "member-access": false,
-        "no-console": false,
-        "indent": [true, "tabs", 2],
-        // "interface-name": [true, "never-prefix"],
+        "interface-name": [true, "never-prefix"],
         "no-switch-case-fall-through": true,
         "only-arrow-functions": ["allow-named-functions"],
         "comment-format": false,
+        "member-ordering": false,
+        "variable-name": [
+            "allow-pascal-case"
+        ],
         "typedef": [
             "call-signature",
             "arrow-call-signature",
@@ -25,6 +26,5 @@
             "object-destructuring",
             "array-destructuring"
         ]
-    },
-    "rulesDirectory": []
+    }
 }

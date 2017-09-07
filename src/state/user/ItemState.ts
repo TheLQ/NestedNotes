@@ -1,5 +1,7 @@
 import { SettingsState } from "./SettingsState";
 
+import { isNullOrUndefined } from "../../utils";
+
 export interface ItemState {
 	readonly id: string;
 	parent?: string;
@@ -11,36 +13,36 @@ export interface ItemState {
 }
 
 export function fillItemDefault(item: ItemState, rootItemIds: string[]) {
-	if (typeof item.id === "undefined") {
+	if (item.id === "undefined") {
 		console.log("Invalid item: Missing id. ", item);
-		throw new Error("Invalid item: Missing id. " + item.id);
+		throw new Error(`Invalid item: Missing id. ${item.id}`);
 	}
-	if (typeof item.parent === "undefined") {
+	if (isNullOrUndefined(item.parent)) {
 		if (rootItemIds.indexOf(item.id) === -1) {
 			console.log("Invalid item: Missing parent. ", item);
-			throw new Error("Invalid item: Missing parent. " + item.id);
+			throw new Error(`Invalid item: Missing parent. ${item.id}`);
 		}
 	} else {
 		if (rootItemIds.indexOf(item.id) !== -1) {
 			console.log("Invalid item: Illegal state, has parent and in rootNotes. ", item);
-			throw new Error("Invalid item: Illegal state, has parent and in rootNotes. " + item.id);
+			throw new Error(`Invalid item: Illegal state, has parent and in rootNotes. ${item.id}`);
 		}
 	}
 
-	if (typeof item.childNotes === "undefined") {
+	if (isNullOrUndefined(item.childNotes)) {
 		item.childNotes = [];
 	}
-	if (typeof item.text === "undefined") {
+	if (isNullOrUndefined(item.text)) {
 		console.log("Invalid item: Missing text. ", item);
-		throw new Error("Invalid item: Missing text. " + item);
+		throw new Error(`Invalid item: Missing text. ${item}`);
 	}
-	if (typeof item.settings === "undefined") {
+	if (isNullOrUndefined(item.settings)) {
 		item.settings = {};
 	}
-	if (typeof item.links === "undefined") {
+	if (isNullOrUndefined(item.links)) {
 		item.links = [];
 	}
-	if (typeof item.tags === "undefined") {
+	if (isNullOrUndefined(item.tags)) {
 		item.tags = [];
 	}
 }

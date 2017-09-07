@@ -4,10 +4,10 @@ import { ClientViewMap } from "../../../state/client/ClientState";
 import { ClientViewTags } from "../../../state/client/ClientViewState";
 import { UserState } from "../../../state/user/UserState";
 
-import ActionType from "../ActionType";
+import { ActionType } from "../ActionType";
 import { SelectionReducer } from "../tools/SelectionReducer";
 
-function ClientViewReducer(
+export function ClientViewReducer(
 	state: ClientViewMap,
 	userState: UserState,
 	rawAction: AnyAction,
@@ -17,18 +17,18 @@ function ClientViewReducer(
 	switch (rawAction.type) {
 		case ActionType.INIT: {
 			const result: ClientViewMap = {
-				active: null,
+				active: undefined,
 				entries: {},
 			};
 			for (const [viewId, userView] of Object.entries(userState.views)) {
-				if (result.active === null) {
+				if (result.active === undefined) {
 					result.active = viewId;
 				}
 
 				const book = userState.books[userView.forBookId];
 
 				const tags: ClientViewTags = {
-					active: null,
+					active: undefined,
 					entries: {},
 					roots: [],
 				};
@@ -61,4 +61,3 @@ function ClientViewReducer(
 			return state;
 	}
 }
-export default ClientViewReducer;

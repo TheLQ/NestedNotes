@@ -16,7 +16,7 @@ interface TagFilterButtonPropsFromState {
 }
 
 interface TagFilterButtonPropsFromDispatch {
-	onClick: () => void;
+	onClick(): void;
 }
 
 function mapStateToProps(state: RootState, ownProps: TagFilterButtonProperty): TagFilterButtonPropsFromState {
@@ -26,7 +26,7 @@ function mapStateToProps(state: RootState, ownProps: TagFilterButtonProperty): T
 }
 
 function mapDispatchToProps(
-	dispatch: Redux.Dispatch</*Action*/any>,
+	dispatch: Redux.Dispatch</*Action*/{}>,
 	ownProps: TagFilterButtonProperty,
 ): TagFilterButtonPropsFromDispatch {
 	return {
@@ -38,13 +38,12 @@ function mapDispatchToProps(
 
 type FinalProps = TagFilterButtonProperty & TagFilterButtonPropsFromState & TagFilterButtonPropsFromDispatch;
 
-function TagFilterButton(props: FinalProps): JSX.Element {
+function TagFilterButtonRender(props: FinalProps): JSX.Element {
 	return <button key={props.tag.name}>{props.selected ? "Selected: " : ""}{props.tag.name}</button>;
 }
 
-const val = connect<
+export const TagFilterButton = connect<
 	TagFilterButtonPropsFromState,
 	TagFilterButtonPropsFromDispatch,
 	TagFilterButtonProperty
->(mapStateToProps, mapDispatchToProps)(TagFilterButton);
-export default val;
+>(mapStateToProps, mapDispatchToProps)(TagFilterButtonRender);

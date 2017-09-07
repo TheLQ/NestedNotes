@@ -1,6 +1,6 @@
 import React from "react";
 
-import ItemComponent from "./ItemComponent";
+import { ItemComponent } from "./ItemComponent";
 
 interface ListProperty {
 	viewId: string;
@@ -13,7 +13,6 @@ export function ListComponent(props: ListProperty): JSX.Element {
 	const items = props.rootNotes.map(
 		(id) => <ItemComponent viewId={props.viewId} id={id} even={props.even} key={id}/>,
 	);
+
 	return <ul>{items}</ul>;
 }
-
-export default ListComponent;

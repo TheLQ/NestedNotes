@@ -3,8 +3,8 @@ import { BookState } from "./BookState";
 import { UserViewState } from "./UserViewState";
 
 export interface UserState {
-	name: string;
 	books: BookMap;
+	name: string;
 	views: UserViewMap;
 }
 

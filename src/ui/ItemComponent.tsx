@@ -6,7 +6,7 @@ import { ItemState } from "../state/user/ItemState";
 import { TagState } from "../state/user/TagState";
 
 import * as AttributeComponent from "./AttributeComponent";
-import ListComponent from "./ListComponent";
+import { ListComponent } from "./ListComponent";
 
 interface ItemProperty {
 	viewId: string;
@@ -19,24 +19,25 @@ function onClickItem(id: string) {
 	// Selection.updateSelection(this.state.itemTree);
 }
 
-function ItemComponent(props: ItemProperty & StateFromProps): JSX.Element {
+function ItemComponentRender(props: ItemProperty & StateFromProps): JSX.Element {
 	try {
 		const nested = props.childNotes.length > 0
 			? <ListComponent viewId={props.viewId} rootNotes={props.childNotes} even={!props.even} />
-			: null;
+			: undefined;
 		const tags = props.tagsModel.length > 0
 			? [...props.tagsModel].map((curTag: TagState) => AttributeComponent.newTag(curTag.name))
-			: null;
+			: undefined;
 		const links = props.links.length > 0
 			? [...props.links].map((curLink: string) => AttributeComponent.newLink(curLink))
-			: null;
+			: undefined;
 
 		const onClickHandler = (e: React.FormEvent<HTMLLIElement>) => {
 			onClickItem(props.id);
 		};
 		const selected = props.selected ? "item-selected" : "item-init";
+
 		return (
-			<li onClick={onClickHandler} className={(props.even ? "itemEven" : "itemOdd") + " item"}>
+			<li onClick={onClickHandler} className={`${(props.even ? "itemEven" : "itemOdd")} item`}>
 				<div className={selected}>
 					{tags}{links}{props.text}
 				</div>
@@ -53,6 +54,7 @@ function ItemComponent(props: ItemProperty & StateFromProps): JSX.Element {
 function mapStateToProps(state: RootState, props: ItemProperty): StateFromProps {
 	const view = state.client.views.entries[props.viewId];
 	const note = view.items.entries[props.id];
+
 	return {
 		...note,
 		tagsModel: note.tags.map((tagId) => view.tags.entries[tagId]),
@@ -65,5 +67,4 @@ interface StateFromProps extends ItemState {
 	selected: boolean;
 }
 
-const component = connect<StateFromProps, void, ItemProperty>(mapStateToProps)(ItemComponent);
-export default component;
+export const ItemComponent = connect<StateFromProps, void, ItemProperty>(mapStateToProps)(ItemComponentRender);

@@ -5,10 +5,10 @@ import { createStore, Store } from "redux";
 import { RootState } from "../state/RootState";
 import { UserState } from "../state/user/UserState";
 
-import ShellComponent from "../ui/ShellComponent";
-import * as GeneralActions from "./reducers/actions/GeneralActions";
-import * as ViewActions from "./reducers/actions/ViewActions";
-import RootReducer from "./reducers/RootReducer";
+import { ShellComponent } from "../ui/ShellComponent";
+import { initUser } from "./reducers/actions/GeneralActions";
+import { selectNextActiveView, selectPrevActiveView } from "./reducers/actions/ViewActions";
+import { RootReducer } from "./reducers/RootReducer";
 
 import devToolsEnhancer from "remote-redux-devtools";
 
@@ -16,7 +16,7 @@ import devToolsEnhancer from "remote-redux-devtools";
 const store: Store<RootState> = createStore(RootReducer, devToolsEnhancer());
 
 export function onUserDataLoad(fileState: UserState) {
-	store.dispatch(GeneralActions.initUser(fileState));
+	store.dispatch(initUser(fileState));
 }
 
 export function createReact() {
@@ -33,8 +33,8 @@ document.addEventListener("keypress", function selectionKeyPressListener(e: Keyb
 	// 	return;
 	// }
 	if (e.charCode === "s".charCodeAt(0)) {
-		store.dispatch(ViewActions.selectedNextActiveView());
+		store.dispatch(selectNextActiveView());
 	} else if (e.charCode === "w".charCodeAt(0)) {
-		store.dispatch(ViewActions.selectedPrevActiveView());
+		store.dispatch(selectPrevActiveView());
 	}
 });

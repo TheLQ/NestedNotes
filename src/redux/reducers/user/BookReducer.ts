@@ -2,14 +2,11 @@ import { AnyAction } from "redux";
 
 import { StringMap } from "../../../state/StringMap";
 import { BookState } from "../../../state/user/BookState";
-import { ItemState } from "../../../state/user/ItemState";
+import { fillItemDefault, ItemState } from "../../../state/user/ItemState";
 
-import { fillItemDefault } from "../../../state/user/ItemState";
+import { ActionType } from "../ActionType";
 
-import ActionType from "../ActionType";
-
-export default BookReducer;
-function BookReducer(
+export function BookReducer(
 	state: BookState,
 	rawAction: AnyAction,
 ): BookState {
@@ -26,6 +23,7 @@ function BookReducer(
 
 				newItems[itemId] = newNote;
 			}
+
 			return {
 				...state,
 				items: {

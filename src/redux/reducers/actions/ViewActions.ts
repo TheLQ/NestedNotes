@@ -1,6 +1,6 @@
 import { Action } from "redux";
 
-import ActionType from "../ActionType";
+import { ActionType } from "../ActionType";
 
 interface ViewAction extends Action {
 	viewId: string;
@@ -10,22 +10,22 @@ interface ViewActionValue<V> extends ViewAction {
 	value: V;
 }
 
-// export type SelectedBookAction = ViewActionValue<string>;
-export type SelectedTagAction = ViewActionValue<string>;
-export type SelectedItemAction = ViewActionValue<string>;
-export type SelectedNextAction = ViewAction;
-export type SelectedNextActiveViewAction = Action;
-export type SelectedPrevAction = ViewAction;
-export type SelectedPrevActiveViewAction = Action;
+// export type SelectBookAction = ViewActionValue<string>;
+export type SelectTagAction = ViewActionValue<string>;
+export type SelectItemAction = ViewActionValue<string>;
+export type SelectNextAction = ViewAction;
+export type SelectNextActiveViewAction = Action;
+export type SelectPrevAction = ViewAction;
+export type SelectPrevActiveViewAction = Action;
 
-// export function selectedBook(givenBookId: string): SelectedBookAction {
+// export function selectBook(givenBookId: string): SelectBookAction {
 // 	return {
-// 		type: ActionType.SELECTED_BOOK,
+// 		type: ActionType.SELECT_BOOK,
 // 		value: givenBookId,
 // 	}
 // }
 
-export function activeTag(viewId: string, id: string): SelectedTagAction {
+export function activeTag(viewId: string, id: string): SelectTagAction {
 	return {
 		type: ActionType.TAG_FILTER,
 		viewId,
@@ -33,36 +33,36 @@ export function activeTag(viewId: string, id: string): SelectedTagAction {
 	};
 }
 
-export function selectedItem(viewId: string, id: string): SelectedItemAction {
+export function selectItem(viewId: string, id: string): SelectItemAction {
 	return {
-		type: ActionType.SELECTED_ITEM,
+		type: ActionType.SELECT_ITEM,
 		viewId,
 		value: id,
 	};
 }
 
-export function selectedNext(viewId: string): SelectedNextAction {
+export function selectNext(viewId: string): SelectNextAction {
 	return {
-		type: ActionType.SELECTED_ITEM_NEXT,
+		type: ActionType.SELECT_ITEM_NEXT,
 		viewId,
 	};
 }
 
-export function selectedNextActiveView(): SelectedNextActiveViewAction {
+export function selectNextActiveView(): SelectNextActiveViewAction {
 	return {
-		type: ActionType.SELECTED_ITEM_NEXT_ACTIVE_VIEW,
+		type: ActionType.SELECT_ITEM_NEXT_ACTIVE_VIEW,
 	};
 }
 
-export function selectedPrev(viewId: string): SelectedPrevAction {
+export function selectPrev(viewId: string): SelectPrevAction {
 	return {
-		type: ActionType.SELECTED_ITEM_PREV,
+		type: ActionType.SELECT_ITEM_PREV,
 		viewId,
 	};
 }
 
-export function selectedPrevActiveView(): SelectedPrevActiveViewAction {
+export function selectPrevActiveView(): SelectPrevActiveViewAction {
 	return {
-		type: ActionType.SELECTED_ITEM_PREV_ACTIVE_VIEW,
+		type: ActionType.SELECT_ITEM_PREV_ACTIVE_VIEW,
 	};
 }

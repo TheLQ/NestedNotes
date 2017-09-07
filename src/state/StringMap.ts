@@ -3,6 +3,6 @@ export interface StringMap<T> {
 }
 
 export interface ActiveStringMap<T> {
+	active: string | undefined;
 	entries: StringMap<T>;
-	active: string | null;
 }

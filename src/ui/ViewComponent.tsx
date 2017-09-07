@@ -3,9 +3,9 @@ import { connect } from "react-redux";
 
 import { RootState } from "../state/RootState";
 
-import TagFilter from "../redux/ui/TagFilter";
+import { TagFilter } from "../redux/ui/TagFilter";
 
-import ListComponent from "./ListComponent";
+import { ListComponent } from "./ListComponent";
 
 interface Props {
 	viewId: string;
@@ -15,7 +15,7 @@ interface StateFromProps {
 	renderedRoots: string[];
 }
 
-function ViewComponent(props: StateFromProps & Props): JSX.Element {
+function ViewComponentRender(props: StateFromProps & Props): JSX.Element {
 	return (
 		<div>
 			<TagFilter viewId={props.viewId} />
@@ -26,13 +26,13 @@ function ViewComponent(props: StateFromProps & Props): JSX.Element {
 
 function mapStateToProps(state: RootState, props: Props): StateFromProps {
 	const view = state.client.views.entries[props.viewId];
-	if (view == null) {
+	if (view === undefined) {
 		throw new Error(`view does not exist: ${props.viewId}`);
 	}
+
 	return {
 		renderedRoots: view.items.roots,
 	};
 }
 
-const component = connect<StateFromProps, void, Props>(mapStateToProps)(ViewComponent);
-export default component;
+export const ViewComponent = connect<StateFromProps, void, Props>(mapStateToProps)(ViewComponentRender);

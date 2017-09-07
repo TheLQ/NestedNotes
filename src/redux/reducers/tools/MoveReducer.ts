@@ -1,25 +1,24 @@
 import { UserState } from "../../state/UserState";
 
-import ActionType from "./ActionType";
+import { ActionType } from "../ActionType";
 
-export default MoveReducer;
-function MoveReducer(
-	state: string | null,
+export function MoveReducer(
+	state: string | undefined,
 	type: ActionType,
 	userData: UserState,
-): string | null {
+): string | undefined {
 	switch (type) {
 		case ActionType.INIT:
 			return userData.rootNotes[0];
-		case ActionType.SELECTED_ITEM:
+		case ActionType.SELECT_ITEM:
 			return value;
-		case ActionType.SELECTED_ITEM_NEXT:
-			if (state == null) {
+		case ActionType.SELECT_ITEM_NEXT:
+			if (state == undefined) {
 				throw new Error("illegal state: null selection");
 			}
 			return selectionNext(state, userData);
-		case ActionType.SELECTED_ITEM_PREV:
-			if (state == null) {
+		case ActionType.SELECT_ITEM_PREV:
+			if (state == undefined) {
 				throw new Error("illegal state: null selection");
 			}
 			return selectionPrev(state, userData);

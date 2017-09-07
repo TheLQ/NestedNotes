@@ -5,7 +5,7 @@ import { UserState } from "./user/UserState";
 
 import * as Utils from "../utils";
 
-export function initActiveConfig(callback: (data: UserState) => any) {
+export function initActiveConfig(callback: (data: UserState) => {}) {
 	jQuery.ajax({
 		url: "../src-php/json.php",
 		dataType: "json",
@@ -24,6 +24,7 @@ export function saveActiveConfig(userData: UserState) {
 	console.log("sending data", userData);
 	if (true) {
 		console.log("nope");
+
 		return;
 	}
 	jQuery.post({
@@ -44,7 +45,7 @@ function onAjaxFail(jqXHR: JQuery.jqXHR, textStatus: JQuery.Ajax.ErrorTextStatus
 	console.log("errorThrow", errorThrown);
 
 	Utils.setError(
-		"Storage Error: " + textStatus + " " + errorThrown
-		+ "\nRaw Response from server:\n" + jqXHR.responseText,
+		`Storage Error: ${textStatus} ${errorThrown}`
+		+ `\nRaw Response from server:\n ${jqXHR.responseText}`,
 	);
 }

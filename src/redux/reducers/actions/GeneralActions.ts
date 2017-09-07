@@ -2,7 +2,7 @@ import { Action } from "redux";
 
 import { UserState } from "../../../state/user/UserState";
 
-import ActionType from "../ActionType";
+import { ActionType } from "../ActionType";
 
 export interface InitUserAction extends Action {
 	rawUserState: UserState;

@@ -6,38 +6,38 @@ import { ClientViewState } from "../../../state/client/ClientViewState";
 import * as StateTools from "../../../state/tools";
 import { ItemState } from "../../../state/user/ItemState";
 
-import { SelectedItemAction, SelectedNextAction, SelectedPrevAction } from "../actions/ViewActions";
-import ActionType from "../ActionType";
+import { SelectItemAction, SelectNextAction, SelectPrevAction } from "../actions/ViewActions";
+import { ActionType } from "../ActionType";
 
 export function SelectionReducer(
 	state: ClientViewMap,
 	rawAction: AnyAction,
 ): ClientViewMap {
 	switch (rawAction.type) {
-		case ActionType.SELECTED_ITEM: {
-			const action = rawAction as SelectedItemAction;
+		case ActionType.SELECT_ITEM: {
+			const action = rawAction as SelectItemAction;
 
 			return ifViewId(state, action.viewId, selectNext);
 		}
-		case ActionType.SELECTED_ITEM_NEXT: {
-			const action = rawAction as SelectedNextAction;
+		case ActionType.SELECT_ITEM_NEXT: {
+			const action = rawAction as SelectNextAction;
 
 			return ifViewId(state, action.viewId, selectNext);
 		}
-		case ActionType.SELECTED_ITEM_NEXT_ACTIVE_VIEW: {
-			if (state.active === null) {
+		case ActionType.SELECT_ITEM_NEXT_ACTIVE_VIEW: {
+			if (state.active === undefined) {
 				throw new Error("active view null");
 			}
 
 			return ifViewId(state, state.active, selectNext);
 		}
-		case ActionType.SELECTED_ITEM_PREV: {
-			const action = rawAction as SelectedPrevAction;
+		case ActionType.SELECT_ITEM_PREV: {
+			const action = rawAction as SelectPrevAction;
 
 			return ifViewId(state, action.viewId, selectPrev);
 		}
-		case ActionType.SELECTED_ITEM_PREV_ACTIVE_VIEW: {
-			if (state.active === null) {
+		case ActionType.SELECT_ITEM_PREV_ACTIVE_VIEW: {
+			if (state.active === undefined) {
 				throw new Error("active view null");
 			}
 
@@ -73,7 +73,7 @@ function ifViewId(
 
 function selectNext(view: ClientViewState): string {
 	const selectedId = view.items.active;
-	if (selectedId === null) {
+	if (selectedId === undefined) {
 		throw new Error("illegal state: null selection");
 	}
 	const selected = view.items.entries[selectedId];
@@ -86,7 +86,7 @@ function selectNext(view: ClientViewState): string {
 			if (parent.indexOfChild !== parent.parentChildren.length - 1) {
 				return parent.parentChildren[parent.indexOfChild + 1];
 			} else {
-				if (parent.parent === null) {
+				if (parent.parent === undefined) {
 					// At last entry
 					return selectedId;
 				}
@@ -99,7 +99,7 @@ function selectNext(view: ClientViewState): string {
 
 function selectPrev(view: ClientViewState): string {
 	const selectedId = view.items.active;
-	if (selectedId === null) {
+	if (selectedId === undefined) {
 		throw new Error("illegal state: null selection");
 	}
 	const child = view.items.entries[selectedId];
@@ -115,7 +115,7 @@ function selectPrev(view: ClientViewState): string {
 
 		return prevSiblingId;
 	} else {
-		if (parent.parent === null) {
+		if (parent.parent === undefined) {
 			// at first entry
 			return selectedId;
 		}

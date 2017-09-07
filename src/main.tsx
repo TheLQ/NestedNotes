@@ -3,7 +3,6 @@ import { initialState } from "./state/RootState";
 
 import ReactDOM from "react-dom";
 
-import { initActiveConfig } from "./state/storage";
 import { UserState } from "./state/user/UserState";
 
 import * as MainRedux from "./redux/factory";
@@ -24,16 +23,16 @@ import "./redux/factory";
 function globalErrorHandler(event: ErrorEvent) {
 	// Note that col & error are new to the HTML 5 spec and may not be
 	// supported in every browser.  It worked for me in Chrome.
-	let extra = !event.colno ? "" : "\ncolumn: " + event.colno;
-	extra += !event.error ? "" : "\nerror: " + event.error;
+	let extra = !event.colno ? "" : `\ncolumn: ${event.colno}`;
+	extra += !event.error ? "" : `\nerror: ${event.error}`;
 
 	// You can view the information in an alert to see things working like this:
-	Utils.setError("Error: " + event.message + "\nfilename: " + event.filename + "\nline: " + event.lineno + extra);
+	Utils.setError(`Error: ${event.message}\nfilename: ${event.filename}\nline: ${event.lineno} ${extra}`);
 
 	// TODO: Report this error via ajax so you can keep track
 	//       of what pages have JS issues
-
 	const suppressErrorAlert = true;
+
 	// If you return true, then error alerts (like in older versions of
 	// Internet Explorer) will be suppressed.
 	return suppressErrorAlert;
@@ -58,7 +57,7 @@ function start(userState: UserState) {
 	MainRedux.onUserDataLoad(userState);
 
 	const loading = document.getElementById("loading");
-	if (loading != null) {
+	if (loading !== null) {
 		loading.outerHTML = "";
 	}
 }
