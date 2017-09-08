@@ -12,8 +12,8 @@ import { RootReducer } from "./reducers/RootReducer";
 
 // const store = createStore(RootReducer);
 const store: Store<RootState> = createStore(
-	RootReducer, 
-	window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+	RootReducer,
+	window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
 );
 
 export function onUserDataLoad(fileState: UserState) {

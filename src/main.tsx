@@ -1,5 +1,7 @@
 "use strict";
-import { initialState } from "./state/RootState";
+import { importUserData } from "./storage/StorageConvert";
+import { WebStorageDriver } from "./storage/WebStorageDriver";
+import { PhpStorageDriver } from "./storage/PhpStorageDriver";
 
 import ReactDOM from "react-dom";
 
@@ -49,11 +51,12 @@ export function main() {
 		document.getElementById("react-content"),
 	);
 
-	// initActiveConfig(start);
-	startStatic();
+	startDefault();
 }
 
 function start(userState: UserState) {
+	console.log("raw state from driver", userState);
+	userState = importUserData(userState);
 	MainRedux.onUserDataLoad(userState);
 
 	const loading = document.getElementById("loading");
@@ -62,8 +65,20 @@ function start(userState: UserState) {
 	}
 }
 
-function startStatic() {
-	start(initialState.user);
+function startDefault() {
+	new WebStorageDriver(
+		"default.json",
+		// will fail
+		"default.json",
+	).load((userState: UserState) => {
+		start(userState);
+	});
+}
+
+function startPhp() {
+	new PhpStorageDriver().load((userState: UserState) => {
+		start(userState);
+	});
 }
 
 console.log("main end");
