@@ -11,7 +11,7 @@
                 "entries": [
                     {
                         "id": "item1",
-                        "childNotes": ["item11"],
+                        "childNotes": ["item11", "item12", "item13"],
                         "text": "test item 1",
                         "settings": {},
                         "links": [],
@@ -22,6 +22,24 @@
                         "parent": "item1",
                         "childNotes": ["item111"],
                         "text": "test item 11",
+                        "settings": {},
+                        "links": [],
+                        "tags": ["child"]
+                    },
+                    {
+                        "id": "item12",
+                        "parent": "item1",
+                        "childNotes": [],
+                        "text": "test item 12",
+                        "settings": {},
+                        "links": [],
+                        "tags": ["child"]
+                    },
+                    {
+                        "id": "item13",
+                        "parent": "item1",
+                        "childNotes": [],
+                        "text": "test item 13",
                         "settings": {},
                         "links": [],
                         "tags": ["child"]
