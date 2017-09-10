@@ -19,15 +19,13 @@ export function importUserData(rawUserData: UserState): UserState {
 }
 
 function entryArrayToIndex<T extends Entry>(rawEntries: StringMap<T>, callback?: (entry: T) => T): StringMap<T> {
-	console.log("entries", rawEntries);
-	const entries = rawEntries as any as T[];
+	const entries = rawEntries as {} as T[];
 
 	const result: StringMap<T> = {};
 	for (let entry of entries) {
 		if (callback !== undefined) {
 			entry = callback(entry);
 		}
-		console.log(`mapping to ${entry.id}`);
 		result[entry.id] = entry;
 	}
 

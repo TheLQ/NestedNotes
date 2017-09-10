@@ -80,3 +80,17 @@ export function moveDown(viewId?: string): MoveDownAction {
 		viewId,
 	};
 }
+
+export function moveLeft(viewId?: string): MoveLeftAction {
+	return {
+		type: ActionType.MOVE_LEFT,
+		viewId,
+	};
+}
+
+export function moveRight(viewId?: string): MoveRightAction {
+	return {
+		type: ActionType.MOVE_RIGHT,
+		viewId,
+	};
+}

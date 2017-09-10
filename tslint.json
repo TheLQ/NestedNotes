@@ -15,6 +15,7 @@
         "variable-name": [
             "allow-pascal-case"
         ],
+        "no-parameter-reassignment": false,
         "binary-expression-operand-order": false,
         "typedef": [
             "call-signature",

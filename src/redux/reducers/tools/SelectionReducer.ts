@@ -2,13 +2,10 @@ import { AnyAction } from "redux";
 
 import { ClientViewMap } from "../../../state/client/ClientState";
 import { ClientViewState } from "../../../state/client/ClientViewState";
-import * as StateTools from "../../../state/tools";
+import { getParent, transformStringMap } from "../../../state/tools";
 import { ItemState } from "../../../state/user/ItemState";
-
 import { ActionType } from "../actions/ActionType";
 import { SelectItemAction, SelectNextAction, SelectPrevAction } from "../actions/ViewActions";
-
-import { transformStringMap } from "../../../utils";
 
 export function SelectionReducer(
 	state: ClientViewMap,
@@ -77,7 +74,7 @@ function selectNext(view: ClientViewState): string {
 	} else {
 		let child: ItemState = selected;
 		while (true) {
-			const parent = StateTools.getParent(view.items, child);
+			const parent = getParent(view.items, child);
 			if (parent.indexOfChild !== parent.parentChildren.length - 1) {
 				return parent.parentChildren[parent.indexOfChild + 1];
 			} else {
@@ -99,7 +96,7 @@ function selectPrev(view: ClientViewState): string {
 	}
 	const child = view.items.entries[selectedId];
 
-	const parent = StateTools.getParent(view.items, child);
+	const parent = getParent(view.items, child);
 	if (parent.indexOfChild !== 0) {
 		let prevSiblingId: string = parent.parentChildren[parent.indexOfChild - 1];
 		let prevSibling: ItemState = view.items.entries[prevSiblingId];

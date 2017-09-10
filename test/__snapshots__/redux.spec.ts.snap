@@ -1,0 +1,423 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`move inside the tree left 1`] = `
+Object {
+  "client": Object {
+    "views": Object {
+      "active": "view1",
+      "entries": Object {
+        "view1": Object {
+          "id": "view1",
+          "items": Object {
+            "active": "item111",
+            "entries": Object {
+              "item1": Object {
+                "childNotes": Array [
+                  "item11",
+                  "item111",
+                  "item12",
+                  "item13",
+                ],
+                "id": "item1",
+                "links": Array [],
+                "settings": Object {},
+                "tags": Array [
+                  "top",
+                ],
+                "text": "test item 1",
+              },
+              "item11": Object {
+                "childNotes": Array [],
+                "id": "item11",
+                "links": Array [],
+                "parent": "item1",
+                "settings": Object {},
+                "tags": Array [
+                  "child",
+                ],
+                "text": "test item 11",
+              },
+              "item111": Object {
+                "childNotes": Array [],
+                "id": "item111",
+                "links": Array [],
+                "parent": "item1",
+                "settings": Object {},
+                "tags": Array [
+                  "grandchild",
+                ],
+                "text": "test item 111",
+              },
+              "item12": Object {
+                "childNotes": Array [],
+                "id": "item12",
+                "links": Array [],
+                "parent": "item1",
+                "settings": Object {},
+                "tags": Array [
+                  "child",
+                ],
+                "text": "test item 12",
+              },
+              "item13": Object {
+                "childNotes": Array [],
+                "id": "item13",
+                "links": Array [],
+                "parent": "item1",
+                "settings": Object {},
+                "tags": Array [
+                  "child",
+                ],
+                "text": "test item 13",
+              },
+              "item2": Object {
+                "childNotes": Array [],
+                "id": "item2",
+                "links": Array [],
+                "settings": Object {},
+                "tags": Array [
+                  "top",
+                ],
+                "text": "test item 2",
+              },
+            },
+            "roots": Array [
+              "item1",
+              "item2",
+            ],
+          },
+          "tags": Object {
+            "active": undefined,
+            "entries": Object {
+              "child": Object {
+                "id": "child",
+                "name": "child",
+              },
+              "grandchild": Object {
+                "id": "grandchild",
+                "name": "grandchild",
+              },
+              "top": Object {
+                "id": "top",
+                "name": "top",
+              },
+            },
+            "roots": Array [
+              "top",
+              "child",
+              "child",
+              "child",
+              "grandchild",
+              "top",
+            ],
+          },
+        },
+      },
+    },
+  },
+  "user": Object {
+    "books": Object {
+      "firstbook": Object {
+        "id": "firstbook",
+        "items": Object {
+          "entries": Object {
+            "item1": Object {
+              "childNotes": Array [
+                "item11",
+                "item12",
+                "item13",
+              ],
+              "id": "item1",
+              "links": Array [],
+              "settings": Object {},
+              "tags": Array [
+                "top",
+              ],
+              "text": "test item 1",
+            },
+            "item11": Object {
+              "childNotes": Array [
+                "item111",
+              ],
+              "id": "item11",
+              "links": Array [],
+              "parent": "item1",
+              "settings": Object {},
+              "tags": Array [
+                "child",
+              ],
+              "text": "test item 11",
+            },
+            "item111": Object {
+              "childNotes": Array [],
+              "id": "item111",
+              "links": Array [],
+              "parent": "item11",
+              "settings": Object {},
+              "tags": Array [
+                "grandchild",
+              ],
+              "text": "test item 111",
+            },
+            "item12": Object {
+              "childNotes": Array [],
+              "id": "item12",
+              "links": Array [],
+              "parent": "item1",
+              "settings": Object {},
+              "tags": Array [
+                "child",
+              ],
+              "text": "test item 12",
+            },
+            "item13": Object {
+              "childNotes": Array [],
+              "id": "item13",
+              "links": Array [],
+              "parent": "item1",
+              "settings": Object {},
+              "tags": Array [
+                "child",
+              ],
+              "text": "test item 13",
+            },
+            "item2": Object {
+              "childNotes": Array [],
+              "id": "item2",
+              "links": Array [],
+              "settings": Object {},
+              "tags": Array [
+                "top",
+              ],
+              "text": "test item 2",
+            },
+          },
+          "roots": Array [
+            "item1",
+            "item2",
+          ],
+        },
+      },
+    },
+    "name": "test",
+    "views": Object {
+      "view1": Object {
+        "forBookId": "firstbook",
+        "id": "view1",
+      },
+    },
+  },
+}
+`;
+
+exports[`move inside the tree right 1`] = `
+Object {
+  "client": Object {
+    "views": Object {
+      "active": "view1",
+      "entries": Object {
+        "view1": Object {
+          "id": "view1",
+          "items": Object {
+            "active": "item13",
+            "entries": Object {
+              "item1": Object {
+                "childNotes": Array [
+                  "item11",
+                  "item12",
+                ],
+                "id": "item1",
+                "links": Array [],
+                "settings": Object {},
+                "tags": Array [
+                  "top",
+                ],
+                "text": "test item 1",
+              },
+              "item11": Object {
+                "childNotes": Array [
+                  "item111",
+                ],
+                "id": "item11",
+                "links": Array [],
+                "parent": "item1",
+                "settings": Object {},
+                "tags": Array [
+                  "child",
+                ],
+                "text": "test item 11",
+              },
+              "item111": Object {
+                "childNotes": Array [],
+                "id": "item111",
+                "links": Array [],
+                "parent": "item11",
+                "settings": Object {},
+                "tags": Array [
+                  "grandchild",
+                ],
+                "text": "test item 111",
+              },
+              "item12": Object {
+                "childNotes": Array [
+                  "item13",
+                ],
+                "id": "item12",
+                "links": Array [],
+                "parent": "item1",
+                "settings": Object {},
+                "tags": Array [
+                  "child",
+                ],
+                "text": "test item 12",
+              },
+              "item13": Object {
+                "childNotes": Array [],
+                "id": "item13",
+                "links": Array [],
+                "parent": "item12",
+                "settings": Object {},
+                "tags": Array [
+                  "child",
+                ],
+                "text": "test item 13",
+              },
+              "item2": Object {
+                "childNotes": Array [],
+                "id": "item2",
+                "links": Array [],
+                "settings": Object {},
+                "tags": Array [
+                  "top",
+                ],
+                "text": "test item 2",
+              },
+            },
+            "roots": Array [
+              "item1",
+              "item2",
+            ],
+          },
+          "tags": Object {
+            "active": undefined,
+            "entries": Object {
+              "child": Object {
+                "id": "child",
+                "name": "child",
+              },
+              "grandchild": Object {
+                "id": "grandchild",
+                "name": "grandchild",
+              },
+              "top": Object {
+                "id": "top",
+                "name": "top",
+              },
+            },
+            "roots": Array [
+              "top",
+              "child",
+              "child",
+              "child",
+              "grandchild",
+              "top",
+            ],
+          },
+        },
+      },
+    },
+  },
+  "user": Object {
+    "books": Object {
+      "firstbook": Object {
+        "id": "firstbook",
+        "items": Object {
+          "entries": Object {
+            "item1": Object {
+              "childNotes": Array [
+                "item11",
+                "item12",
+                "item13",
+              ],
+              "id": "item1",
+              "links": Array [],
+              "settings": Object {},
+              "tags": Array [
+                "top",
+              ],
+              "text": "test item 1",
+            },
+            "item11": Object {
+              "childNotes": Array [
+                "item111",
+              ],
+              "id": "item11",
+              "links": Array [],
+              "parent": "item1",
+              "settings": Object {},
+              "tags": Array [
+                "child",
+              ],
+              "text": "test item 11",
+            },
+            "item111": Object {
+              "childNotes": Array [],
+              "id": "item111",
+              "links": Array [],
+              "parent": "item11",
+              "settings": Object {},
+              "tags": Array [
+                "grandchild",
+              ],
+              "text": "test item 111",
+            },
+            "item12": Object {
+              "childNotes": Array [],
+              "id": "item12",
+              "links": Array [],
+              "parent": "item1",
+              "settings": Object {},
+              "tags": Array [
+                "child",
+              ],
+              "text": "test item 12",
+            },
+            "item13": Object {
+              "childNotes": Array [],
+              "id": "item13",
+              "links": Array [],
+              "parent": "item1",
+              "settings": Object {},
+              "tags": Array [
+                "child",
+              ],
+              "text": "test item 13",
+            },
+            "item2": Object {
+              "childNotes": Array [],
+              "id": "item2",
+              "links": Array [],
+              "settings": Object {},
+              "tags": Array [
+                "top",
+              ],
+              "text": "test item 2",
+            },
+          },
+          "roots": Array [
+            "item1",
+            "item2",
+          ],
+        },
+      },
+    },
+    "name": "test",
+    "views": Object {
+      "view1": Object {
+        "forBookId": "firstbook",
+        "id": "view1",
+      },
+    },
+  },
+}
+`;

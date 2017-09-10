@@ -1,13 +1,10 @@
 "use strict";
-import { importUserData } from "./storage/StorageConvert";
-import { WebStorageDriver } from "./storage/WebStorageDriver";
-import { PhpStorageDriver } from "./storage/PhpStorageDriver";
-
-import ReactDOM from "react-dom";
+import { ReduxManager } from "./redux/ReduxManager";
 
 import { UserState } from "./state/user/UserState";
 
-import * as MainRedux from "./redux/factory";
+import { PhpStorageDriver } from "./storage/PhpStorageDriver";
+import { WebStorageDriver } from "./storage/WebStorageDriver";
 import * as Utils from "./utils";
 
 // initialize
@@ -15,7 +12,7 @@ import * as Utils from "./utils";
 // import "./ui/insert";
 // import "./ui/move";
 // import "./ui/selection";
-import "./redux/factory";
+// import "./redux/factory";
 
 // window.addEventListener('error', (e) => {
 //     // e instanceof ErrorEvent
@@ -46,18 +43,23 @@ window.addEventListener("load", main);
 
 export function main() {
 	console.log("load EventListener");
-	ReactDOM.render(
-		MainRedux.createReact(),
-		document.getElementById("react-content"),
-	);
-
-	startDefault();
+	create(document.getElementById("react-content"));
 }
 
-function start(userState: UserState) {
+export function create(element: HTMLElement | null) {
+	if (element === null) {
+		throw new Error("null element");
+	}
+	const reduxManager = new ReduxManager(true);
+	reduxManager.create(element);
+
+	startDefault(reduxManager);
+	// startPhp();
+}
+
+export function start(userState: UserState, reduxManager: ReduxManager) {
 	console.log("raw state from driver", userState);
-	userState = importUserData(userState);
-	MainRedux.onUserDataLoad(userState);
+	reduxManager.onUserDataLoad(userState);
 
 	const loading = document.getElementById("loading");
 	if (loading !== null) {
@@ -65,19 +67,19 @@ function start(userState: UserState) {
 	}
 }
 
-function startDefault() {
+function startDefault(reduxManager: ReduxManager) {
 	new WebStorageDriver(
 		"default.json",
 		// will fail
 		"default.json",
 	).load((userState: UserState) => {
-		start(userState);
+		start(userState, reduxManager);
 	});
 }
 
-function startPhp() {
+function startPhp(reduxManager: ReduxManager) {
 	new PhpStorageDriver().load((userState: UserState) => {
-		start(userState);
+		start(userState, reduxManager);
 	});
 }
 

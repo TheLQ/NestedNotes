@@ -1,9 +1,10 @@
+import { Entry } from "./Entry";
 import { ActiveStringMap, StringMap } from "./StringMap";
 
-export interface Tree<T> {
+export interface Tree<T extends Entry> {
 	roots: string[];
 	entries: StringMap<T>;
 }
 
-export interface ActiveTree<T> extends ActiveStringMap<T>, Tree<T> {
+export interface ActiveTree<T extends Entry> extends ActiveStringMap<T>, Tree<T> {
 }
