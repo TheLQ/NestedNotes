@@ -1,10 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
 
+import { selectItem } from "../redux/reducers/actions/ViewActions";
 import { RootState } from "../state/RootState";
 import { ItemState } from "../state/user/ItemState";
 import { TagState } from "../state/user/TagState";
-
 import * as AttributeComponent from "./AttributeComponent";
 import { ListComponent } from "./ListComponent";
 
@@ -14,12 +15,18 @@ interface ItemProperty {
 	even: boolean;
 }
 
-function onClickItem(id: string) {
-	// TODO: uhh...
-	// Selection.updateSelection(this.state.itemTree);
+interface ItemStateFromProps extends ItemState {
+	tagsModel: TagState[];
+	selected: boolean;
 }
 
-function ItemComponentRender(props: ItemProperty & StateFromProps): JSX.Element {
+interface ItemDispatchFromProps {
+	onClick(): void;
+}
+
+type ItemProps = ItemProperty & ItemStateFromProps & ItemDispatchFromProps;
+
+function ItemComponentRender(props: ItemProps): JSX.Element {
 	try {
 		const nested = props.childNotes.length > 0
 			? <ListComponent viewId={props.viewId} rootNotes={props.childNotes} even={!props.even} />
@@ -32,12 +39,15 @@ function ItemComponentRender(props: ItemProperty & StateFromProps): JSX.Element 
 			: undefined;
 
 		const onClickHandler = (e: React.FormEvent<HTMLLIElement>) => {
-			onClickItem(props.id);
+			e.stopPropagation();
+			e.preventDefault();
+			props.onClick();
 		};
+		const itemEvenCss = props.even ? "itemEven" : "itemOdd";
 		const selected = props.selected ? "item-selected" : "item-init";
 
 		return (
-			<li onClick={onClickHandler} className={`${(props.even ? "itemEven" : "itemOdd")} item`}>
+			<li onClick={onClickHandler} className={`${itemEvenCss} item`}>
 				<div className={selected}>
 					{tags}{links}{props.text}
 				</div>
@@ -51,7 +61,7 @@ function ItemComponentRender(props: ItemProperty & StateFromProps): JSX.Element 
 
 }
 
-function mapStateToProps(state: RootState, props: ItemProperty): StateFromProps {
+function mapStateToProps(state: RootState, props: ItemProperty): ItemStateFromProps {
 	const view = state.client.views.entries[props.viewId];
 	const note = view.items.entries[props.id];
 
@@ -62,9 +72,19 @@ function mapStateToProps(state: RootState, props: ItemProperty): StateFromProps 
 	};
 }
 
-interface StateFromProps extends ItemState {
-	tagsModel: TagState[];
-	selected: boolean;
+function mapDispatchToProps(
+	dispatch: Dispatch</*Action*/{}>,
+	ownProps: ItemProperty,
+): ItemDispatchFromProps {
+	return {
+		onClick: () => {
+			dispatch(selectItem(ownProps.viewId, ownProps.id));
+		},
+	};
 }
 
-export const ItemComponent = connect<StateFromProps, void, ItemProperty>(mapStateToProps)(ItemComponentRender);
+export const ItemComponent = connect<
+	ItemStateFromProps,
+	ItemDispatchFromProps,
+	ItemProperty
+>(mapStateToProps, mapDispatchToProps)(ItemComponentRender);

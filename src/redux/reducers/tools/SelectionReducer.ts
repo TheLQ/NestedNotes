@@ -15,7 +15,7 @@ export function SelectionReducer(
 		case ActionType.SELECT_ITEM: {
 			const action = rawAction as SelectItemAction;
 
-			return ifViewId(state, action.viewId, selectNext);
+			return ifViewId(state, action.viewId, () => action.value);
 		}
 		case ActionType.SELECT_ITEM_NEXT: {
 			const action = rawAction as SelectNextAction;
