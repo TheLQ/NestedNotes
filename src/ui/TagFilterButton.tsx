@@ -2,9 +2,9 @@ import React from "react";
 import { connect } from "react-redux";
 import Redux from "redux";
 
-import { RootState } from "../../state/RootState";
-import { TagState } from "../../state/user/TagState";
-import * as ViewActions from "../reducers/actions/ViewActions";
+import * as ViewActions from "../redux/reducers/actions/ViewActions";
+import { RootState } from "../state/RootState";
+import { TagState } from "../state/user/TagState";
 
 interface TagFilterButtonProperty {
 	viewId: string;
