@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import { Action, applyMiddleware, createStore, Dispatch, Middleware, MiddlewareAPI, Store } from "redux";
 import { composeWithDevTools } from "remote-redux-devtools";
 
-import { initialState, RootState } from "../state/RootState";
+import { RootState } from "../state/RootState";
 import { UserState } from "../state/user/UserState";
 import { validate } from "../state/Validator";
 import { importUserData } from "../storage/StorageConvert";
@@ -49,9 +49,14 @@ const validator: Middleware = <S extends {}>(api: MiddlewareAPI<S>) =>
 		};
 
 function defaultStoreFactory(): RootStore {
-	const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
-		// Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
-	  }) || composeWithDevTools({});
+	// workaround for strict ts compiler
+	const windowAny: any = window;
+
+	const composeEnhancers = windowAny.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+		? windowAny.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+			// Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
+		})
+		: composeWithDevTools({});
 
 	return createStore(
 		RootReducer,

@@ -3,10 +3,11 @@ import { connect } from "react-redux";
 import { Dispatch } from "redux";
 
 import { selectItem } from "../redux/reducers/actions/ViewActions";
+import { ClientItemState } from "../state/client/ClientViewState";
 import { RootState } from "../state/RootState";
-import { ItemState } from "../state/user/ItemState";
 import { TagState } from "../state/user/TagState";
 import * as AttributeComponent from "./AttributeComponent";
+import { EditorComponent } from "./EditorComponent";
 import { ListComponent } from "./ListComponent";
 
 interface ItemProperty {

@@ -1,3 +1,5 @@
+import { AnyAction } from "redux";
+import { ClientViewMap } from "../../../state/client/ClientState";
 import { ItemState } from "../../../state/user/ItemState";
 import { UserState } from "../../../state/user/UserState";
 
@@ -14,4 +16,14 @@ export function deleteItem(item: ItemState, root: UserState) {
 	// 		1,
 	// 	);
 	// }
+}
+
+export function DeleteReducer(
+	state: ClientViewMap,
+	rawAction: AnyAction,
+): ClientViewMap {
+	switch (rawAction.type) {
+		default:
+			return state;
+	}
 }

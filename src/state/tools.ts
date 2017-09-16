@@ -1,14 +1,14 @@
 import lodash from "lodash";
 
-import { Entry } from "./Entry";
-import { RootState } from "./RootState";
-import { StringMap } from "./StringMap";
-import { BookState, ItemMap } from "./user/BookState";
+import { ClientViewMap } from "./client/ClientState";
+import { ClientItemState, ClientViewState } from "./client/ClientViewState";
+import { Entry, StringMap } from "./StringMap";
+import { BookState, UserItemMap } from "./user/BookState";
 import { ItemState } from "./user/ItemState";
 
 // ----- Item Data ------
 
-export function getItem(items: ItemMap, id: string): ItemState {
+export function getItem(items: UserItemMap, id: string): ItemState {
 	if (id === undefined) {
 		throw new Error(`id is ${id}`);
 	}
@@ -24,10 +24,10 @@ export function getItem(items: ItemMap, id: string): ItemState {
 	return item;
 }
 
-export function getParent(items: ItemMap, item: ItemState): ParentData {
+export function getParent(items: UserItemMap, item: ItemState): ParentData {
 	if (item.parent !== undefined) {
 		const parent = getItem(items, item.parent);
-		const childIndex = parent.childNotes.indexOf(item.id);
+		const childIndex = parent.children.indexOf(item.id);
 		if (childIndex === -1) {
 			console.log("parent", parent);
 			console.log("item", item);
@@ -36,7 +36,7 @@ export function getParent(items: ItemMap, item: ItemState): ParentData {
 
 		return {
 			parent,
-			parentChildren: parent.childNotes,
+			parentChildren: parent.children,
 			indexOfChild: childIndex,
 		};
 	} else {
@@ -74,9 +74,9 @@ export function getAllTags(userData: BookState): string[] {
 
 // ------ Utils ----
 
-export function applyRecursive(items: ItemMap, item: ItemState, callback: (value: ItemState) => void) {
+export function applyRecursive(items: UserItemMap, item: ItemState, callback: (value: ItemState) => void) {
 	callback(item);
-	for (const child of item.childNotes) {
+	for (const child of item.children) {
 		applyRecursive(
 			items,
 			getItem(items, child),
@@ -85,15 +85,32 @@ export function applyRecursive(items: ItemMap, item: ItemState, callback: (value
 	}
 }
 
-export function getActiveView(rootState: RootState) {
-	const activeView = rootState.client.views.active;
+export function getActiveView(views: ClientViewMap): ClientViewState {
+	const activeView = views.active;
 	if (activeView === undefined) {
-		throw new Error("null view");
+		throw new Error("no view active");
 	}
-	const value = rootState.client.views.entries[activeView];
+	const value = views.entries[activeView];
 	if (value === undefined) {
-		console.log("views", rootState.client.views);
+		console.log("views", views);
 		throw new Error(`cannot find view '${activeView}'`);
+	}
+
+	return value;
+}
+
+export function getActiveItem(views: ClientViewMap): ClientItemState {
+	const view = getActiveView(views);
+
+	const active = view.items.active;
+	if (active === undefined) {
+		throw new Error("no item active");
+	}
+
+	const value = view.items.entries[active];
+	if (value === undefined) {
+		console.log("views", views);
+		throw new Error(`cannot find item '${active}'`);
 	}
 
 	return value;

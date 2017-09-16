@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import { RootState } from "../state/RootState";
 
-import { TagFilter } from "../redux/ui/TagFilter";
+import { TagFilter } from "./TagFilter";
 
 import { ListComponent } from "./ListComponent";
 

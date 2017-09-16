@@ -1,10 +1,9 @@
-import { MoveReducer } from "../tools/MoveReducer";
+import lodash from "lodash";
 import { AnyAction } from "redux";
 
 import { ClientViewMap } from "../../../state/client/ClientState";
 import { ClientViewTags } from "../../../state/client/ClientViewState";
 import { UserState } from "../../../state/user/UserState";
-
 import { ActionType } from "../actions/ActionType";
 import { SelectionReducer } from "../tools/SelectionReducer";
 
@@ -14,7 +13,6 @@ export function ClientViewReducer(
 	rawAction: AnyAction,
 ): ClientViewMap {
 	state = SelectionReducer(state, rawAction);
-	state = MoveReducer(state, rawAction);
 
 	switch (rawAction.type) {
 		case ActionType.INIT: {
@@ -46,10 +44,19 @@ export function ClientViewReducer(
 					}
 				}
 
+				const newItems = lodash.mapValues(
+					book.items.entries,
+					(item) => ({
+						...item,
+						bookId: book.id,
+					}),
+				);
+
 				result.entries[viewId] = {
 					id: viewId,
 					items: {
-						...book.items,
+						entries: newItems,
+						roots: book.items.roots,
 						active: Object.keys(book.items.entries)[0],
 					},
 					tags,

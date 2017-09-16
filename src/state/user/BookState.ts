@@ -1,9 +1,9 @@
-import { Entry } from "../Entry";
+import { Entry } from "../StringMap";
 import { Tree } from "../Tree";
 import { ItemState } from "./ItemState";
 
 export interface BookState extends Entry {
-	items: ItemMap;
+	items: UserItemMap;
 }
 
-export type ItemMap = Tree<ItemState>;
+export type UserItemMap = Tree<ItemState>;

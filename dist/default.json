@@ -70,5 +70,6 @@
             "id": "view1",
             "forBookId": "firstbook"
         }
-    ]
+    ],
+    "editors": {}
 }

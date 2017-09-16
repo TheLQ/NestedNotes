@@ -3,95 +3,92 @@ import { AnyAction } from "redux";
 
 import { ClientViewMap } from "../../../state/client/ClientState";
 import { ClientViewItems } from "../../../state/client/ClientViewState";
-import { transformStringMap } from "../../../state/tools";
+import { getActiveItem } from "../../../state/tools";
+import { UserItemMap } from "../../../state/user/BookState";
+import { ItemState } from "../../../state/user/ItemState";
+import { BookMap } from "../../../state/user/UserState";
 import { indexOfSafe } from "../../../utils";
 import { ActionType } from "../actions/ActionType";
 import { MoveDownAction, MoveLeftAction, MoveRightAction, MoveUpAction } from "../actions/ViewActions";
 
 export function MoveReducer(
-	state: ClientViewMap,
+	state: BookMap,
+	viewMap: ClientViewMap,
 	rawAction: AnyAction,
-): ClientViewMap {
+): BookMap {
 	switch (rawAction.type) {
 		case ActionType.MOVE_UP: {
 			const action = rawAction as MoveUpAction;
 
-			return ifViewId(state, action.viewId, moveUp);
+			return applyToBookFromView(state, viewMap, action.viewId, moveUp);
 		}
 		case ActionType.MOVE_DOWN: {
 			const action = rawAction as MoveDownAction;
 
-			return ifViewId(state, action.viewId, moveDown);
+			return applyToBookFromView(state, viewMap, action.viewId, moveDown);
 		}
 		case ActionType.MOVE_LEFT: {
 			const action = rawAction as MoveLeftAction;
 
-			return ifViewId(state, action.viewId, moveLeft);
+			return applyToBookFromView(state, viewMap, action.viewId, moveLeft);
 		}
 		case ActionType.MOVE_RIGHT: {
 			const action = rawAction as MoveRightAction;
 
-			return ifViewId(state, action.viewId, moveRight);
+			return applyToBookFromView(state, viewMap, action.viewId, moveRight);
 		}
 		default:
 			return state;
 	}
 }
 
-function ifViewId(
-	state: ClientViewMap,
+function applyToBookFromView(
+	state: BookMap,
+	viewMap: ClientViewMap,
 	viewIdRaw: string | undefined,
-	callback: (view: ClientViewItems) => ClientViewItems,
-): ClientViewMap {
+	callback: (userItems: UserItemMap, item: ItemState) => UserItemMap,
+): BookMap {
 	let viewId: string;
 	if (viewIdRaw === undefined) {
-		if (state.active === undefined) {
+		if (viewMap.active === undefined) {
 			throw new Error("active view is null");
 		} else {
-			viewId = state.active;
+			viewId = viewMap.active;
 		}
 	} else {
 		viewId = viewIdRaw;
 	}
+	const item = getActiveItem(viewMap);
 
-	return {
-		...state,
-		entries: transformStringMap(state.entries, viewId, (view) => {
-			if (view.id === viewId) {
-				return {
-					...view,
-					items: callback(view.items),
-				};
-			} else {
-				return view;
+	return lodash.mapValues(
+		state,
+		(book) => (book.id === item.bookId)
+			? {
+				...book,
+				items: callback(book.items, item),
 			}
-		}),
-	};
+			: book,
+	);
 }
 
-function moveUp(state: ClientViewItems): ClientViewItems {
-	return moveUpDown(state, -1);
+function moveUp(state: UserItemMap, item: ItemState): UserItemMap {
+	return moveUpDown(state, item, -1);
 }
 
-function moveDown(state: ClientViewItems): ClientViewItems {
-	return moveUpDown(state, 1);
+function moveDown(state: UserItemMap, item: ItemState): UserItemMap {
+	return moveUpDown(state, item, 1);
 }
 
-function moveUpDown(state: ClientViewItems, direction: number): ClientViewItems {
-	if (state.active === undefined) {
-		throw new Error("active item undefined");
-	}
-	const active = state.entries[state.active];
-
-	const parentArray: string[] = active.parent === undefined
+function moveUpDown(state: UserItemMap, item: ItemState, direction: number): UserItemMap {
+	const parentArray: string[] = item.parent === undefined
 		? state.roots.slice(0)
-		: state.entries[active.parent].childNotes.slice(0);
+		: state.entries[item.parent].children.slice(0);
 
 	const parentIndex = indexOfSafe(
 		parentArray,
-		active.id,
+		item.id,
 		0,
-		`child ${active.id} does not exist in parent ${parentArray}`,
+		`child ${item.id} does not exist in parent ${parentArray}`,
 	);
 	if (direction === -1 && parentIndex === 0) {
 		return state;
@@ -99,9 +96,9 @@ function moveUpDown(state: ClientViewItems, direction: number): ClientViewItems 
 		return state;
 	}
 	parentArray.splice(parentIndex, 1);
-	parentArray.splice(parentIndex + (1 * direction), 0, active.id);
+	parentArray.splice(parentIndex + (1 * direction), 0, item.id);
 
-	if (active.parent === undefined) {
+	if (item.parent === undefined) {
 		return {
 			...state,
 			roots: parentArray,
@@ -109,19 +106,21 @@ function moveUpDown(state: ClientViewItems, direction: number): ClientViewItems 
 	} else {
 		return {
 			...state,
-			entries: lodash.mapValues(state.entries, (item) => {
-				if (item.id === active.parent) {
+			entries: lodash.mapValues(state.entries, (itemOld) => {
+				if (itemOld.id === itemOld.parent) {
 					return {
-						...item,
-						childNotes: parentArray,
+						...itemOld,
+						children: parentArray,
 					};
 				} else {
-					return item;
+					return itemOld;
 				}
 			}),
 		};
 	}
 }
+
+// moveLeft and moveRight v4
 
 function moveLeft(state: ClientViewItems): ClientViewItems {
 	if (state.active === undefined) {
@@ -147,7 +146,7 @@ function moveLeft(state: ClientViewItems): ClientViewItems {
 	} else {
 		// move child of parent to sibling of parent, or child of grandparent
 		const grandParent = state.entries[parent.parent];
-		const grandParentIndex = indexOfSafe(grandParent.childNotes, parent.id);
+		const grandParentIndex = indexOfSafe(grandParent.children, parent.id);
 
 		return moveTo(
 			state,
@@ -166,7 +165,7 @@ function moveRight(state: ClientViewItems): ClientViewItems {
 
 	const parentChildren = (active.parent === undefined)
 		? state.roots
-		: state.entries[active.parent].childNotes;
+		: state.entries[active.parent].children;
 	const parentIndex = indexOfSafe(parentChildren, active.id);
 	if (parentIndex === 0) {
 		return state;
@@ -179,82 +178,6 @@ function moveRight(state: ClientViewItems): ClientViewItems {
 		0,
 	);
 }
-
-// ------ v1
-
-// function moveTo(state: ClientViewItems, srcId: string, toId: string, after: boolean) {
-// 	const srcEntry = state.entries[srcId];
-// 	state = rewrite(state, srcEntry.parent, (children) => lodash.without(children, srcEntry.id));
-
-// 	const toEntry = state.entries[toId];
-// 	state = rewrite(
-// 		state,
-// 		toEntry.parent,
-// 		(children) => {
-// 			const toIndex = children.indexOf(toId);
-// 			if (toIndex === -1) {
-// 				throw new Error(`failed to find toId ${toId} in array ${children}`);
-// 			}
-// 			if (after) {
-// 				return children.splice(toIndex + 1, 0, srcId);
-// 			} else {
-// 				return children.splice(toIndex, 0, srcId);
-// 			}
-// 		},
-// 	);
-
-// 	return state;
-// }
-
-// --------- v2
-
-// function moveTo(state: ClientViewItems, srcId: string, toParentId: string, childPos: number) {
-// 	const src = state.entries[srcId];
-// 	state = rewriteItem(state, src.parent, (children) => lodash.without(children, src.id));
-
-// 	// const toParent = state.entries[toParentId];
-// 	state = rewriteItem(
-// 		state,
-// 		toParentId,
-// 		(children) => {
-// 			const newChildren = children.slice(0);
-// 			newChildren.splice(childPos, 0, srcId);
-
-// 			return newChildren;
-// 		},
-// 	);
-
-// 	return state;
-// }
-
-// function rewriteItem(
-// 	state: ClientViewItems,
-// 	itemId: string | undefined,
-// 	callback: (children: string[]) => string[],
-// ): ClientViewItems {
-// 	if (itemId === undefined) {
-// 		return {
-// 			...state,
-// 			roots: callback(state.roots),
-// 		};
-// 	} else {
-// 		return {
-// 			...state,
-// 			entries: lodash.mapValues(state.entries, (item) => {
-// 				if (item.id === itemId) {
-// 					return {
-// 						...item,
-// 						childNotes: callback(item.childNotes),
-// 					};
-// 				} else {
-// 					return item;
-// 				}
-// 			}),
-// 		};
-// 	}
-// }
-
-// ---------------- v3
 
 function moveTo(state: ClientViewItems, srcId: string, toParentId: string | undefined, childPos: number) {
 	const src = state.entries[srcId];
@@ -284,15 +207,15 @@ function moveTo(state: ClientViewItems, srcId: string, toParentId: string | unde
 				case src.parent:
 					item = {
 						...item,
-						childNotes: lodash.without(item.childNotes, src.id),
+						children: lodash.without(item.children, src.id),
 					};
 					break;
 				case toParentId: {
-					const newChildNotes = item.childNotes.slice(0);
+					const newChildNotes = item.children.slice(0);
 					newChildNotes.splice(childPos, 0, src.id);
 					item = {
 						...item,
-						childNotes: newChildNotes,
+						children: newChildNotes,
 					};
 					break;
 				}

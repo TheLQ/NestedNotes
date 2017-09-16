@@ -1,5 +1,4 @@
-import { Entry } from "./Entry";
-import { ActiveStringMap, StringMap } from "./StringMap";
+import { ActiveStringMap, Entry, StringMap } from "./StringMap";
 
 export interface Tree<T extends Entry> {
 	roots: string[];

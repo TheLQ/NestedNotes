@@ -69,8 +69,8 @@ function selectNext(view: ClientViewState): string {
 		throw new Error("illegal state: null selection");
 	}
 	const selected = view.items.entries[selectedId];
-	if (selected.childNotes.length > 0) {
-		return selected.childNotes[0];
+	if (selected.children.length > 0) {
+		return selected.children[0];
 	} else {
 		let child: ItemState = selected;
 		while (true) {
@@ -100,8 +100,8 @@ function selectPrev(view: ClientViewState): string {
 	if (parent.indexOfChild !== 0) {
 		let prevSiblingId: string = parent.parentChildren[parent.indexOfChild - 1];
 		let prevSibling: ItemState = view.items.entries[prevSiblingId];
-		while (prevSibling.childNotes.length !== 0) {
-			prevSiblingId = prevSibling.childNotes[prevSibling.childNotes.length - 1];
+		while (prevSibling.children.length !== 0) {
+			prevSiblingId = prevSibling.children[prevSibling.children.length - 1];
 			prevSibling = view.items.entries[prevSiblingId];
 		}
 

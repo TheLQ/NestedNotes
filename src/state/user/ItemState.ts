@@ -1,19 +1,23 @@
 import lodash from "lodash";
 
 import { isNullOrUndefined } from "../../utils";
-import { Entry } from "../Entry";
-import { SettingsState } from "./SettingsState";
+import { Entry } from "../StringMap";
 
 export interface ItemState extends Entry {
 	parent?: string;
-	childNotes: string[];
+	children: string[];
 	text: string;
-	settings: SettingsState;
+	name?: string;
 	links: string[];
 	tags: string[];
 }
 
-export function fillItemDefault(item: ItemState, rootItemIds: string[]) {
+/**
+ * Init all null values
+ * @param item 
+ * @param rootItemIds roots of item tree
+ */
+export function fillItemDefault(item: ItemState, rootItemIds: string[]): void {
 	if (item.id === "undefined") {
 		console.log("Invalid item: Missing id. ", item);
 		throw new Error(`Invalid item: Missing id. ${item.id}`);
@@ -31,15 +35,15 @@ export function fillItemDefault(item: ItemState, rootItemIds: string[]) {
 		}
 	}
 
-	if (isNullOrUndefined(item.childNotes)) {
-		item.childNotes = [];
+	if (isNullOrUndefined(item.children)) {
+		item.children = [];
 	}
 	if (isNullOrUndefined(item.text)) {
 		console.log("Invalid item: Missing text. ", item);
 		throw new Error(`Invalid item: Missing text. ${item}`);
 	}
-	if (isNullOrUndefined(item.settings)) {
-		item.settings = {};
+	if (isNullOrUndefined(item.name)) {
+		item.name = "";
 	}
 	if (isNullOrUndefined(item.links)) {
 		item.links = [];

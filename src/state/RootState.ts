@@ -20,35 +20,31 @@ export const initialState: RootState = {
 					entries: {
 						item1: {
 							id: "item1",
-							childNotes: ["item11"],
+							children: ["item11"],
 							text: "test item 1",
-							settings: {},
 							links: [],
 							tags: ["top"],
 						},
 						item11: {
 							id: "item11",
 							parent: "item1",
-							childNotes: ["item111"],
+							children: ["item111"],
 							text: "test item 11",
-							settings: {},
 							links: [],
 							tags: ["child"],
 						},
 						item111: {
 							id: "item111",
 							parent: "item11",
-							childNotes: [],
+							children: [],
 							text: "test item 111",
-							settings: {},
 							links: [],
 							tags: ["grandchild"],
 						},
 						item2: {
 							id: "item2",
-							childNotes: [],
+							children: [],
 							text: "test item 2",
-							settings: {},
 							links: [],
 							tags: ["top"],
 						},
@@ -61,6 +57,18 @@ export const initialState: RootState = {
 				id: "view1",
 				forBookId: "firstbook",
 			},
+		},
+		editors: {},
+		tags: {
+			entries: {
+				tag1: {
+					id: "tag1",
+					name: "top",
+				},
+			},
+			roots: [
+				"tag1",
+			],
 		},
 	},
 	client: {

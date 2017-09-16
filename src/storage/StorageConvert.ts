@@ -1,5 +1,4 @@
-import { Entry } from "../state/Entry";
-import { StringMap } from "../state/StringMap";
+import { Entry, StringMap } from "../state/StringMap";
 import { UserState } from "../state/user/UserState";
 
 export function importUserData(rawUserData: UserState): UserState {

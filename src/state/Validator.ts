@@ -1,10 +1,9 @@
 import { isNullOrUndefined } from "../utils";
 import { ClientState } from "./client/ClientState";
-import { Entry } from "./Entry";
 import { RootState } from "./RootState";
-import { ActiveStringMap } from "./StringMap";
+import { ActiveStringMap, Entry } from "./StringMap";
 import { ActiveTree } from "./Tree";
-import { ItemMap } from "./user/BookState";
+import { UserItemMap } from "./user/BookState";
 import { ItemState } from "./user/ItemState";
 import { UserState } from "./user/UserState";
 
@@ -28,23 +27,21 @@ function validateClient(clientState: ClientState) {
 	}
 }
 
-function validateItems(items: ItemMap) {
+function validateItems(items: UserItemMap) {
 	for (const [key, item] of Object.entries(items.entries)) {
 		validateEntry(key, item);
 		validateItem(items, item);
 	}
 }
 
-function validateItem(items: ItemMap, item: ItemState) {
+function validateItem(items: UserItemMap, item: ItemState) {
 	try {
 		if (!(item.id in items.entries)) {
 			throw new Error(`Failed to find id ${item.id}`);
-		} else if (isNullOrUndefined(item.childNotes)) {
+		} else if (isNullOrUndefined(item.children)) {
 			throw new Error(`childNotes is null for ${item.id}`);
 		} else if (isNullOrUndefined(item.tags)) {
 			throw new Error(`tags is null for ${item.id}`);
-		} else if (isNullOrUndefined(item.settings)) {
-			throw new Error(`settings is null for ${item.id}`);
 		} else if (isNullOrUndefined(item.links)) {
 			throw new Error(`links is null for ${item.id}`);
 		} else if (isNullOrUndefined(item.text)) {
@@ -56,9 +53,9 @@ function validateItem(items: ItemMap, item: ItemState) {
 				throw new Error(`Failed to find parent id ${item.parent}`);
 			}
 			const parent = items.entries[item.parent];
-			if (isNullOrUndefined(parent.childNotes)) {
+			if (isNullOrUndefined(parent.children)) {
 				throw new Error(`Parent id ${parent.id} has no children`);
-			} else if (parent.childNotes.indexOf(item.id) === -1) {
+			} else if (parent.children.indexOf(item.id) === -1) {
 				throw new Error(`Parent id ${parent.id} does not contain its child id ${item.id}`);
 			}
 		} else {
@@ -67,7 +64,7 @@ function validateItem(items: ItemMap, item: ItemState) {
 			}
 		}
 
-		for (const childId of item.childNotes) {
+		for (const childId of item.children) {
 			const child = items.entries[childId];
 			if (child === undefined) {
 				throw new Error(`child ${childId} of ${item.id} does not exist`);
