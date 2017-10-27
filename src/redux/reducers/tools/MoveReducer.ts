@@ -2,7 +2,6 @@ import lodash from "lodash";
 import { AnyAction } from "redux";
 
 import { ClientViewMap } from "../../../state/client/ClientState";
-import { ClientViewItems } from "../../../state/client/ClientViewState";
 import { getActiveItem } from "../../../state/tools";
 import { UserItemMap } from "../../../state/user/BookState";
 import { ItemState } from "../../../state/user/ItemState";
@@ -122,24 +121,20 @@ function moveUpDown(state: UserItemMap, item: ItemState, direction: number): Use
 
 // moveLeft and moveRight v4
 
-function moveLeft(state: ClientViewItems): ClientViewItems {
-	if (state.active === undefined) {
-		throw new Error("active item undefined");
-	}
-	const active = state.entries[state.active];
-	if (active.parent === undefined) {
+function moveLeft(state: UserItemMap, item: ItemState): UserItemMap {
+	if (item.parent === undefined) {
 		// is root item, can't go left anymore
 		return state;
 	}
 
-	const parent = state.entries[active.parent];
+	const parent = state.entries[item.parent];
 	if (parent.parent === undefined) {
 		// move child of root to sibling of root
 		const rootIndex = state.roots.indexOf(parent.id);
 
 		return moveTo(
 			state,
-			active.id,
+			item.id,
 			undefined,
 			rootIndex + 1,
 		);
@@ -150,36 +145,34 @@ function moveLeft(state: ClientViewItems): ClientViewItems {
 
 		return moveTo(
 			state,
-			active.id,
+			item.id,
 			grandParent.id,
 			grandParentIndex + 1,
 		);
 	}
 }
 
-function moveRight(state: ClientViewItems): ClientViewItems {
-	if (state.active === undefined) {
-		throw new Error("active item undefined");
-	}
-	const active = state.entries[state.active];
-
-	const parentChildren = (active.parent === undefined)
+function moveRight(state: UserItemMap, item: ItemState): UserItemMap {
+	const parentChildren = (item.parent === undefined)
 		? state.roots
-		: state.entries[active.parent].children;
-	const parentIndex = indexOfSafe(parentChildren, active.id);
+		: state.entries[item.parent].children;
+	const parentIndex = indexOfSafe(parentChildren, item.id);
 	if (parentIndex === 0) {
 		return state;
 	}
 
+	const toParentId = parentChildren[parentIndex - 1];
+	const toParent = state.entries[toParentId];
+
 	return moveTo(
 		state,
-		active.id,
-		parentChildren[parentIndex - 1],
-		0,
+		item.id,
+		toParentId,
+		toParent.children.length,
 	);
 }
 
-function moveTo(state: ClientViewItems, srcId: string, toParentId: string | undefined, childPos: number) {
+function moveTo(state: UserItemMap, srcId: string, toParentId: string | undefined, childPos: number) {
 	const src = state.entries[srcId];
 	// console.log(`moving ${src.id} with parent ${src.parent} to parent ${toParentId} pos ${childPos}`);
 
