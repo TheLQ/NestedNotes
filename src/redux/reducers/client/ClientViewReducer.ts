@@ -15,6 +15,11 @@ export function ClientViewReducer(
 	state = SelectionReducer(state, rawAction);
 
 	switch (rawAction.type) {
+		// TODO: This is not scalable
+		case ActionType.MOVE_LEFT:
+		case ActionType.MOVE_RIGHT:
+		case ActionType.MOVE_UP:
+		case ActionType.MOVE_DOWN:
 		case ActionType.INIT: {
 			const result: ClientViewMap = {
 				active: undefined,
