@@ -52,12 +52,23 @@ export function ClientViewReducer(
 					}),
 				);
 
+				let activeId = Object.keys(book.items.entries)[0];
+				if (state !== null) {
+					const stateView = state.entries[viewId];
+					if (stateView !== undefined) {
+						const existingActiveId = stateView.items.active;
+						if (existingActiveId !== undefined && stateView.items.entries[existingActiveId] !== undefined) {
+							activeId = existingActiveId;
+						}
+					}
+				}
+
 				result.entries[viewId] = {
 					id: viewId,
 					items: {
 						entries: newItems,
 						roots: book.items.roots,
-						active: Object.keys(book.items.entries)[0],
+						active: activeId,
 					},
 					tags,
 
