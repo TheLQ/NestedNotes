@@ -40,24 +40,13 @@ export function MoveReducer(
 			return state;
 	}
 }
-
-function applyToBookFromView(
+export function applyToBookFromView(
 	state: BookMap,
 	viewMap: ClientViewMap,
 	viewIdRaw: string | undefined,
 	callback: (userItems: UserItemMap, item: ItemState) => UserItemMap,
 ): BookMap {
-	let viewId: string;
-	if (viewIdRaw === undefined) {
-		if (viewMap.active === undefined) {
-			throw new Error("active view is null");
-		} else {
-			viewId = viewMap.active;
-		}
-	} else {
-		viewId = viewIdRaw;
-	}
-	const item = getActiveItem(viewMap);
+	const item = getActiveItem(viewMap, viewIdRaw);
 
 	return lodash.mapValues(
 		state,

@@ -6,7 +6,7 @@ interface ViewAction extends Action {
 	viewId: string;
 }
 
-interface OptionalViewAction extends Action {
+export interface OptionalViewAction extends Action {
 	viewId: string | undefined;
 }
 

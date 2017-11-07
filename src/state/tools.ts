@@ -61,7 +61,7 @@ interface ParentData {
 
 export function getAllTags(userData: BookState): string[] {
 	const tags: string[] = [];
-	for (const item of Object.values(userData.items)) {
+	for (const item of Object.values(userData.items.entries)) {
 		for (const tag of item.tags) {
 			if (tags.indexOf(tag) === -1) {
 				tags.push(tag);
@@ -85,22 +85,26 @@ export function applyRecursive(items: UserItemMap, item: ItemState, callback: (v
 	}
 }
 
-export function getActiveView(views: ClientViewMap): ClientViewState {
-	const activeView = views.active;
-	if (activeView === undefined) {
-		throw new Error("no view active");
+export function getActiveView(views: ClientViewMap, viewId?: string): ClientViewState {
+	let lookupViewId = viewId;
+	if (lookupViewId === undefined) {
+		lookupViewId = views.active;
+		if (lookupViewId === undefined) {
+			throw new Error("no view active");
+		}
 	}
-	const value = views.entries[activeView];
+
+	const value = views.entries[lookupViewId];
 	if (value === undefined) {
 		console.log("views", views);
-		throw new Error(`cannot find view '${activeView}'`);
+		throw new Error(`cannot find view '${lookupViewId}'`);
 	}
 
 	return value;
 }
 
-export function getActiveItem(views: ClientViewMap): ClientItemState {
-	const view = getActiveView(views);
+export function getActiveItem(views: ClientViewMap, viewId?: string): ClientItemState {
+	const view = getActiveView(views, viewId);
 
 	const active = view.items.active;
 	if (active === undefined) {
@@ -175,3 +179,4 @@ export function getFirstInMapOrError<T extends Entry>(map: StringMap<T>): T {
 
 	return result;
 }
+

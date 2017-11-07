@@ -15,6 +15,7 @@
         "variable-name": [
             "allow-pascal-case"
         ],
+        "prefer-template": false,
         "no-parameter-reassignment": false,
         "binary-expression-operand-order": false,
         "typedef": [

@@ -31,9 +31,20 @@ export function newTag(givenValue: string, isNew: boolean = false): JSX.Element 
 	return <AttributeComponent type={AttributeType.Tag} new={isNew} value={givenValue} key={givenValue}/>;
 }
 
+const newLinkExp = /[a-zA-Z0-9\.]+/g;
+
 export function newLink(givenValue: string, isNew: boolean = false): JSX.Element {
-	const url = new URL(givenValue);
-	const value = <a href={givenValue}>{url.hostname}</a>;
+	// v2: URL's may be invalid while written, so try basic matching
+	// const url = new URL(givenValue);
+	// const hostname = url.hostname
+	const matches = givenValue.match(newLinkExp);
+	// console.log("for match " + givenValue, matches);
+	const hostname = (matches === null || matches.length === 1)
+		? "New Link"
+		// skip http protocol, second match is probably domain
+		: matches[1];
+
+	const value = <a href={givenValue}>{hostname}</a>;
 
 	return <AttributeComponent type={AttributeType.Link} new={isNew} value={value} key={givenValue}/>;
 }

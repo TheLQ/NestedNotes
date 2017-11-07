@@ -20,6 +20,7 @@ export function ClientViewReducer(
 		case ActionType.MOVE_RIGHT:
 		case ActionType.MOVE_UP:
 		case ActionType.MOVE_DOWN:
+		case ActionType.EDITOR_SUBMIT:
 		case ActionType.INIT: {
 			const result: ClientViewMap = {
 				active: undefined,

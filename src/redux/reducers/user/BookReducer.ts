@@ -28,6 +28,7 @@ export function BookReducer(
 					...book,
 					items: {
 						...book.items,
+						editors: {},
 						entries: newItems,
 					},
 				};

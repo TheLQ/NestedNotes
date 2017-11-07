@@ -14,7 +14,7 @@ export interface ItemState extends Entry {
 
 /**
  * Init all null values
- * @param item 
+ * @param item
  * @param rootItemIds roots of item tree
  */
 export function fillItemDefault(item: ItemState, rootItemIds: string[]): void {

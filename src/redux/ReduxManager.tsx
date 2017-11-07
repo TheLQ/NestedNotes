@@ -1,3 +1,4 @@
+import { newEditor } from "./reducers/actions/EditorActions";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
@@ -138,6 +139,12 @@ function selectionKeyPressListener(e: KeyboardEvent, store: RootStore) {
 		// shift + d
 		case "D":
 			store.dispatch(moveRight());
+			break;
+		// e
+		case "e":
+			// stop char from being inserted into focused form element
+			e.preventDefault();
+			store.dispatch(newEditor());
 			break;
 		default:
 	}
