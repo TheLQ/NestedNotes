@@ -42,7 +42,9 @@ const validator: Middleware = <S extends {}>(api: MiddlewareAPI<S>) =>
 			try {
 				validate(api.getState() as {} as RootState);
 			} catch (e) {
-				throw new Error(`failed post validate ${e}`);
+				console.error("failed post validate");
+				throw e;
+				// throw new Error(`failed post validate ${e}`);
 			}
 
 			return result;
@@ -101,11 +103,17 @@ export class ReduxManager {
 }
 
 function selectionKeyPressListener(e: KeyboardEvent, store: RootStore) {
-	// TODO: disable selection when inside edit box
-	// if (Edit.insideForm()) {
-	// 	return;
-	// }
 	console.log("keypress", e);
+
+	// Do not trigger when inside a form
+	const activeElement = document.activeElement as any;
+	// console.log("activeElement", document.activeElement);
+	if (activeElement.form !== undefined) {
+		console.log("ignoring form");
+
+		return;
+	}
+
 	switch (e.key) {
 		// w
 		case "w":
