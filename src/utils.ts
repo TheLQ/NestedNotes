@@ -23,9 +23,13 @@ export function deleteFrom(haystack: Array<{}>, needle: {}, deleteCount: number 
 }
 
 export function setError(error: string) {
-	const errorBox: HTMLElement | null =  document.getElementById("error-text");
-	if (errorBox !== null) {
-		errorBox.appendChild(new Text(`${error}\n`));
+	const errorText: HTMLElement | null =  document.getElementById("error-text");
+	const errorBox: HTMLElement | null =  document.getElementById("error-box");
+	if (errorBox !== null && errorText !== null) {
+		errorBox.style.display = "block";
+		errorText.appendChild(new Text(`${error}\n`));
+	} else {
+		alert("Error displaying error: No error-text element found?\n" + error);
 	}
 }
 

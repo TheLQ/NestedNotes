@@ -1,4 +1,4 @@
-import { insertBelow, newEditor } from "./reducers/actions/EditorActions";
+import { ActionType } from "./reducers/actions/ActionType";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
@@ -7,17 +7,19 @@ import { composeWithDevTools } from "remote-redux-devtools";
 
 import { RootState } from "../state/RootState";
 import { UserState } from "../state/user/UserState";
-import { validate } from "../state/Validator";
+import { validate, validateUser } from "../state/Validator";
 import { importUserData } from "../storage/StorageConvert";
+import { StorageDriver } from "../storage/StorageDriver";
 import { ShellComponent } from "../ui/ShellComponent";
+import { insertBelow, newEditor } from "./reducers/actions/EditorActions";
 import { initUser } from "./reducers/actions/GeneralActions";
 import {
-	moveDown,
-	moveLeft,
-	moveRight,
-	moveUp,
-	selectNextActiveView,
-	selectPrevActiveView,
+    moveDown,
+    moveLeft,
+    moveRight,
+    moveUp,
+    selectNextActiveView,
+    selectPrevActiveView,
 } from "./reducers/actions/ViewActions";
 import { RootReducer } from "./reducers/RootReducer";
 
@@ -51,7 +53,21 @@ const validator: Middleware = <S extends {}>(api: MiddlewareAPI<S>) =>
 			return result;
 		};
 
-function defaultStoreFactory(): RootStore {
+function storageSaver(storageDriver: StorageDriver): Middleware {
+	return <S extends {}>(api: MiddlewareAPI<S>) =>
+		(next: Dispatch<S>) =>
+			<A extends Action>(action: A) => {
+				const result = next(action);
+
+				if (action.type === ActionType.EDITOR_SUBMIT) {
+					storageDriver.save((api.getState() as {} as RootState).user);
+				}
+
+				return result;
+			};
+}
+
+function defaultStoreFactory(storageDriver: StorageDriver): RootStore {
 	// workaround for strict ts compiler
 	const windowAny: any = window;
 
@@ -64,7 +80,7 @@ function defaultStoreFactory(): RootStore {
 	return createStore(
 		RootReducer,
 		composeEnhancers(
-			applyMiddleware(crashReporter, validator),
+			applyMiddleware(crashReporter, validator, storageSaver(storageDriver)),
 		),
 	) as RootStore;
 }
@@ -74,9 +90,10 @@ export class ReduxManager {
 
 	public constructor(
 		enableKeyboard: boolean,
-		storeFactory: () => RootStore = defaultStoreFactory,
+		storageDriver: StorageDriver,
+		storeFactory: (storageDriver: StorageDriver) => RootStore = defaultStoreFactory,
 	) {
-		this.store = storeFactory();
+		this.store = storeFactory(storageDriver);
 		if (enableKeyboard) {
 			setSelectionKeyPressListener(this.store);
 		}
@@ -99,6 +116,7 @@ export class ReduxManager {
 
 	public onUserDataLoad(fileState: UserState) {
 		fileState = importUserData(fileState);
+		validateUser(fileState);
 		this.store.dispatch(initUser(fileState));
 	}
 }

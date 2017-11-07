@@ -64,7 +64,10 @@ function saveData($data) {
     if ($newJson === FALSE) {
         die("failed to save json");
     }
+    saveDataRaw($newJson);
+}
 
+function saveDataRaw($newJson) {
     $saveResult = file_put_contents("example.json", $newJson);
     if ($saveResult === FALSE) {
         die("failed to save data file");

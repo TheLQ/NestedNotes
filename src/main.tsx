@@ -50,11 +50,21 @@ export function create(element: HTMLElement | null) {
 	if (element === null) {
 		throw new Error("null element");
 	}
-	const reduxManager = new ReduxManager(true);
+
+	const debug = false;
+	const storageDriver = (debug)
+		? new WebStorageDriver(
+			"default.json",
+			// will fail
+			"default.json",
+		)
+		: new PhpStorageDriver();
+	const reduxManager = new ReduxManager(true, storageDriver);
 	reduxManager.create(element);
 
-	startDefault(reduxManager);
-	// startPhp();
+	storageDriver.load((userState: UserState) => {
+		start(userState, reduxManager);
+	});
 }
 
 export function start(userState: UserState, reduxManager: ReduxManager) {
@@ -65,22 +75,6 @@ export function start(userState: UserState, reduxManager: ReduxManager) {
 	if (loading !== null) {
 		loading.outerHTML = "";
 	}
-}
-
-function startDefault(reduxManager: ReduxManager) {
-	new WebStorageDriver(
-		"default.json",
-		// will fail
-		"default.json",
-	).load((userState: UserState) => {
-		start(userState, reduxManager);
-	});
-}
-
-function startPhp(reduxManager: ReduxManager) {
-	new PhpStorageDriver().load((userState: UserState) => {
-		start(userState, reduxManager);
-	});
 }
 
 console.log("main end");

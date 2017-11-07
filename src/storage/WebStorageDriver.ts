@@ -15,20 +15,28 @@ export class WebStorageDriver implements StorageDriver {
 
 	public load = (callback: (userState: UserState) => void): void => {
 		jQuery.ajax({
-			url: this.urlSave,
+			url: this.urlLoad,
 			dataType: "json",
 		}).done((data) => {
 			callback(data);
 		}).fail(onAjaxFail);
 	}
 
-	public save(userState: UserState, callback: () => void): void {
+	public save(userState: UserState, callback?: () => void): void {
+		console.log("save", new Error("fuck"));
 		jQuery.post({
-			url: this.urlLoad,
+			url: this.urlSave,
 			// dataType: "json",
-			data: userState,
+			data: {
+				json: JSON.stringify(userState),
+			},
 		}).done((data) => {
-			callback();
+			if (data.length !== 0) {
+				throw new Error("unexpected response from server of length :\n" + data);
+			}
+			if (callback !== undefined) {
+				callback();
+			}
 		}).fail(onAjaxFail);
 	}
 }

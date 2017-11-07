@@ -12,10 +12,17 @@ export function validate(root: RootState) {
 	validateClient(root.client);
 }
 
-function validateUser(userState: UserState) {
+export function validateUser(userState: UserState) {
 	for (const [key, book] of Object.entries(userState.books)) {
 		validateEntry(key, book);
 		validateItems(book.items);
+	}
+
+	for (const [key, view] of Object.entries(userState.views)) {
+		validateEntry(key, view);
+		if (!userState.books.hasOwnProperty(view.forBookId)) {
+			throw new Error(`View ${view.id} points to missing book ${view.forBookId}`);
+		}
 	}
 }
 
