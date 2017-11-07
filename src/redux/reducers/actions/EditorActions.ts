@@ -2,6 +2,11 @@ import { OptionalViewAction } from "./ViewActions";
 import { ActionType } from "./ActionType";
 import { EntryAction, ValueEntryAction } from "./types";
 
+export type EditorNewAction = OptionalViewAction;
+export type EditorInsertAboveAction = OptionalViewAction;
+export type EditorInsertBelowAction = OptionalViewAction;
+export type EditorInsertLeftAction = OptionalViewAction;
+export type EditorInsertRightAction = OptionalViewAction;
 export type EditorSetTextAction = ValueEntryAction<string>;
 export type EditorSetTextRawAction = ValueEntryAction<string>;
 export type EditorAddTagAction = ValueEntryAction<string>;
@@ -12,11 +17,38 @@ export type EditorRemoveLinkAction = ValueEntryAction<string>;
 export type EditorSetLinksAction = ValueEntryAction<string[]>;
 export type EditorSubmitAction = EntryAction;
 export type EditorCancelAction = EntryAction;
-export type EditorNewAction = OptionalViewAction;
 
 export function newEditor(viewId?: string): EditorNewAction {
 	return {
 		type: ActionType.EDITOR_NEW,
+		viewId,
+	};
+}
+
+export function insertAbove(viewId?: string): EditorInsertAboveAction {
+	return {
+		type: ActionType.EDITOR_INSERT_ABOVE,
+		viewId,
+	};
+}
+
+export function insertBelow(viewId?: string): EditorInsertBelowAction {
+	return {
+		type: ActionType.EDITOR_INSERT_BELOW,
+		viewId,
+	};
+}
+
+export function insertLeft(viewId?: string): EditorInsertLeftAction {
+	return {
+		type: ActionType.EDITOR_INSERT_LEFT,
+		viewId,
+	};
+}
+
+export function insertRight(viewId?: string): EditorInsertRightAction {
+	return {
+		type: ActionType.EDITOR_INSERT_RIGHT,
 		viewId,
 	};
 }

@@ -1,3 +1,4 @@
+import { InsertReducer } from "./InsertReducer";
 import lodash from "lodash";
 import { AnyAction } from "redux";
 
@@ -7,6 +8,7 @@ import { EditorState } from "../../../state/user/EditorState";
 import { EditorMap, UserState } from "../../../state/user/UserState";
 import { ActionType } from "../actions/ActionType";
 import {
+    EditorCancelAction,
     EditorNewAction,
     EditorSetLinksAction,
     EditorSetTagsAction,
@@ -20,6 +22,8 @@ export function EditorReducer(
 	viewMap: ClientViewMap,
 	rawAction: AnyAction,
 ): UserState {
+	state = InsertReducer(state, viewMap, rawAction);
+
 	switch (rawAction.type) {
 		// Note: ActionType.EDITOR_SUBMIT lives in BookReducer
 		case ActionType.INIT:
@@ -45,6 +49,7 @@ export function EditorReducer(
 					...state.editors,
 					[item.id]: {
 						id: item.id,
+						parent: item.parent,
 						bookId: item.bookId,
 						text: item.text,
 						textRaw: item.text + tags + links,
@@ -176,6 +181,48 @@ export function EditorReducer(
 						}
 						: book,
 					),
+			};
+		}
+		case ActionType.EDITOR_CANCEL: {
+			const action = rawAction as EditorCancelAction;
+
+			const editor = state.editors[action.entryId];
+			let books = state.books;
+			if (editor.deleteOnCancel) {
+				const book = books[editor.bookId];
+
+				let bookRoots = book.items.roots;
+				let bookEntries = lodash.omit(book.items.entries, [action.entryId]);
+				if (editor.parent === undefined) {
+					bookRoots = lodash.without(bookRoots, editor.id);
+				} else {
+					const parentEntry = bookEntries[editor.parent];
+					bookEntries = {
+						...bookEntries,
+						[parentEntry.id]: {
+							...parentEntry,
+							children: lodash.without(parentEntry.children, editor.id),
+						},
+					};
+				}
+
+				books = {
+					...books,
+					[editor.bookId]: {
+						...book,
+						items: {
+							...book.items,
+							entries: bookEntries,
+							roots: bookRoots,
+						},
+					},
+				};
+			}
+
+			return {
+				...state,
+				editors: lodash.omit(state.editors, [action.entryId]),
+				books,
 			};
 		}
 

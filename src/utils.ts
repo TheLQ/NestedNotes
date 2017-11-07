@@ -51,3 +51,11 @@ export function indexOfSafe<T>(haystack: T[], searchElement: T, fromIndex?: numb
 
 	return result;
 }
+
+export function deepSlowMerge<Left, Right>(left: Left, right: Right): Left & Right {
+	// deep clone
+	// this is likely much slower than immutable libraries but has actually seemless integration
+	const cloneLeft = JSON.parse(JSON.stringify(left));
+
+	return lodash.merge(cloneLeft, right);
+}

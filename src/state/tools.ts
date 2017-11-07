@@ -36,6 +36,7 @@ export function getParent(items: UserItemMap, item: ItemState): ParentData {
 
 		return {
 			parent,
+			parentId: item.parent,
 			parentChildren: parent.children,
 			indexOfChild: childIndex,
 		};
@@ -47,6 +48,7 @@ export function getParent(items: UserItemMap, item: ItemState): ParentData {
 
 		return {
 			parent: undefined,
+			parentId: undefined,
 			parentChildren: items.roots,
 			indexOfChild: childIndex,
 		};
@@ -55,6 +57,7 @@ export function getParent(items: UserItemMap, item: ItemState): ParentData {
 
 interface ParentData {
 	parent: ItemState | undefined;
+	parentId: string | undefined;
 	parentChildren: string[];
 	indexOfChild: number;
 }

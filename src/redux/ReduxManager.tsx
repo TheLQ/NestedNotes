@@ -1,4 +1,4 @@
-import { newEditor } from "./reducers/actions/EditorActions";
+import { insertBelow, newEditor } from "./reducers/actions/EditorActions";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
@@ -142,9 +142,12 @@ function selectionKeyPressListener(e: KeyboardEvent, store: RootStore) {
 			break;
 		// e
 		case "e":
-			// stop char from being inserted into focused form element
+			// stop char from being inserted into newly created form element with focus
 			e.preventDefault();
 			store.dispatch(newEditor());
+			break;
+		case "ArrowDown":
+			store.dispatch(insertBelow());
 			break;
 		default:
 	}
@@ -153,9 +156,9 @@ function selectionKeyPressListener(e: KeyboardEvent, store: RootStore) {
 let activeSelectionKeyPressListener: (e: KeyboardEvent) => void | undefined;
 function setSelectionKeyPressListener(store: RootStore) {
 	if (activeSelectionKeyPressListener !== undefined) {
-		document.removeEventListener("keypress", activeSelectionKeyPressListener);
+		document.removeEventListener("keydown", activeSelectionKeyPressListener);
 	}
 
 	activeSelectionKeyPressListener = (e) => selectionKeyPressListener(e, store);
-	document.addEventListener("keypress", activeSelectionKeyPressListener);
+	document.addEventListener("keydown", activeSelectionKeyPressListener);
 }
