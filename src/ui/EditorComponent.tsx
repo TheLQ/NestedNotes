@@ -54,7 +54,10 @@ function parseText(input: string) {
 
 			let end = input.indexOf(" ", start);
 			if (end === -1) {
-				end = input.length;
+				end = input.indexOf("\n", start);
+				if (end === -1) {
+					end = input.length;
+				}
 			}
 			// console.log("found end " + end);
 
@@ -87,7 +90,7 @@ function onTextChange(props: EditorDispatchProps, value: string) {
 
 	const parseData = parseText(value);
 	props.setLinks(parseData.links);
-	props.setTags(parseData.tags)
+	props.setTags(parseData.tags);
 	props.setText(parseData.result);
 }
 
