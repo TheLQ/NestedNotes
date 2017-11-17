@@ -25,7 +25,7 @@ function ShellComponentRender(props: StateFromProps): JSX.Element {
 	);
 }
 
-function mapStateToProps(state: RootState, props: {}): StateFromProps {
+function mapStateToProps(state: RootState, props?: {}): StateFromProps {
 	return {
 		name: state.user.name,
 		viewIds: Object.keys(state.client.views.entries),

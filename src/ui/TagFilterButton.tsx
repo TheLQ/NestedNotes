@@ -19,7 +19,11 @@ interface TagFilterButtonPropsFromDispatch {
 	onClick(): void;
 }
 
-function mapStateToProps(state: RootState, ownProps: TagFilterButtonProperty): TagFilterButtonPropsFromState {
+function mapStateToProps(state: RootState, ownProps?: TagFilterButtonProperty): TagFilterButtonPropsFromState {
+	if (ownProps === undefined) {
+		throw new Error("no props");
+	}
+
 	return {
 		selected: ownProps.tag.id === state.client.views.active,
 	};
@@ -27,8 +31,12 @@ function mapStateToProps(state: RootState, ownProps: TagFilterButtonProperty): T
 
 function mapDispatchToProps(
 	dispatch: Redux.Dispatch</*Action*/{}>,
-	ownProps: TagFilterButtonProperty,
+	ownProps?: TagFilterButtonProperty,
 ): TagFilterButtonPropsFromDispatch {
+	if (ownProps === undefined) {
+		throw new Error("no props");
+	}
+
 	return {
 		onClick: () => {
 			dispatch(ViewActions.activeTag(ownProps.viewId, ownProps.tag.name));

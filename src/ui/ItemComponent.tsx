@@ -60,7 +60,11 @@ function ItemComponentRender(props: ItemProps): JSX.Element {
 	}
 }
 
-function mapStateToProps(state: RootState, props: ItemProperty): ItemStateFromProps {
+function mapStateToProps(state: RootState, props?: ItemProperty): ItemStateFromProps {
+	if (props === undefined) {
+		throw new Error("no props");
+	}
+
 	const view = state.client.views.entries[props.viewId];
 	const note = view.items.entries[props.id];
 
@@ -74,8 +78,12 @@ function mapStateToProps(state: RootState, props: ItemProperty): ItemStateFromPr
 
 function mapDispatchToProps(
 	dispatch: Dispatch</*Action*/{}>,
-	ownProps: ItemProperty,
+	ownProps?: ItemProperty,
 ): ItemDispatchFromProps {
+	if (ownProps === undefined) {
+		throw new Error("no props");
+	}
+
 	return {
 		onClick: () => {
 			dispatch(selectItem(ownProps.viewId, ownProps.id));

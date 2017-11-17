@@ -26,7 +26,11 @@ function TagFilterRender(props: TagFilterPropsFromState & TagFilterProps): JSX.E
 	return <div>{tagButtons}</div>;
 }
 
-function mapStateToProps(state: RootState, props: TagFilterProps): TagFilterPropsFromState {
+function mapStateToProps(state: RootState, props?: TagFilterProps): TagFilterPropsFromState {
+	if (props === undefined) {
+		throw new Error("no props");
+	}
+
 	const view = state.client.views.entries[props.viewId];
 
 	return {

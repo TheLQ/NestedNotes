@@ -173,7 +173,11 @@ function EditComponentRender(
 	);
 }
 
-function mapStateToProps(state: RootState, props: EditorProperty): EditorStateProps {
+function mapStateToProps(state: RootState, props?: EditorProperty): EditorStateProps {
+	if (props === undefined) {
+		throw new Error("no props");
+	}
+
 	const editor = state.user.editors[props.itemId];
 
 	return {
@@ -185,8 +189,12 @@ function mapStateToProps(state: RootState, props: EditorProperty): EditorStatePr
 
 function mapDispatchToProps(
 	dispatch: Dispatch</*Action*/{}>,
-	ownProps: EditorProperty,
+	ownProps?: EditorProperty,
 ): EditorDispatchProps {
+	if (ownProps === undefined) {
+		throw new Error("no props");
+	}
+
 	return {
 			setText(text: string) {
 				dispatch(EditorActions.setText(ownProps.itemId, text));
@@ -222,7 +230,7 @@ function mapDispatchToProps(
 }
 
 export const EditorComponent = connect<
-	EditorState,
+	EditorStateProps,
 	EditorDispatchProps,
 	EditorProperty
 >(mapStateToProps, mapDispatchToProps)(EditComponentRender);
