@@ -1,4 +1,5 @@
-# treenotebook - Note taking with nested lists and tags
+# treenotebook
+Note taking with nested lists and tags
 
 TreeNoteBook is a note taking app using powerful nested lists and can be easily self-hosted. Nested lists are a great notes system that are finally usable at scale. TreeNoteBook is aiming to be an open source alternative to apps like Workflowy and a cross-platform alternative to desktop apps like TreeNote.
 
@@ -20,6 +21,7 @@ Planned
 * Hard linked trees
 * Multiple books
 * Encrypted lists
+* Collapsable
 
 Future
 
@@ -77,7 +79,7 @@ To build yourself
 
 ## Rewrite history
 
-1. OneNote, text files, random documents, and physical sticky notes and notebooks
+1. OneNote, random text files, random documents, and physical sticky notes and notebooks
 1. Sphinx/rst
 1. Knockout.JS
 1. Pure PHP
@@ -90,3 +92,4 @@ To build yourself
 * selfnotes
 * selfnotetree
 * selftreenotes
+* nestednotes

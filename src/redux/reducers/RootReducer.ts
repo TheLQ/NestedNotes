@@ -4,8 +4,8 @@ import { initialState, RootState } from "../../state/RootState";
 import { ActionType } from "./actions/ActionType";
 import { InitUserAction } from "./actions/GeneralActions";
 import { ClientReducer } from "./client/ClientReducer";
+import { EditorReducer } from "./tools/EditorReducer";
 import { MoveReducer } from "./tools/MoveReducer";
-import { EditorReducer } from "./user/EditorReducer";
 import { UserReducer } from "./user/UserReducer";
 
 export function RootReducer(state: RootState = initialState, rawAction: AnyAction): RootState {
