@@ -1,6 +1,1 @@
-Bug #1 - Found Aug 2017
-
-
-
-
-default typescript+rollup
+https://github.com/debitoor/dot-prop-immutable

@@ -9,9 +9,6 @@ import * as replace from "rollup-plugin-replace";
 import * as rollupTypescript from "rollup-plugin-typescript2";
 import typescript from "typescript";
 
-/* To run: npm run gulp -- build
- */
-
 const tasks = gulpStd(gulp);
 
 const SOURCE_ALL_FILES = "./src/**/*";
