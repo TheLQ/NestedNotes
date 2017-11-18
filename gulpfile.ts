@@ -1,5 +1,4 @@
-// import "ts-babel-node/register-babel";
-
+/* tslint:disable:no-implicit-dependencies */
 import * as gulp from "gulp";
 import * as gulpStd from "gulp-standard-tasks";
 import tslint from "gulp-tslint";
@@ -22,17 +21,19 @@ function doLint(paths: string[]) {
 	return gulp.src(paths)
 		.pipe(tslint({
 			configuration: "tslint.json",
+			formatter: "verbose",
 		}))
 		.pipe(tslint.report({
 			emitError: false,
 		}));
 }
-gulp.task("lint", ["compile"], () => doLint([SOURCE_ALL_FILES, "gulpfile.ts"]));
+gulp.task("lintGulp", () => doLint(["gulpfile.ts"]));
+gulp.task("lint", ["lintGulp"], () => doLint(["./src/**/*.ts", "./src/**/*.tsx"]));
 gulp.task("testLint", ["testCompile"], () => doLint([TEST_ALL_FILES]));
 
 gulp.task("cleanBundle", tasks.clean("./dist/bundle.js*"));
 
-gulp.task("bundle", async () => {
+gulp.task("bundle", ["lint"], async () => {
 	const bundle = await rollup.rollup({
 		entry: "./src/main.tsx",
 		plugins: [
@@ -47,7 +48,7 @@ gulp.task("bundle", async () => {
 				include: "node_modules/**",
 				sourceMap: true,
 				namedExports: {
-					"node_modules/react/react.js": [ "Children", "Component", "createElement" ]
+					"node_modules/react/react.js": [ "Children", "Component", "createElement" ],
 				},
 			}),
 			rollupTypescript({

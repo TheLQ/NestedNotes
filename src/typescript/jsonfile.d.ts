@@ -1,1 +1,1 @@
-declare module 'jsonfile';
+declare module "jsonfile";

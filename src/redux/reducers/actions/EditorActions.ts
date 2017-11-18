@@ -1,6 +1,6 @@
-import { OptionalViewAction } from "./ViewActions";
 import { ActionType } from "./ActionType";
 import { EntryAction, ValueEntryAction } from "./types";
+import { OptionalViewAction } from "./ViewActions";
 
 export type EditorNewAction = OptionalViewAction;
 export type EditorInsertAboveAction = OptionalViewAction;

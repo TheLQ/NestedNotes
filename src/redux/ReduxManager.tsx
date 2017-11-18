@@ -1,4 +1,3 @@
-import { ActionType } from "./reducers/actions/ActionType";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
@@ -11,15 +10,16 @@ import { validate, validateUser } from "../state/Validator";
 import { importUserData } from "../storage/StorageConvert";
 import { StorageDriver } from "../storage/StorageDriver";
 import { ShellComponent } from "../ui/ShellComponent";
+import { ActionType } from "./reducers/actions/ActionType";
 import { insertBelow, newEditor } from "./reducers/actions/EditorActions";
 import { initUser } from "./reducers/actions/GeneralActions";
 import {
-    moveDown,
-    moveLeft,
-    moveRight,
-    moveUp,
-    selectNextActiveView,
-    selectPrevActiveView,
+	moveDown,
+	moveLeft,
+	moveRight,
+	moveUp,
+	selectNextActiveView,
+	selectPrevActiveView,
 } from "./reducers/actions/ViewActions";
 import { RootReducer } from "./reducers/RootReducer";
 
@@ -75,6 +75,7 @@ function storageSaver(storageDriver: StorageDriver): Middleware {
 
 function defaultStoreFactory(storageDriver: StorageDriver): RootStore {
 	// workaround for strict ts compiler
+	// tslint:disable-next-line:no-any
 	const windowAny: any = window;
 
 	const composeEnhancers = windowAny.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
@@ -107,7 +108,7 @@ export class ReduxManager {
 
 	private render() {
 		return (
-			<Provider store={ this.store } >
+			<Provider store={this.store} >
 				<ShellComponent />
 			</Provider>
 			);
@@ -131,6 +132,7 @@ function selectionKeyPressListener(e: KeyboardEvent, store: RootStore) {
 	console.log("keypress", e);
 
 	// Do not trigger when inside a form
+	// tslint:disable-next-line:no-any
 	const activeElement = document.activeElement as any;
 	// console.log("activeElement", document.activeElement);
 	if (activeElement.form !== undefined) {

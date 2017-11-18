@@ -147,9 +147,7 @@ export function transformStringMap<T extends Entry>(
 
 /**
  * Copy object and apply onSingle transform to one key
- * @param map
- * @param key
- * @param onSingle
+ * @param onSingle transformer
  */
 export function mapSingle<V extends Entry>(
 	map: StringMap<V>,
@@ -182,4 +180,3 @@ export function getFirstInMapOrError<T extends Entry>(map: StringMap<T>): T {
 
 	return result;
 }
-

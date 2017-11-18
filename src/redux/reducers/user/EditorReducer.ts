@@ -1,4 +1,3 @@
-import { InsertReducer } from "./InsertReducer";
 import lodash from "lodash";
 import { AnyAction } from "redux";
 
@@ -8,14 +7,15 @@ import { EditorState } from "../../../state/user/EditorState";
 import { EditorMap, UserState } from "../../../state/user/UserState";
 import { ActionType } from "../actions/ActionType";
 import {
-    EditorCancelAction,
-    EditorNewAction,
-    EditorSetLinksAction,
-    EditorSetTagsAction,
-    EditorSetTextAction,
-    EditorSetTextRawAction,
-    EditorSubmitAction,
+	EditorCancelAction,
+	EditorNewAction,
+	EditorSetLinksAction,
+	EditorSetTagsAction,
+	EditorSetTextAction,
+	EditorSetTextRawAction,
+	EditorSubmitAction,
 } from "../actions/EditorActions";
+import { InsertReducer } from "./InsertReducer";
 
 export function EditorReducer(
 	state: UserState,

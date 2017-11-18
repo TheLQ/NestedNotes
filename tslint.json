@@ -1,28 +1,32 @@
 {
-    "extends": "tslint:all",
+    "extends": ["tslint:all", "tslint-react"],
     "rules": {
         "indent": [true, "tabs", 2],
         "no-console": false,
         "completed-docs": false,
+        // Disabled because of https://github.com/palantir/tslint/issues/3080
+        "no-unsafe-any": false,
         // tune more intrusive rules
         "max-classes-per-file": false,
         "object-literal-sort-keys": false,
         "interface-name": [true, "never-prefix"],
         "no-switch-case-fall-through": true,
-        "only-arrow-functions": ["allow-named-functions"],
+        "only-arrow-functions": [true, "allow-named-functions"],
         "comment-format": false,
         "member-ordering": false,
         "variable-name": [
+            true,
             "allow-pascal-case"
         ],
         "prefer-template": false,
         "no-parameter-reassignment": false,
         "binary-expression-operand-order": false,
         "typedef": [
-            "call-signature",
-            "arrow-call-signature",
+            true,
+            // "call-signature",
+            // "arrow-call-signature",
             "parameter",
-            "arrow-parameter",
+            // "arrow-parameter",
             "property-declaration",
             // "variable-declaration",
             "member-variable-declaration",

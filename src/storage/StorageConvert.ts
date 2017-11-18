@@ -7,10 +7,12 @@ export function importUserData(rawUserData: UserState): UserState {
 	// Convert array of entries to index object
 	if (!rawUserData.hasOwnProperty("globalsettings")) {
 		console.log("new format");
+
 		return rawUserData;
 	}
 
-	let raw = rawUserData as any;
+	// tslint:disable-next-line:no-any
+	const raw = rawUserData as any;
 
 	raw.notes = lodash.mapValues(raw.notes, (note) => {
 		if (note.hasOwnProperty("children")) {
@@ -25,7 +27,7 @@ export function importUserData(rawUserData: UserState): UserState {
 			note = {
 				...note,
 				children: [],
-			}
+			};
 		}
 
 		if (!note.hasOwnProperty("links")) {
@@ -42,7 +44,7 @@ export function importUserData(rawUserData: UserState): UserState {
 		}
 
 		return note;
-	})
+	});
 
 	const roots = (raw.hasOwnProperty("roots"))
 		? raw.roots

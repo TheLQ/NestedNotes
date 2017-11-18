@@ -8,6 +8,9 @@ import { getAllTags } from "../state/tools";
 import { EditorState } from "../state/user/EditorState";
 import { ItemValueComponent } from "./ItemValueComponent";
 
+const EDITOR_TEXT_COLUMNS = 80;
+const EDITOR_TEXT_ROWS = 20;
+
 interface EditorProperty {
 	itemId: string;
 }
@@ -36,15 +39,11 @@ function blockOnClick(event: React.MouseEvent<HTMLFormElement>) {
 function parseText(input: string) {
 	const newLinks: Set<string> = new Set();
 	const newTags: Set<string> = new Set();
-	let counter = 0;
 
 	for (const urlPrefix of ["http://", "https://", "#"]) {
 		// console.log("prefix " + urlPrefix);
 		let start = 0;
 		while (true) {
-			if (++counter === 10) {
-				throw new Error("oops");
-			}
 			// const origStart = start;
 			start = input.indexOf(urlPrefix, start);
 			// console.log("for string '" + input + "' from " + origStart + " found start " + start);
@@ -137,12 +136,12 @@ function EditComponentRender(
 					<label><input type="checkbox" id="bulkAdd" name="bulkAdd" /> Bulk Add Mode</label>
 				</div>
 				<textarea
-					rows={20}
-					cols={80}
+					rows={EDITOR_TEXT_ROWS}
+					cols={EDITOR_TEXT_COLUMNS}
 					value={props.textRaw}
 					onKeyPress={onKeyPress}
 					onChange={onChange}
-					autoFocus
+					autoFocus={true}
 				/>
 			</fieldset>
 			<fieldset>
