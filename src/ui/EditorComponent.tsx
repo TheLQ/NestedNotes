@@ -96,19 +96,38 @@ function onTextChange(props: EditorDispatchProps, value: string) {
 function EditComponentRender(
 	props: EditorProperty & EditorStateProps & EditorDispatchProps,
 ): JSX.Element {
-	const addTagOptions = props.allTags.map(
-		(tag) => <option key={tag}>{tag}</option>,
-	);
-
-	const removeTagButtons = props.tags.map((tag) => {
-		const onRemoveTag = (e: React.MouseEvent<HTMLButtonElement>) => props.removeTag(tag);
-
-		return (
-			<button id="removeTag" className="tag" onClick={onRemoveTag} key={tag}>
-				{tag}
-			</button>
+	const addTagOptions = props.allTags
+		.filter((tag) => props.tags.indexOf(tag) === -1)
+		.map(
+			(tag) => <option key={tag}>{tag}</option>,
 		);
-	});
+
+	const addTag = (event: React.ChangeEvent<HTMLSelectElement>) => {
+		let text = props.textRaw;
+		const tagToAdd = "#" + event.target.value;
+
+		let lastTagPos = text.lastIndexOf(" #");
+		if (lastTagPos === -1 && text.startsWith("#")) {
+			lastTagPos = 0;
+		}
+		if (lastTagPos !== -1) {
+			// insert after tag
+			const spaceAfterTag = text.indexOf(" ", lastTagPos);
+			if (spaceAfterTag !== -1) {
+				text = text.substr(0, spaceAfterTag)
+					+ " " + tagToAdd + " "
+					+ text.substr(spaceAfterTag + 1);
+			} else {
+				// tag is at end of text
+				text = text + " " + tagToAdd;
+			}
+		} else {
+			// no existing tags
+			text = tagToAdd + " " + text;
+		}
+
+		onTextChange(props, text);
+	};
 
 	const onKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
 		event.stopPropagation();
@@ -143,27 +162,15 @@ function EditComponentRender(
 					onChange={onChange}
 					autoFocus={true}
 				/>
+				<p>
+					<label htmlFor="addTags">Add Tag: </label>
+					<select id="addTags" onChange={addTag}>{addTagOptions}</select>
+				</p>
 			</fieldset>
 			<fieldset>
 				<legend>Preview</legend>
 
 				<ItemValueComponent item={props} selected={false} />
-			</fieldset>
-			<fieldset>
-				<legend>Tags</legend>
-				<p>
-					<label htmlFor="removeTag">Tags:</label>
-					{removeTagButtons}
-				</p>
-				<p>
-					<label htmlFor="addTags">Add: </label>
-					<select id="addTags" onChange={(e) => props.addTag(e.target.value)}>{addTagOptions}</select>
-				</p>
-				{/* <p>
-					<label htmlFor="newTag">New: </label>
-					<input type="text" value={this.state.newTagText} onChange={this.onTagNewChange} />
-					<button onClick={this.onTagNewAdd}>Add New Tag</button>
-				</p> */}
 			</fieldset>
 
 			<button id="cancel" type="reset" onClick={props.cancel}>Cancel</button>

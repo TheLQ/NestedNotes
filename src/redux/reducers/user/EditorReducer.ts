@@ -36,7 +36,7 @@ export function EditorReducer(
 			const tags = (item.tags.length > 0)
 				? " " + lodash.join(
 					lodash.map(item.tags, (tag) => `#${tag}`),
-					"",
+					" ",
 				)
 				: "";
 			const links = (item.links.length > 0)
