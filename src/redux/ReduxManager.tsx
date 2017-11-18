@@ -59,11 +59,17 @@ function storageSaver(storageDriver: StorageDriver): Middleware {
 			<A extends Action>(action: A) => {
 				const result = next(action);
 
-				if (action.type === ActionType.EDITOR_SUBMIT) {
-					storageDriver.save((api.getState() as {} as RootState).user);
+				switch (action.type) {
+					case ActionType.EDITOR_SUBMIT:
+					case ActionType.MOVE_UP:
+					case ActionType.MOVE_DOWN:
+					case ActionType.MOVE_LEFT:
+					case ActionType.MOVE_RIGHT:
+						storageDriver.save((api.getState() as {} as RootState).user);
+						 /* falls through */
+					default:
+						return result;
 				}
-
-				return result;
 			};
 }
 
