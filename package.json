@@ -5,6 +5,7 @@
   "dependencies": {
     "commonmark": "^0.27.0",
     "create-react-app": "^1.4.3",
+    "immutable-assign": "^2.0.1",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
     "react": "^15.6.2",

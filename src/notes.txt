@@ -1,1 +1,22 @@
+
+Benchmarker
+https://github.com/engineforce/ImmutableAssign/blob/master/debug/benchmarks.js
+
+typescript-immutable-helper
+- Essentially wrapper around lodash.set with Object.freeze
+- Uses deepClone - expensive?
+
+typed-immutable-record
+- NOPE, uses immutabe.js
+
+immutable.js
+- NOPE, isn't a plain object
+
 https://github.com/debitoor/dot-prop-immutable
+- ???
+- doesn't seem to support typescript
+
+https://github.com/mariocasciaro/object-path-immutable
+
+
+immutable-assign

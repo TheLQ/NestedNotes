@@ -11,7 +11,7 @@ import { importUserData } from "../storage/StorageConvert";
 import { StorageDriver } from "../storage/StorageDriver";
 import { ShellComponent } from "../ui/ShellComponent";
 import { ActionType } from "./reducers/actions/ActionType";
-import { insertBelow, newEditor } from "./reducers/actions/EditorActions";
+import { insertAbove, insertBelow, insertLeft, insertRight, newEditor } from "./reducers/actions/EditorActions";
 import { initUser } from "./reducers/actions/GeneralActions";
 import {
 	moveDown,
@@ -86,6 +86,7 @@ function defaultStoreFactory(storageDriver: StorageDriver): RootStore {
 
 	return createStore(
 		RootReducer,
+		// deepFreeze(initialState),
 		composeEnhancers(
 			applyMiddleware(crashReporter, validator, storageSaver(storageDriver)),
 		),
@@ -141,18 +142,69 @@ function selectionKeyPressListener(e: KeyboardEvent, store: RootStore) {
 		return;
 	}
 
+	/*
+	j - nav down
+	k - nav up
+
+	shift + j - nav down to sibling (skipping children)
+	shift + k - nav up to sibling (skipping children)
+
+	p - nav to parent
+	t or r (In RES t=topic) - nav to root element
+
+	alt + shift + j - nav to next root element (used inside children, seems arbitrary)
+	alt + shift + k - nav to next root element (used inside children, seems arbitrary)
+
+	w - insert above
+	s - insert below
+	a - insert left
+	d - insert right
+
+	shift + w - move above
+	shift + s - move below
+	shift + a - move left
+	shift + d - move right
+
+	// could have modes, eg pressing v enters view nav mode
+	*/
+
 	switch (e.key) {
-		// w
-		case "w":
+		/* Navigation */
+		// j
+		case "j":
+			store.dispatch(selectNextActiveView());
+			break;
+		// k
+		case "k":
 			store.dispatch(selectPrevActiveView());
 			break;
-		// shift + w
-		case "W":
-			store.dispatch(moveUp());
+
+		/* insert */
+		// w
+		case "w":
+			blockCharFromNewFormElement(e);
+			store.dispatch(insertAbove());
 			break;
 		// s
 		case "s":
-			store.dispatch(selectNextActiveView());
+			blockCharFromNewFormElement(e);
+			store.dispatch(insertBelow());
+			break;
+		// a
+		case "a":
+			blockCharFromNewFormElement(e);
+			store.dispatch(insertLeft());
+			break;
+		// d
+		case "d":
+			blockCharFromNewFormElement(e);
+			store.dispatch(insertRight());
+			break;
+
+		/* move */
+		// shift + w
+		case "W":
+			store.dispatch(moveUp());
 			break;
 		// shift + s
 		case "S":
@@ -166,17 +218,22 @@ function selectionKeyPressListener(e: KeyboardEvent, store: RootStore) {
 		case "D":
 			store.dispatch(moveRight());
 			break;
+
+		/* tools */
 		// e
 		case "e":
-			// stop char from being inserted into newly created form element with focus
-			e.preventDefault();
+			blockCharFromNewFormElement(e);
 			store.dispatch(newEditor());
-			break;
-		case "ArrowDown":
-			store.dispatch(insertBelow());
 			break;
 		default:
 	}
+}
+
+/**
+ * When pressing key creates a form element and input field gets focus, don't insert char in element
+ */
+function blockCharFromNewFormElement(e: KeyboardEvent) {
+	e.preventDefault();
 }
 
 let activeSelectionKeyPressListener: (e: KeyboardEvent) => void | undefined;

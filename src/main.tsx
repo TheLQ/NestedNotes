@@ -1,8 +1,7 @@
 "use strict";
+
 import { ReduxManager } from "./redux/ReduxManager";
-
 import { UserState } from "./state/user/UserState";
-
 import { PhpStorageDriver } from "./storage/PhpStorageDriver";
 import { WebStorageDriver } from "./storage/WebStorageDriver";
 import * as Utils from "./utils";
