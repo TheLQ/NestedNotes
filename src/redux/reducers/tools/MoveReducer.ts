@@ -1,3 +1,4 @@
+import iassign from "immutable-assign";
 import lodash from "lodash";
 import { AnyAction } from "redux";
 
@@ -68,43 +69,35 @@ function moveDown(state: UserItemMap, item: ItemState): UserItemMap {
 }
 
 function moveUpDown(state: UserItemMap, item: ItemState, direction: number): UserItemMap {
-	const parentArray: string[] = item.parent === undefined
-		? state.roots.slice(0)
-		: state.entries[item.parent].children.slice(0);
+	const stateInserter = (children: string[]): string[] => {
+		const parentIndex = indexOfSafe(children, item.id, 0, `child ${item.id} does not exist in parent ${children}`);
 
-	const parentIndex = indexOfSafe(
-		parentArray,
-		item.id,
-		0,
-		`child ${item.id} does not exist in parent ${parentArray}`,
-	);
-	if (direction === -1 && parentIndex === 0) {
-		return state;
-	} else if (direction === 1 && parentIndex === parentArray.length - 1) {
-		return state;
-	}
-	parentArray.splice(parentIndex, 1);
-	parentArray.splice(parentIndex + (1 * direction), 0, item.id);
+		if ((parentIndex === 0 && direction === -1) || (parentIndex === children.length - 1 && direction === 1)) {
+			// for direction=-1, causes 2nd splice to go negative
+			// for direction=1, causes 2nd splice to (maybe) get reduced to actual last index by browser
+			return children;
+		}
+
+		children.splice(parentIndex, 1);
+		children.splice(parentIndex + (1 * direction), 0, item.id);
+
+		return children;
+	};
 
 	if (item.parent === undefined) {
-		return {
-			...state,
-			roots: parentArray,
-		};
+		return iassign(
+			state,
+			(newState) => newState.roots,
+			stateInserter,
+		);
 	} else {
-		return {
-			...state,
-			entries: lodash.mapValues(state.entries, (itemOld) => {
-				if (itemOld.id === itemOld.parent) {
-					return {
-						...itemOld,
-						children: parentArray,
-					};
-				} else {
-					return itemOld;
-				}
-			}),
-		};
+		const itemParent = item.parent;
+
+		return iassign(
+			state,
+			(newState) => newState.entries[itemParent].children,
+			stateInserter,
+		);
 	}
 }
 
