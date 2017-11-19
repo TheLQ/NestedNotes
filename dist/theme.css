@@ -21,12 +21,26 @@ textarea {
     background-color: #333333;
 }
 
+.renderedItem p:first-child {
+    /* don't push to line after tags/links */
+    display: inline;
+}
+
+.renderedItem p:last-child {
+    /* don't put spaces between list items */
+    margin-bottom: 0;
+}
+
+.item-selected {
+    background-color: #000000 !important;
+}
+
 /* .generic:nth-child(even) li { */
 .itemEven {
 	background-color: #333333 !important;
 }
 
-.itemEven ul {
+.itemEven > ul {
 	border-bottom-style: solid;
 	border-bottom-width: 1px;
 	border-bottom-color: #121212 !important;
@@ -38,12 +52,11 @@ textarea {
 
 }
 
-.itemOdd ul {
+.itemOdd > ul {
 	border-bottom-style: solid;
 	border-bottom-width: 1px;
 	border-bottom-color: #333333 !important;
 }
-
 
 .links {
     font-size: 9px;

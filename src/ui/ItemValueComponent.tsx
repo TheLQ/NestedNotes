@@ -1,3 +1,4 @@
+import commonmark from "commonmark";
 import React from "react";
 
 import * as AttributeComponent from "./AttributeComponent";
@@ -13,6 +14,9 @@ interface ItemValueProperty {
 	selected: boolean;
 }
 
+const markReader = new commonmark.Parser();
+const markWriter = new commonmark.HtmlRenderer();
+
 export function ItemValueComponent(props: ItemValueProperty): JSX.Element {
 	try {
 		const tags = props.item.tags.length > 0
@@ -23,9 +27,13 @@ export function ItemValueComponent(props: ItemValueProperty): JSX.Element {
 			: undefined;
 		const selected = props.selected ? "item-selected" : "item-init";
 
+		const markParsed = markReader.parse(props.item.text);
+		const markHtml = markWriter.render(markParsed);
+
 		return (
 			<div className={selected}>
-				{tags}{links}{props.item.text}
+				{tags}{links}
+				<span className="renderedItem" dangerouslySetInnerHTML={{ __html: markHtml }}/>
 			</div>
 		);
 	} catch (error) {
