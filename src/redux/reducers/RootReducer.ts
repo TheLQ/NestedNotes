@@ -1,6 +1,8 @@
+import iassign from "immutable-assign";
 import { AnyAction } from "redux";
 
 import { initialState, RootState } from "../../state/RootState";
+import { DEFAULT_IASSIGN_OPS } from "../../utils";
 import { ActionType } from "./actions/ActionType";
 import { InitUserAction } from "./actions/GeneralActions";
 import { ClientReducer } from "./client/ClientReducer";
@@ -11,7 +13,16 @@ import { UserReducer } from "./user/UserReducer";
 export function RootReducer(state: RootState = initialState, rawAction: AnyAction): RootState {
 	if (rawAction.type === ActionType.INIT) {
 		const action = rawAction as InitUserAction;
-		state.user = action.rawUserState;
+
+		state = iassign(
+			state,
+			(newState) => {
+				newState.user = action.rawUserState;
+
+				return newState;
+			},
+			DEFAULT_IASSIGN_OPS,
+		);
 	}
 
 	let newUserState = UserReducer(state.user, state.client, rawAction);

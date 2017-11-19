@@ -55,7 +55,7 @@ export function getParent(items: UserItemMap, item: ItemState): ParentData {
 	}
 }
 
-interface ParentData {
+export interface ParentData {
 	parent: ItemState | undefined;
 	parentId: string | undefined;
 	parentChildren: string[];

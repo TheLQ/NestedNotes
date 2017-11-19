@@ -63,3 +63,34 @@ export function deepSlowMerge<Left, Right>(left: Left, right: Right): Left & Rig
 
 	return lodash.merge(cloneLeft, right);
 }
+
+// export function mut<V>(callback: (val: V) => void): (val: V) => V {
+// 	return (val: V) => {
+// 		callback(val);
+// 		return val;
+// 	}
+// }
+
+// Extracted from immutable-assign
+// type getPropFunc<TObj, TProp, TContext> = (obj: TObj, context: TContext) => TProp;
+// type setPropFunc<TProp> = (prop: TProp) => TProp;
+// export function iassignState<TObj>(
+// 	obj: TObj,
+// 	setProp: setPropFunc<TObj>,
+// 	option?: any,
+// ): TObj;
+// export function iassignState<TObj, TProp, TContext>(
+// 	obj: TObj,
+// 	getProp: getPropFunc<TObj, TProp, TContext>,
+// 	setProp: setPropFunc<TProp>,
+// 	context?: TContext,
+// 	option?: any,
+// ): TObj {
+// 	deepFr
+// 	return iassign(obj, getProp, setProp, context, option);
+// }
+
+export const DEFAULT_IASSIGN_OPS = {
+	// freeze: true,
+	// ignoreIfNoChange: true,
+};

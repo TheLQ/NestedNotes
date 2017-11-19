@@ -26,8 +26,6 @@ export function EditorReducer(
 
 	switch (rawAction.type) {
 		// Note: ActionType.EDITOR_SUBMIT lives in BookReducer
-		case ActionType.INIT:
-			return state;
 		case ActionType.EDITOR_NEW: {
 			const action = rawAction as EditorNewAction;
 
