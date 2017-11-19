@@ -62,6 +62,10 @@ export function create(element: HTMLElement | null) {
 	reduxManager.create(element);
 
 	storageDriver.load((userState: UserState) => {
+		if (userState.prod) {
+			document.title = "ProdNotes";
+		}
+
 		start(userState, reduxManager);
 	});
 }

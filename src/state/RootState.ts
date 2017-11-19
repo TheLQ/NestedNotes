@@ -8,6 +8,7 @@ export interface RootState {
 
 export const initialState: RootState = {
 	user: {
+		prod: false,
 		name: "test",
 		books: {
 			firstbook: {

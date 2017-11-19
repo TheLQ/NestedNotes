@@ -7,6 +7,7 @@ import { UserViewState } from "./UserViewState";
 
 export interface UserState {
 	name: string;
+	prod: boolean;
 	books: BookMap;
 	tags: UserTagMap;
 	views: UserViewMap;
