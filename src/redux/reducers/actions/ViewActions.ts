@@ -24,7 +24,7 @@ export type MoveUpAction = OptionalViewAction;
 export type MoveDownAction = OptionalViewAction;
 export type MoveLeftAction = OptionalViewAction;
 export type MoveRightAction = OptionalViewAction;
-export type DeleteItemAction = ViewActionValue<string>;
+export type DeleteItemAction = OptionalViewAction;
 
 export function activeTag(viewId: string, id: string): SelectTagAction {
 	return {
@@ -96,10 +96,9 @@ export function moveRight(viewId?: string): MoveRightAction {
 	};
 }
 
-export function deleteItem(viewId: string, item: string): DeleteItemAction {
+export function deleteItem(viewId?: string): DeleteItemAction {
 	return {
 		type: ActionType.DELETE_ITEM,
 		viewId,
-		value: item,
 	};
 }

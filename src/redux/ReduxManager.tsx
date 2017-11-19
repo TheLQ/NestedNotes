@@ -14,6 +14,7 @@ import { ActionType } from "./reducers/actions/ActionType";
 import { insertAbove, insertBelow, insertLeft, insertRight, newEditor } from "./reducers/actions/EditorActions";
 import { initUser } from "./reducers/actions/GeneralActions";
 import {
+	deleteItem,
 	moveDown,
 	moveLeft,
 	moveRight,
@@ -65,6 +66,7 @@ function storageSaver(storageDriver: StorageDriver): Middleware {
 					case ActionType.MOVE_DOWN:
 					case ActionType.MOVE_LEFT:
 					case ActionType.MOVE_RIGHT:
+					case ActionType.DELETE_ITEM:
 						storageDriver.save((api.getState() as {} as RootState).user);
 						 /* falls through */
 					default:
@@ -224,6 +226,12 @@ function selectionKeyPressListener(e: KeyboardEvent, store: RootStore) {
 		case "e":
 			blockCharFromNewFormElement(e);
 			store.dispatch(newEditor());
+			break;
+		// Delete key
+		case "Delete":
+			if (confirm("Are you sure you wish to delete selected item")) {
+				store.dispatch(deleteItem());
+			}
 			break;
 		default:
 	}

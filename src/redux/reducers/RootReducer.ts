@@ -6,6 +6,7 @@ import { DEFAULT_IASSIGN_OPS } from "../../utils";
 import { ActionType } from "./actions/ActionType";
 import { InitUserAction } from "./actions/GeneralActions";
 import { ClientReducer } from "./client/ClientReducer";
+import { DeleteReducer } from "./tools/DeleteReducer";
 import { EditorReducer } from "./tools/EditorReducer";
 import { MoveReducer } from "./tools/MoveReducer";
 import { UserReducer } from "./user/UserReducer";
@@ -29,6 +30,11 @@ export function RootReducer(state: RootState = initialState, rawAction: AnyActio
 	newUserState = {
 		...newUserState,
 		books: MoveReducer(newUserState.books, state.client.views, rawAction),
+		// TODO: is this safe in the same instance as MoveReducer?
+	};
+	newUserState = {
+		...newUserState,
+		books: DeleteReducer(newUserState.books, state.client.views, rawAction),
 		// TODO: is this safe in the same instance as MoveReducer?
 	};
 	newUserState = EditorReducer(newUserState, state.client.views, rawAction);

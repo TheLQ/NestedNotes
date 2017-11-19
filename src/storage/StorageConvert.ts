@@ -78,6 +78,7 @@ export function importUserData(rawUserData: UserState): UserState {
 
 	const newFormat = {
 		name: raw.globalsettings.name,
+		prod: false,
 		tags: {
 			roots: [],
 			entries: {},
