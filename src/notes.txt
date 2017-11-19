@@ -20,3 +20,6 @@ https://github.com/mariocasciaro/object-path-immutable
 
 
 immutable-assign
+
+    How Reddit Enhancement Suite does scrolling for j-k navigation
+    https://github.com/honestbleeps/Reddit-Enhancement-Suite/blob/8a0374ea07ff13e284c8d9d4d5b2f210460f96a4/lib/utils/dom.js#L134

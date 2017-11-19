@@ -1,47 +1,8 @@
 <html>
 
-<!-- 
-    TODO
-
-    Instead of abusing mce, make custom one based on markdown xml, display a normal nested list.
-    Editing or insert brings up a textarea where item used to be
-
-    Press j-k or up-down - Move highlighted tree item like Reddit Enhancement Suite does
-    Press enter - insert new item after current element, submit
-    Press tab or shift+tab - Incriment or decriment item level
-    Press e - edit current
-
-    Could have collapsable tree nav like standard explorer tree nav
-
-    Easier than figuring out how mce works and turning off all its features
-
-    ----
-
-    How Reddit Enhancement Suite does scrolling for j-k navigation
-    https://github.com/honestbleeps/Reddit-Enhancement-Suite/blob/8a0374ea07ff13e284c8d9d4d5b2f210460f96a4/lib/utils/dom.js#L134
--->
-
 <head>
-    <title>Tetsing</title>
-    <!--<script src='https://cloud.tinymce.com/stable/tinymce.min.js'></script>-->
-    <!--<script src='https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.5.6/tinymce.min.js'></script>
-    <script>
-        tinymce.init({
-            selector: '#mytextarea',
-            plugins: 'lists',
-            init_instance_callback: function (editor) {
-                editor.on('BeforeSetContent', function (e) {
-                    console.log("content: " + e.content);
-                });
-                editor.on('NodeChange', function (e) {
-                    
-                    console.log("content: ", e.element, e.parents);
-                });
-            }
-        });
-    </script>-->
+    <title>TEST-Notes</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="core.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="theme.css" media="screen" />
 </head>
 
@@ -49,7 +10,6 @@
     <h1 id="loading">Loading...</h1>
     <div id="error-box"><pre id="error-text"></pre></div>
     <div id="react-content"></div>
-
 
     <script type="text/javascript" src="bundle.js"></script>
 </body>
