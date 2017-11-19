@@ -11,15 +11,40 @@ body {
     line-height: 1.4285714285714286em;
     font-size: 1em;
 }
-a {
-    color: #8cb3d9;
-    text-decoration: none;
-}
 textarea {
     color: #ccc;
     border-color: #4d4d4d;
     background-color: #333333;
 }
+
+/*
+item lists
+*/
+
+.item > ul {
+    border-bottom-style: solid;
+	border-bottom-width: 1px;
+}
+
+.itemEven {
+	background-color: #333333 !important;
+}
+
+.itemEven > ul {
+	border-bottom-color: #121212 !important;
+}
+
+.itemOdd {
+	background-color: #121212 !important;
+}
+
+.itemOdd > ul {
+	border-bottom-color: #333333 !important;
+}
+
+/*
+value rendering
+*/
 
 .renderedItem p:first-child {
     /* don't push to line after tags/links */
@@ -33,29 +58,6 @@ textarea {
 
 .item-selected {
     background-color: #000000 !important;
-}
-
-/* .generic:nth-child(even) li { */
-.itemEven {
-	background-color: #333333 !important;
-}
-
-.itemEven > ul {
-	border-bottom-style: solid;
-	border-bottom-width: 1px;
-	border-bottom-color: #121212 !important;
-}
-
-/* .generic:nth-child(odd) li { */
-.itemOdd {
-	background-color: #121212 !important;
-
-}
-
-.itemOdd > ul {
-	border-bottom-style: solid;
-	border-bottom-width: 1px;
-	border-bottom-color: #333333 !important;
 }
 
 .links {
@@ -103,11 +105,14 @@ textarea {
     padding-right: 3px;
 }
 
-.link-new {
-    /* background-color: red;
-	color: white; */
-	border-color: red;
+a {
+    color: #8cb3d9;
+    text-decoration: none;
 }
+
+/*
+Error Box
+*/
 
 .errorHiden {
     display: none;
