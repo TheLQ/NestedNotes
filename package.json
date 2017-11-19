@@ -4,7 +4,6 @@
   "description": "Note taking with nested lists and tags",
   "dependencies": {
     "commonmark": "^0.27.0",
-    "create-react-app": "^1.4.3",
     "immutable-assign": "^2.0.1",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
@@ -13,7 +12,6 @@
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
     "remote-redux-devtools": "^0.5.12",
-    "shortid": "^2.2.8",
     "uuid": "^3.1.0"
   },
   "devDependencies": {
@@ -50,6 +48,7 @@
     "rollup": "^0.41.6",
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-commonjs": "^8.2.6",
+    "rollup-plugin-json": "^2.3.0",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-replace": "^1.2.1",
     "rollup-plugin-typescript": "^0.8.1",

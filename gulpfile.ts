@@ -4,6 +4,7 @@ import * as gulpStd from "gulp-standard-tasks";
 import tslint from "gulp-tslint";
 import * as rollup from "rollup";
 import * as commonjs from "rollup-plugin-commonjs";
+import * as rollupJson from "rollup-plugin-json";
 import * as nodeResolve from "rollup-plugin-node-resolve";
 import * as replace from "rollup-plugin-replace";
 import * as rollupTypescript from "rollup-plugin-typescript2";
@@ -34,6 +35,18 @@ gulp.task("bundle", ["lint"], async () => {
 	const bundle = await rollup.rollup({
 		entry: "./src/main.tsx",
 		plugins: [
+			rollupJson({
+				// All JSON files will be parsed by default,
+				// but you can also specifically include/exclude files
+				// include: 'node_modules/**',
+				// exclude: [ 'node_modules/foo/**', 'node_modules/bar/**' ],
+				// for tree-shaking, properties will be declared as
+				// variables, using either `var` or `const`
+				preferConst: true, // Default: false
+				// specify indentation for the generated default export —
+				// defaults to '\t'
+				// indent: '  '
+			}),
 			nodeResolve({
 				module: true,
 				jsnext: true,
