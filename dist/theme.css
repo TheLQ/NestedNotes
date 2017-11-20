@@ -42,6 +42,12 @@ item lists
 	border-bottom-color: #333333 !important;
 }
 
+.itemList > li {
+    border-top-style: solid;
+    border-top-width: 1px;
+    border-top-color: black;
+}
+
 /*
 value rendering
 */

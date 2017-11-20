@@ -14,5 +14,5 @@ export function ListComponent(props: ListProperty): JSX.Element {
 		(id) => <ItemComponent viewId={props.viewId} id={id} even={props.even} key={id}/>,
 	);
 
-	return <ul>{items}</ul>;
+	return <ul className="itemList">{items}</ul>;
 }
